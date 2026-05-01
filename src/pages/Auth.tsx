@@ -76,6 +76,9 @@ const Auth = () => {
             <GraduationCap className="h-6 w-6 text-primary" />
             <span>ACG Unadmitted</span>
           </div>
+          <div className="mb-4 px-3 py-2 rounded-md bg-secondary border border-border text-xs text-muted-foreground">
+            <span className="font-semibold text-foreground">Not affiliated with The American College of Greece.</span> Independent, student-run. <span className="font-semibold">#gogriffins</span>
+          </div>
           <h2 className="text-3xl font-bold mb-1">{mode === "signup" ? "Create account" : "Welcome back"}</h2>
           <p className="text-muted-foreground mb-6">Use your <span className="font-semibold text-foreground">@acg.edu</span> email.</p>
           <form onSubmit={submit} className="space-y-4">
