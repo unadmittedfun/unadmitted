@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { signUpSchema, emailDomainSchema } from "@/lib/validation";
+import { signUpSchema } from "@/lib/validation";
 import { useAuth } from "@/contexts/AuthContext";
-import { fetchAllCommunities, Community } from "@/lib/community";
+import { fetchCommunityByEmailDomain } from "@/lib/community";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { GraduationCap, ChevronDown } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 
 const Auth = () => {
   const nav = useNavigate();
@@ -19,33 +19,16 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // When there's no subdomain (e.g. main domain or local dev), let users pick a community.
-  const [communities, setCommunities] = useState<Community[]>([]);
-  const [selectedSlug, setSelectedSlug] = useState<string>("");
-
-  useEffect(() => {
-    if (hostCommunity) return;
-    fetchAllCommunities().then((list) => {
-      setCommunities(list);
-      if (list[0]) setSelectedSlug(list[0].slug);
-    });
-  }, [hostCommunity]);
-
-  const community: Community | null =
-    hostCommunity ?? communities.find((c) => c.slug === selectedSlug) ?? null;
-
-  const brand = community?.name ?? "Unadmitted";
-  const handle = community?.email_domain ?? "your-uni.edu";
-  const hashtag = community?.hashtag ?? "#unadmitted";
-  const tagline = community?.tagline ?? "The unfiltered university community.";
-  const shortName = community?.short_name ?? "";
+  // Branding falls back to a generic look until the user is logged in or we
+  // detect their university from the subdomain.
+  const brand = hostCommunity?.name ?? "Unadmitted";
+  const handle = hostCommunity?.email_domain ?? "your-uni.edu";
+  const hashtag = hostCommunity?.hashtag ?? "#unadmitted";
+  const shortName = hostCommunity?.short_name ?? "";
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!community && mode !== "forgot") {
-      toast.error("Pick your community first");
-      return;
-    }
+
     if (mode === "forgot") {
       const emailParsed = signUpSchema.shape.email.safeParse(email);
       if (!emailParsed.success) return toast.error(emailParsed.error.errors[0].message);
@@ -62,14 +45,26 @@ const Auth = () => {
       } finally { setLoading(false); }
       return;
     }
-    const schema = community
-      ? emailDomainSchema(community.email_domain)
-      : signUpSchema.shape.email;
-    const emailParsed = schema.safeParse(email);
+
+    const emailParsed = signUpSchema.shape.email.safeParse(email);
     if (!emailParsed.success) return toast.error(emailParsed.error.errors[0].message);
     if (password.length < 8) return toast.error("Password must be at least 8 characters");
+
+    const domain = emailParsed.data.split("@")[1]?.toLowerCase();
+    if (!domain) return toast.error("Enter a valid university email");
+
     setLoading(true);
     try {
+      // Auto-detect the community from the email domain.
+      const community = await fetchCommunityByEmailDomain(domain);
+      if (!community) {
+        toast.error(
+          `@${domain} isn't part of Unadmitted yet. Use your official university email.`
+        );
+        setLoading(false);
+        return;
+      }
+
       if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
           email: emailParsed.data,
@@ -77,7 +72,7 @@ const Auth = () => {
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
-        toast.success(`Welcome to ${brand}`);
+        toast.success(`Welcome to ${community.name}`);
         nav("/amendments");
       } else {
         const { error } = await supabase.auth.signInWithPassword({
@@ -105,7 +100,7 @@ const Auth = () => {
             The unfiltered<br/>{shortName || "university"} community.
           </h1>
           <p className="text-primary-foreground/80 max-w-sm">
-            Anonymous. Honest. Strictly @{handle} only — no exceptions.
+            Anonymous. Honest. {hostCommunity ? <>Strictly @{handle} only — no exceptions.</> : "Sign in with your official university email — we'll do the rest."}
           </p>
         </div>
         <div className="space-y-1 text-xs text-primary-foreground/70">
@@ -129,35 +124,15 @@ const Auth = () => {
             Independent, student-run. <span className="font-semibold">{hashtag}</span>
           </div>
 
-          {!hostCommunity && communities.length > 0 && (
-            <div className="mb-4">
-              <Label htmlFor="community">Choose your university</Label>
-              <div className="relative">
-                <select
-                  id="community"
-                  value={selectedSlug}
-                  onChange={(e) => setSelectedSlug(e.target.value)}
-                  className="flex h-10 w-full appearance-none rounded-md border border-input bg-background px-3 py-2 pr-9 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  {communities.map((c) => (
-                    <option key={c.id} value={c.slug}>
-                      {c.short_name} — @{c.email_domain}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              </div>
-              <p className="text-[11px] text-muted-foreground mt-1">{tagline}</p>
-            </div>
-          )}
-
           <h2 className="text-3xl font-bold mb-1">
             {mode === "signup" ? "Create account" : mode === "signin" ? "Welcome back" : "Reset password"}
           </h2>
           <p className="text-muted-foreground mb-6">
             {mode === "forgot"
               ? "We'll email a reset link to your university address."
-              : <>Use your <span className="font-semibold text-foreground">@{handle}</span> email.</>}
+              : hostCommunity
+                ? <>Use your <span className="font-semibold text-foreground">@{handle}</span> email.</>
+                : "Use your official university email — your community is set automatically."}
           </p>
           <form onSubmit={submit} className="space-y-4">
             <div>
