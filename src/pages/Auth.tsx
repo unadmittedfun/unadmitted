@@ -66,6 +66,7 @@ const Auth = () => {
         </div>
         <div className="space-y-1 text-xs text-primary-foreground/70">
           <p className="font-semibold text-primary-foreground/90">🔒 We never read, store, or use your data.</p>
+          <p className="text-primary-foreground/90">⚠️ Not affiliated with ACG. <span className="font-semibold">#gogriffins</span></p>
           <p className="text-primary-foreground/60">By DEREE students, for DEREE students.</p>
         </div>
       </div>
