@@ -7,6 +7,8 @@ type Profile = {
   handle: string;
   email: string;
   accepted_amendments: boolean;
+  avatar_url: string | null;
+  handle_suffix: string;
 };
 
 type AuthCtx = {

@@ -27,7 +27,7 @@ const PostDetail = () => {
     const { data: p } = await supabase.from("posts").select("*").eq("id", id).maybeSingle();
     if (!p) { setLoading(false); return; }
     const [profileRes, votesRes, commentsRes, repostsRes, myVoteRes, myRepostRes] = await Promise.all([
-      supabase.from("profiles").select("handle").eq("id", p.author_id).maybeSingle(),
+      supabase.from("profiles").select("handle, avatar_url").eq("id", p.author_id).maybeSingle(),
       supabase.from("votes").select("value").eq("target_type","post").eq("target_id", id),
       supabase.from("comments").select("id, body, created_at, author_id").eq("post_id", id).order("created_at", { ascending: true }),
       supabase.from("reposts").select("id").eq("post_id", id),
@@ -46,6 +46,7 @@ const PostDetail = () => {
       id: p.id, body: p.body, created_at: p.created_at, author_id: p.author_id,
       is_promoted: p.is_promoted,
       author_handle: profileRes.data?.handle ?? "anon",
+      author_avatar: profileRes.data?.avatar_url ?? null,
       upvotes: up, downvotes: down,
       comment_count: commentsRes.data?.length ?? 0,
       repost_count: repostsRes.data?.length ?? 0,

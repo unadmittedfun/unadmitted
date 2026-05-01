@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowBigUp, ArrowBigDown, MessageCircle, Repeat2, Share2, Flame } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,7 @@ export type PostRow = {
   author_id: string;
   is_promoted: boolean;
   author_handle: string;
+  author_avatar: string | null;
   upvotes: number;
   downvotes: number;
   comment_count: number;
@@ -70,6 +72,10 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
   return (
     <Card className="p-4 mb-3 shadow-card hover:border-primary/30 transition-colors">
       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+        <Avatar className="h-6 w-6">
+          <AvatarImage src={post.author_avatar ?? undefined} />
+          <AvatarFallback className="text-[9px] font-mono">{post.author_handle.slice(5, 7).toUpperCase()}</AvatarFallback>
+        </Avatar>
         <span className="font-mono">{post.author_handle}</span>
         <span>·</span>
         <span>{formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}</span>

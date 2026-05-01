@@ -19,7 +19,7 @@ const amendments = [
     n: "II",
     icon: Megaphone,
     title: "No real-store ads without the bot.",
-    body: "You may not advertise anything happening at a real store, business or event without first chatting with the Marketing Bot. Packages start at €2 for a full day on Trending.",
+    body: "You may not advertise anything happening at a real store, business or event without first chatting with the Marketing Bot. Packages start at €1 for a full day on Trending.",
   },
   {
     n: "III",

@@ -21,7 +21,7 @@ export const usePostFeed = (mode: "new" | "trending") => {
     const authorIds = [...new Set(rawPosts.map((p) => p.author_id))];
 
     const [profilesRes, votesRes, commentsRes, repostsRes, myVotesRes, myRepostsRes] = await Promise.all([
-      supabase.from("profiles").select("id, handle").in("id", authorIds),
+      supabase.from("profiles").select("id, handle, avatar_url").in("id", authorIds),
       supabase.from("votes").select("target_id, value").eq("target_type", "post").in("target_id", ids),
       supabase.from("comments").select("post_id").in("post_id", ids),
       supabase.from("reposts").select("post_id").in("post_id", ids),
@@ -29,7 +29,7 @@ export const usePostFeed = (mode: "new" | "trending") => {
       supabase.from("reposts").select("post_id").in("post_id", ids).eq("user_id", user.id),
     ]);
 
-    const handleMap = new Map((profilesRes.data ?? []).map((p) => [p.id, p.handle]));
+    const profMap = new Map((profilesRes.data ?? []).map((p: any) => [p.id, p]));
     const upMap: Record<string, number> = {};
     const downMap: Record<string, number> = {};
     (votesRes.data ?? []).forEach((v: any) => {
@@ -46,7 +46,8 @@ export const usePostFeed = (mode: "new" | "trending") => {
     let assembled: PostRow[] = rawPosts.map((p) => ({
       id: p.id, body: p.body, created_at: p.created_at, author_id: p.author_id,
       is_promoted: p.is_promoted,
-      author_handle: handleMap.get(p.author_id) ?? "anon",
+      author_handle: profMap.get(p.author_id)?.handle ?? "anon",
+      author_avatar: profMap.get(p.author_id)?.avatar_url ?? null,
       upvotes: upMap[p.id] ?? 0,
       downvotes: downMap[p.id] ?? 0,
       comment_count: cMap[p.id] ?? 0,
