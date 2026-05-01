@@ -11,13 +11,29 @@ import { GraduationCap } from "lucide-react";
 
 const Auth = () => {
   const nav = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signup");
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signup");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (mode === "forgot") {
+      const emailParsed = signUpSchema.shape.email.safeParse(email);
+      if (!emailParsed.success) return toast.error(emailParsed.error.errors[0].message);
+      setLoading(true);
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(emailParsed.data, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+        toast.success("Reset link sent — check your @acg.edu inbox");
+        setMode("signin");
+      } catch (err: any) {
+        toast.error(err.message ?? "Something went wrong");
+      } finally { setLoading(false); }
+      return;
+    }
     const parsed = signUpSchema.safeParse({ email, password });
     if (!parsed.success) {
       toast.error(parsed.error.errors[0].message);
