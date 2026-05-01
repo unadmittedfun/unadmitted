@@ -51,6 +51,19 @@ export const fetchAllCommunities = async (): Promise<Community[]> => {
   return (data ?? []) as Community[];
 };
 
+/** Look up community by the email's domain (the part after @). */
+export const fetchCommunityByEmailDomain = async (
+  domain: string
+): Promise<Community | null> => {
+  const { data } = await supabase
+    .from("communities")
+    .select("*")
+    .eq("email_domain", domain.toLowerCase())
+    .eq("is_active", true)
+    .maybeSingle();
+  return (data as Community | null) ?? null;
+};
+
 /** Apply community theme to :root CSS variables. */
 export const applyCommunityTheme = (c: Community | null) => {
   if (typeof document === "undefined") return;
