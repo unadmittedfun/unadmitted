@@ -64,7 +64,10 @@ const Auth = () => {
             Anonymous. Honest. Strictly @acg.edu only — no exceptions.
           </p>
         </div>
-        <p className="text-xs text-primary-foreground/60">By DEREE students, for DEREE students.</p>
+        <div className="space-y-1 text-xs text-primary-foreground/70">
+          <p className="font-semibold text-primary-foreground/90">🔒 We never read, store, or use your data.</p>
+          <p className="text-primary-foreground/60">By DEREE students, for DEREE students.</p>
+        </div>
       </div>
       <div className="flex items-center justify-center p-6">
         <Card className="w-full max-w-md p-8 shadow-card">
@@ -90,10 +93,14 @@ const Auth = () => {
           <button
             type="button"
             onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
-            className="text-sm text-muted-foreground mt-4 hover:text-foreground"
+            className="text-sm text-muted-foreground mt-4 hover:text-foreground block"
           >
             {mode === "signup" ? "Already have an account? Sign in" : "New here? Sign up"}
           </button>
+          <p className="text-xs text-muted-foreground mt-6 pt-4 border-t">
+            We will <span className="font-semibold text-foreground">never</span> read, store, or use your data beyond what's needed to run the app.{" "}
+            <a href="/privacy" className="text-primary hover:underline">Read our privacy promise →</a>
+          </p>
         </Card>
       </div>
     </div>
