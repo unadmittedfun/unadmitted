@@ -12,10 +12,10 @@ import { formatDistanceToNow } from "date-fns";
 type Msg = { id: string; body: string; sender_id: string | null; is_bot: boolean; created_at: string };
 
 const PACKAGES = [
-  { id: "front_day", label: "Front of Trending — 1 day", price: 2 },
-  { id: "front_3day", label: "Front of Trending — 3 days", price: 5 },
-  { id: "pinned_week", label: "Pinned post — 1 week", price: 10 },
-  { id: "story_blast", label: "Top-of-feed blast (1 hour)", price: 3 },
+  { id: "front_day", label: "Front of Trending — 1 day", price: 1 },
+  { id: "front_3day", label: "Front of Trending — 3 days", price: 2.5 },
+  { id: "pinned_week", label: "Pinned post — 1 week", price: 5 },
+  { id: "story_blast", label: "Top-of-feed blast (1 hour)", price: 1.5 },
 ];
 
 const Marketing = () => {
