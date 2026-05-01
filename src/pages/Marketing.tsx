@@ -79,13 +79,34 @@ const Marketing = () => {
 
   const choose = async (pkg: typeof PACKAGES[number]) => {
     if (!user || !profile || !convId) return;
+    const requestId = crypto.randomUUID();
+    const lastUserMsg = [...messages].reverse().find((m) => !m.is_bot)?.body ?? "";
     const { error } = await supabase.from("ad_requests").insert({
+      id: requestId,
       user_id: user.id, conversation_id: convId,
       package_label: pkg.label, price_eur: pkg.price,
-      details: { package_id: pkg.id },
+      details: { package_id: pkg.id, request_text: lastUserMsg },
       community_id: profile.community_id,
     });
     if (error) return toast.error(error.message);
+
+    // Notify admin via email — fire-and-forget, do NOT block the user
+    supabase.functions.invoke("send-transactional-email", {
+      body: {
+        templateName: "ad-request-notification",
+        recipientEmail: "v.mastrogiannoudis@acg.edu",
+        idempotencyKey: `ad-request-${requestId}`,
+        templateData: {
+          handle: profile.handle,
+          packageLabel: pkg.label,
+          priceEur: pkg.price,
+          details: lastUserMsg || "(no extra context — student picked a package without describing the ad)",
+          community: "ACG Unadmitted",
+          requestId,
+        },
+      },
+    }).catch((e) => console.error("admin notify failed", e));
+
     const { data: b } = await supabase.from("messages").insert({
       conversation_id: convId, sender_id: undefined, is_bot: true,
       body: `✅ Request for "${pkg.label}" (€${pkg.price}) submitted. We'll DM you to confirm copy and payment.`,
