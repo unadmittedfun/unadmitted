@@ -44,6 +44,7 @@ const PostDetail = () => {
     }
     setPost({
       id: p.id, body: p.body, created_at: p.created_at, author_id: p.author_id,
+      community_id: p.community_id,
       is_promoted: p.is_promoted,
       media_url: p.media_url ?? null,
       media_type: (p.media_type as "image" | "video" | null) ?? null,

@@ -15,7 +15,7 @@ type Conv = { id: string; user_a: string; user_b: string; is_marketing_bot: bool
 type Msg = { id: string; body: string; sender_id: string | null; is_bot: boolean; created_at: string };
 
 const DMs = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [convs, setConvs] = useState<Conv[]>([]);
   const [active, setActive] = useState<Conv | null>(null);
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -55,7 +55,7 @@ const DMs = () => {
   }, [active]);
 
   const startConvo = async () => {
-    if (!user) return;
+    if (!user || !profile) return;
     const handle = newHandle.trim();
     if (!handle) return;
     const { data: prof } = await supabase.from("profiles").select("id").eq("handle", handle).maybeSingle();
@@ -68,7 +68,8 @@ const DMs = () => {
       setNewHandle("");
       return;
     }
-    const { data: created, error } = await supabase.from("conversations").insert({ user_a: a, user_b: b }).select().single();
+    const { data: created, error } = await supabase
+      .from("conversations").insert({ user_a: a, user_b: b, community_id: profile.community_id }).select().single();
     if (error) return toast.error(error.message);
     setActive({ ...(created as any), other_handle: handle });
     setNewHandle("");
@@ -76,10 +77,10 @@ const DMs = () => {
   };
 
   const send = async () => {
-    if (!user || !active || !body.trim()) return;
+    if (!user || !profile || !active || !body.trim()) return;
     if (containsSurname(body)) return toast.error("1st Amendment: no surnames.");
     const { error } = await supabase.from("messages").insert({
-      conversation_id: active.id, sender_id: user.id, body: body.trim(),
+      conversation_id: active.id, sender_id: user.id, body: body.trim(), community_id: profile.community_id,
     });
     if (error) return toast.error(error.message);
     setBody("");
