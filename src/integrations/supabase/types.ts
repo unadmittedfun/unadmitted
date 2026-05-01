@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       ad_requests: {
         Row: {
+          community_id: string
           conversation_id: string | null
           created_at: string
           details: Json
@@ -26,6 +27,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          community_id: string
           conversation_id?: string | null
           created_at?: string
           details?: Json
@@ -36,6 +38,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          community_id?: string
           conversation_id?: string | null
           created_at?: string
           details?: Json
@@ -46,6 +49,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "ad_requests_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "ad_requests_conversation_id_fkey"
             columns: ["conversation_id"]
@@ -59,6 +69,7 @@ export type Database = {
         Row: {
           author_id: string
           body: string
+          community_id: string
           created_at: string
           id: string
           post_id: string
@@ -66,6 +77,7 @@ export type Database = {
         Insert: {
           author_id: string
           body: string
+          community_id: string
           created_at?: string
           id?: string
           post_id: string
@@ -73,11 +85,19 @@ export type Database = {
         Update: {
           author_id?: string
           body?: string
+          community_id?: string
           created_at?: string
           id?: string
           post_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "comments_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "comments_post_id_fkey"
             columns: ["post_id"]
@@ -87,8 +107,51 @@ export type Database = {
           },
         ]
       }
+      communities: {
+        Row: {
+          accent_hsl: string
+          created_at: string
+          email_domain: string
+          hashtag: string
+          id: string
+          is_active: boolean
+          name: string
+          primary_hsl: string
+          short_name: string
+          slug: string
+          tagline: string | null
+        }
+        Insert: {
+          accent_hsl?: string
+          created_at?: string
+          email_domain: string
+          hashtag?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          primary_hsl?: string
+          short_name: string
+          slug: string
+          tagline?: string | null
+        }
+        Update: {
+          accent_hsl?: string
+          created_at?: string
+          email_domain?: string
+          hashtag?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          primary_hsl?: string
+          short_name?: string
+          slug?: string
+          tagline?: string | null
+        }
+        Relationships: []
+      }
       conversations: {
         Row: {
+          community_id: string
           created_at: string
           id: string
           is_marketing_bot: boolean
@@ -96,6 +159,7 @@ export type Database = {
           user_b: string
         }
         Insert: {
+          community_id: string
           created_at?: string
           id?: string
           is_marketing_bot?: boolean
@@ -103,17 +167,27 @@ export type Database = {
           user_b: string
         }
         Update: {
+          community_id?: string
           created_at?: string
           id?: string
           is_marketing_bot?: boolean
           user_a?: string
           user_b?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "conversations_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       messages: {
         Row: {
           body: string
+          community_id: string
           conversation_id: string
           created_at: string
           id: string
@@ -122,6 +196,7 @@ export type Database = {
         }
         Insert: {
           body: string
+          community_id: string
           conversation_id: string
           created_at?: string
           id?: string
@@ -130,6 +205,7 @@ export type Database = {
         }
         Update: {
           body?: string
+          community_id?: string
           conversation_id?: string
           created_at?: string
           id?: string
@@ -137,6 +213,13 @@ export type Database = {
           sender_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "messages_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "messages_conversation_id_fkey"
             columns: ["conversation_id"]
@@ -150,6 +233,7 @@ export type Database = {
         Row: {
           author_id: string
           body: string
+          community_id: string
           created_at: string
           id: string
           is_promoted: boolean
@@ -160,6 +244,7 @@ export type Database = {
         Insert: {
           author_id: string
           body: string
+          community_id: string
           created_at?: string
           id?: string
           is_promoted?: boolean
@@ -170,6 +255,7 @@ export type Database = {
         Update: {
           author_id?: string
           body?: string
+          community_id?: string
           created_at?: string
           id?: string
           is_promoted?: boolean
@@ -177,12 +263,21 @@ export type Database = {
           media_url?: string | null
           promoted_until?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "posts_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
           accepted_amendments: boolean
           avatar_url: string | null
+          community_id: string
           created_at: string
           email: string
           handle: string
@@ -192,6 +287,7 @@ export type Database = {
         Insert: {
           accepted_amendments?: boolean
           avatar_url?: string | null
+          community_id: string
           created_at?: string
           email: string
           handle: string
@@ -201,34 +297,53 @@ export type Database = {
         Update: {
           accepted_amendments?: boolean
           avatar_url?: string | null
+          community_id?: string
           created_at?: string
           email?: string
           handle?: string
           handle_suffix?: string
           id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reposts: {
         Row: {
+          community_id: string
           created_at: string
           id: string
           post_id: string
           user_id: string
         }
         Insert: {
+          community_id: string
           created_at?: string
           id?: string
           post_id: string
           user_id: string
         }
         Update: {
+          community_id?: string
           created_at?: string
           id?: string
           post_id?: string
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "reposts_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "reposts_post_id_fkey"
             columns: ["post_id"]
@@ -258,6 +373,7 @@ export type Database = {
       }
       votes: {
         Row: {
+          community_id: string
           created_at: string
           id: string
           target_id: string
@@ -266,6 +382,7 @@ export type Database = {
           value: Database["public"]["Enums"]["vote_value"]
         }
         Insert: {
+          community_id: string
           created_at?: string
           id?: string
           target_id: string
@@ -274,6 +391,7 @@ export type Database = {
           value: Database["public"]["Enums"]["vote_value"]
         }
         Update: {
+          community_id?: string
           created_at?: string
           id?: string
           target_id?: string
@@ -281,7 +399,15 @@ export type Database = {
           user_id?: string
           value?: Database["public"]["Enums"]["vote_value"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "votes_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -295,6 +421,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      my_community_id: { Args: never; Returns: string }
       update_my_handle_suffix: { Args: { _suffix: string }; Returns: string }
     }
     Enums: {

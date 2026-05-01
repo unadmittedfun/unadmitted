@@ -1,23 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { signUpSchema } from "@/lib/validation";
+import { signUpSchema, emailDomainSchema } from "@/lib/validation";
+import { useAuth } from "@/contexts/AuthContext";
+import { fetchAllCommunities, Community } from "@/lib/community";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, ChevronDown } from "lucide-react";
 
 const Auth = () => {
   const nav = useNavigate();
+  const { hostCommunity } = useAuth();
   const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signup");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // When there's no subdomain (e.g. main domain or local dev), let users pick a community.
+  const [communities, setCommunities] = useState<Community[]>([]);
+  const [selectedSlug, setSelectedSlug] = useState<string>("");
+
+  useEffect(() => {
+    if (hostCommunity) return;
+    fetchAllCommunities().then((list) => {
+      setCommunities(list);
+      if (list[0]) setSelectedSlug(list[0].slug);
+    });
+  }, [hostCommunity]);
+
+  const community: Community | null =
+    hostCommunity ?? communities.find((c) => c.slug === selectedSlug) ?? null;
+
+  const brand = community?.name ?? "Unadmitted";
+  const handle = community?.email_domain ?? "your-uni.edu";
+  const hashtag = community?.hashtag ?? "#unadmitted";
+  const tagline = community?.tagline ?? "The unfiltered university community.";
+  const shortName = community?.short_name ?? "";
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!community && mode !== "forgot") {
+      toast.error("Pick your community first");
+      return;
+    }
     if (mode === "forgot") {
       const emailParsed = signUpSchema.shape.email.safeParse(email);
       if (!emailParsed.success) return toast.error(emailParsed.error.errors[0].message);
@@ -27,33 +55,33 @@ const Auth = () => {
           redirectTo: `${window.location.origin}/reset-password`,
         });
         if (error) throw error;
-        toast.success("Reset link sent — check your @acg.edu inbox");
+        toast.success("Reset link sent — check your inbox");
         setMode("signin");
       } catch (err: any) {
         toast.error(err.message ?? "Something went wrong");
       } finally { setLoading(false); }
       return;
     }
-    const parsed = signUpSchema.safeParse({ email, password });
-    if (!parsed.success) {
-      toast.error(parsed.error.errors[0].message);
-      return;
-    }
+    const schema = community
+      ? emailDomainSchema(community.email_domain)
+      : signUpSchema.shape.email;
+    const emailParsed = schema.safeParse(email);
+    if (!emailParsed.success) return toast.error(emailParsed.error.errors[0].message);
+    if (password.length < 8) return toast.error("Password must be at least 8 characters");
     setLoading(true);
     try {
       if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
-          email: parsed.data.email,
-          password: parsed.data.password,
+          email: emailParsed.data,
+          password,
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
-        toast.success("Welcome to ACG Unadmitted");
+        toast.success(`Welcome to ${brand}`);
         nav("/amendments");
       } else {
         const { error } = await supabase.auth.signInWithPassword({
-          email: parsed.data.email,
-          password: parsed.data.password,
+          email: emailParsed.data, password,
         });
         if (error) throw error;
         nav("/amendments");
@@ -70,43 +98,71 @@ const Auth = () => {
       <div className="hidden lg:flex flex-col justify-between p-12 bg-primary text-primary-foreground relative overflow-hidden">
         <div className="flex items-center gap-2 font-semibold">
           <GraduationCap className="h-6 w-6" />
-          <span>ACG Unadmitted</span>
+          <span>{brand}</span>
         </div>
         <div>
           <h1 className="text-5xl font-black leading-[0.95] mb-4">
-            The unfiltered<br/>ACG community.
+            The unfiltered<br/>{shortName || "university"} community.
           </h1>
           <p className="text-primary-foreground/80 max-w-sm">
-            Anonymous. Honest. Strictly @acg.edu only — no exceptions.
+            Anonymous. Honest. Strictly @{handle} only — no exceptions.
           </p>
         </div>
         <div className="space-y-1 text-xs text-primary-foreground/70">
           <p className="font-semibold text-primary-foreground/90">🔒 We never read, store, or use your data.</p>
-          <p className="text-primary-foreground/90">⚠️ Not affiliated with ACG. <span className="font-semibold">#gogriffins</span></p>
-          <p className="text-primary-foreground/60">By DEREE students, for DEREE students.</p>
+          <p className="text-primary-foreground/90">
+            ⚠️ Not affiliated with {shortName || "your university"}. <span className="font-semibold">{hashtag}</span>
+          </p>
+          <p className="text-primary-foreground/60">By students, for students.</p>
         </div>
       </div>
       <div className="flex items-center justify-center p-6">
         <Card className="w-full max-w-md p-8 shadow-card">
           <div className="lg:hidden flex items-center gap-2 font-semibold mb-6">
             <GraduationCap className="h-6 w-6 text-primary" />
-            <span>ACG Unadmitted</span>
+            <span>{brand}</span>
           </div>
           <div className="mb-4 px-3 py-2 rounded-md bg-secondary border border-border text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">Not affiliated with The American College of Greece.</span> Independent, student-run. <span className="font-semibold">#gogriffins</span>
+            <span className="font-semibold text-foreground">
+              Not affiliated with {shortName ? shortName : "any university"}.
+            </span>{" "}
+            Independent, student-run. <span className="font-semibold">{hashtag}</span>
           </div>
+
+          {!hostCommunity && communities.length > 0 && (
+            <div className="mb-4">
+              <Label htmlFor="community">Choose your university</Label>
+              <div className="relative">
+                <select
+                  id="community"
+                  value={selectedSlug}
+                  onChange={(e) => setSelectedSlug(e.target.value)}
+                  className="flex h-10 w-full appearance-none rounded-md border border-input bg-background px-3 py-2 pr-9 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {communities.map((c) => (
+                    <option key={c.id} value={c.slug}>
+                      {c.short_name} — @{c.email_domain}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              </div>
+              <p className="text-[11px] text-muted-foreground mt-1">{tagline}</p>
+            </div>
+          )}
+
           <h2 className="text-3xl font-bold mb-1">
             {mode === "signup" ? "Create account" : mode === "signin" ? "Welcome back" : "Reset password"}
           </h2>
           <p className="text-muted-foreground mb-6">
             {mode === "forgot"
-              ? "We'll email a reset link to your @acg.edu address."
-              : <>Use your <span className="font-semibold text-foreground">@acg.edu</span> email.</>}
+              ? "We'll email a reset link to your university address."
+              : <>Use your <span className="font-semibold text-foreground">@{handle}</span> email.</>}
           </p>
           <form onSubmit={submit} className="space-y-4">
             <div>
-              <Label htmlFor="email">ACG email</Label>
-              <Input id="email" type="email" placeholder="you@acg.edu" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <Label htmlFor="email">University email</Label>
+              <Input id="email" type="email" placeholder={`you@${handle}`} value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             {mode !== "forgot" && (
               <div>

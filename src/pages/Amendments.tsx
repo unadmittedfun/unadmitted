@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollText, ShieldCheck, Megaphone, GraduationCap } from "lucide-react";
 import { toast } from "sonner";
 
-const amendments = [
+const buildAmendments = (handle: string) => [
   {
     n: "I",
     icon: ScrollText,
@@ -24,13 +24,13 @@ const amendments = [
   {
     n: "III",
     icon: ShieldCheck,
-    title: "@acg.edu only. No exceptions.",
-    body: "Membership is restricted to verified @acg.edu email holders. There are no workarounds. There are no guests.",
+    title: `@${handle} only. No exceptions.`,
+    body: `Membership is restricted to verified @${handle} email holders. There are no workarounds. There are no guests.`,
   },
 ];
 
 const Amendments = () => {
-  const { user, refreshProfile } = useAuth();
+  const { user, profile, community, refreshProfile } = useAuth();
   const nav = useNavigate();
   const [agreed, setAgreed] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -51,13 +51,17 @@ const Amendments = () => {
     nav("/");
   };
 
+  const handle = community?.email_domain ?? "acg.edu";
+  const name = community?.name ?? "Unadmitted";
+  const items = buildAmendments(handle);
+
   return (
     <div className="min-h-screen bg-background py-12 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 mb-4 text-primary">
             <GraduationCap className="h-6 w-6" />
-            <span className="font-semibold">ACG Unadmitted</span>
+            <span className="font-semibold">{name}</span>
           </div>
           <h1 className="text-5xl font-black mb-3">The Three Amendments</h1>
           <p className="text-muted-foreground">Read carefully. These are the only rules.</p>
@@ -77,7 +81,7 @@ const Amendments = () => {
         </Card>
 
         <div className="space-y-4 mb-8">
-          {amendments.map((a) => (
+          {items.map((a) => (
             <Card key={a.n} className="p-6 shadow-card border-l-4 border-l-primary">
               <div className="flex gap-4">
                 <div className="flex-shrink-0">
@@ -106,7 +110,7 @@ const Amendments = () => {
             </span>
           </label>
           <Button onClick={accept} disabled={!agreed || saving} className="w-full mt-4" size="lg">
-            {saving ? "..." : "Enter ACG Unadmitted"}
+            {saving ? "..." : `Enter ${name}`}
           </Button>
         </Card>
       </div>

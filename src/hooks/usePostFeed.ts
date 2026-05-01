@@ -12,7 +12,7 @@ export const usePostFeed = (mode: "new" | "trending") => {
     if (!user) return;
     const { data: rawPosts } = await supabase
       .from("posts")
-      .select("id, body, created_at, author_id, is_promoted, media_url, media_type")
+      .select("id, body, created_at, author_id, is_promoted, media_url, media_type, community_id")
       .order("created_at", { ascending: false })
       .limit(100);
     if (!rawPosts) { setPosts([]); setLoading(false); return; }
@@ -45,6 +45,7 @@ export const usePostFeed = (mode: "new" | "trending") => {
 
     let assembled: PostRow[] = rawPosts.map((p: any) => ({
       id: p.id, body: p.body, created_at: p.created_at, author_id: p.author_id,
+      community_id: p.community_id,
       is_promoted: p.is_promoted,
       media_url: p.media_url ?? null,
       media_type: (p.media_type as "image" | "video" | null) ?? null,

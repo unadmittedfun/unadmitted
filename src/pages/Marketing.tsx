@@ -19,19 +19,21 @@ const PACKAGES = [
 ];
 
 const Marketing = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [convId, setConvId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
 
   const ensureConv = async () => {
-    if (!user) return null;
+    if (!user || !profile) return null;
     const { data: existing } = await supabase
       .from("conversations").select("id")
       .eq("is_marketing_bot", true).eq("user_a", user.id).maybeSingle();
     if (existing) return existing.id;
     const { data: created, error } = await supabase
-      .from("conversations").insert({ user_a: user.id, user_b: user.id, is_marketing_bot: true })
+      .from("conversations").insert({
+        user_a: user.id, user_b: user.id, is_marketing_bot: true, community_id: profile.community_id,
+      })
       .select("id").single();
     if (error) { toast.error(error.message); return null; }
     return created.id;
@@ -39,6 +41,7 @@ const Marketing = () => {
 
   useEffect(() => {
     (async () => {
+      if (!profile) return;
       const cid = await ensureConv();
       if (!cid) return;
       setConvId(cid);
@@ -47,20 +50,20 @@ const Marketing = () => {
       if (msgs.length === 0) {
         const intro = "Hey! I'm the Marketing Bot 🤖\n\nIf you want to promote anything happening at a real store, business, or event — you're in the right place. Tell me what you'd like to advertise and I'll show you packages.\n\nReminder: 1st Amendment still applies. No surnames in your ad copy.";
         const { data: ins } = await supabase.from("messages").insert({
-          conversation_id: cid, sender_id: null, is_bot: true, body: intro,
+          conversation_id: cid, sender_id: undefined, is_bot: true, body: intro, community_id: profile.community_id,
         }).select().single();
         if (ins) msgs = [ins as Msg];
       }
       setMessages(msgs);
     })();
-  }, [user]);
+  }, [user, profile]);
 
   const send = async () => {
-    if (!user || !convId || !input.trim()) return;
+    if (!user || !profile || !convId || !input.trim()) return;
     const text = input.trim();
     setInput("");
     const { data: u } = await supabase.from("messages").insert({
-      conversation_id: convId, sender_id: user.id, is_bot: false, body: text,
+      conversation_id: convId, sender_id: user.id, is_bot: false, body: text, community_id: profile.community_id,
     }).select().single();
     if (u) setMessages((m) => [...m, u as Msg]);
 
@@ -69,22 +72,24 @@ const Marketing = () => {
       PACKAGES.map((p) => `• ${p.label} — €${p.price}`).join("\n") +
       "\n\nReply with the package name to request approval.";
     const { data: b } = await supabase.from("messages").insert({
-      conversation_id: convId, sender_id: null, is_bot: true, body: reply,
+      conversation_id: convId, sender_id: undefined, is_bot: true, body: reply, community_id: profile.community_id,
     }).select().single();
     if (b) setMessages((m) => [...m, b as Msg]);
   };
 
   const choose = async (pkg: typeof PACKAGES[number]) => {
-    if (!user || !convId) return;
+    if (!user || !profile || !convId) return;
     const { error } = await supabase.from("ad_requests").insert({
       user_id: user.id, conversation_id: convId,
       package_label: pkg.label, price_eur: pkg.price,
       details: { package_id: pkg.id },
+      community_id: profile.community_id,
     });
     if (error) return toast.error(error.message);
     const { data: b } = await supabase.from("messages").insert({
-      conversation_id: convId, sender_id: null, is_bot: true,
+      conversation_id: convId, sender_id: undefined, is_bot: true,
       body: `✅ Request for "${pkg.label}" (€${pkg.price}) submitted. We'll DM you to confirm copy and payment.`,
+      community_id: profile.community_id,
     }).select().single();
     if (b) setMessages((m) => [...m, b as Msg]);
     toast.success("Ad request submitted");

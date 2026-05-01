@@ -43,7 +43,7 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
     if (looksLikeAd(parsed.data.body)) {
       return toast.error("2nd Amendment: chat with the Marketing Bot to promote.");
     }
-    if (!user) return;
+    if (!user || !profile) return;
     setPosting(true);
     try {
       let media_url: string | null = null;
@@ -60,8 +60,9 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
       const { error } = await supabase.from("posts").insert({
         author_id: user.id,
         body: parsed.data.body,
-        media_url,
-        media_type,
+        media_url: media_url ?? undefined,
+        media_type: media_type ?? undefined,
+        community_id: profile.community_id,
       });
       if (error) throw error;
       setBody("");

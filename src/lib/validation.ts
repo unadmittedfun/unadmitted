@@ -4,10 +4,7 @@ export const acgEmail = z
   .string()
   .trim()
   .toLowerCase()
-  .email("Invalid email")
-  .refine((e) => e.endsWith("@acg.edu"), {
-    message: "Only @acg.edu emails are allowed",
-  });
+  .email("Invalid email");
 
 export const passwordSchema = z
   .string()
@@ -18,6 +15,12 @@ export const signUpSchema = z.object({
   email: acgEmail,
   password: passwordSchema,
 });
+
+export const emailDomainSchema = (domain: string) =>
+  z.string().trim().toLowerCase().email("Invalid email").refine(
+    (e) => e.endsWith(`@${domain}`),
+    { message: `Only @${domain} emails are allowed` }
+  );
 
 export const postSchema = z.object({
   body: z.string().trim().min(1, "Cannot be empty").max(2000, "Too long (max 2000)"),
