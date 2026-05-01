@@ -16,10 +16,11 @@ const tabs = [
 ];
 
 export const AppShell = ({ children }: { children: React.ReactNode }) => {
-  const { profile, signOut } = useAuth();
+  const { profile, community, signOut } = useAuth();
   const loc = useLocation();
   const nav = useNavigate();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const brand = community?.name ?? "Unadmitted";
 
   return (
     <div className="min-h-screen bg-background">
@@ -27,7 +28,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 font-bold">
             <GraduationCap className="h-5 w-5 text-primary" />
-            <span>ACG Unadmitted</span>
+            <span>{brand}</span>
           </Link>
           <div className="flex items-center gap-1">
             <button
@@ -80,6 +81,10 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
       <footer className="max-w-6xl mx-auto px-4 py-6 border-t border-border mt-6">
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
           <p>🔒 We never read, store, or use your data.</p>
+          <p className="hidden md:block">
+            Not affiliated with {community?.name?.replace(" Unadmitted", "") ?? "the school"}.{" "}
+            <span className="font-semibold">{community?.hashtag ?? "#unadmitted"}</span>
+          </p>
           <Link to="/privacy" className="hover:text-foreground underline-offset-4 hover:underline">Privacy promise</Link>
         </div>
       </footer>
