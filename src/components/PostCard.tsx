@@ -18,6 +18,8 @@ export type PostRow = {
   is_promoted: boolean;
   author_handle: string;
   author_avatar: string | null;
+  media_url: string | null;
+  media_type: "image" | "video" | null;
   upvotes: number;
   downvotes: number;
   comment_count: number;
@@ -86,8 +88,29 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
         )}
       </div>
       <Link to={`/post/${post.id}`} className="block">
-        <p className="whitespace-pre-wrap text-foreground leading-relaxed">{post.body}</p>
+        {post.body && post.body !== "📎" && (
+          <p className="whitespace-pre-wrap text-foreground leading-relaxed">{post.body}</p>
+        )}
       </Link>
+      {post.media_url && (
+        <div className="mt-2 rounded-lg overflow-hidden border border-border bg-secondary">
+          {post.media_type === "video" ? (
+            <video
+              src={post.media_url}
+              controls
+              playsInline
+              className="w-full max-h-[520px] bg-black"
+            />
+          ) : (
+            <img
+              src={post.media_url}
+              alt="post media"
+              loading="lazy"
+              className="w-full max-h-[520px] object-contain"
+            />
+          )}
+        </div>
+      )}
       <div className="flex items-center gap-1 mt-3 -ml-2">
         <div className="flex items-center bg-secondary rounded-full">
           <Button

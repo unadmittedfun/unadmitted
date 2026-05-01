@@ -12,7 +12,7 @@ export const usePostFeed = (mode: "new" | "trending") => {
     if (!user) return;
     const { data: rawPosts } = await supabase
       .from("posts")
-      .select("id, body, created_at, author_id, is_promoted")
+      .select("id, body, created_at, author_id, is_promoted, media_url, media_type")
       .order("created_at", { ascending: false })
       .limit(100);
     if (!rawPosts) { setPosts([]); setLoading(false); return; }
@@ -43,9 +43,11 @@ export const usePostFeed = (mode: "new" | "trending") => {
     const myVoteMap = new Map((myVotesRes.data ?? []).map((v: any) => [v.target_id, v.value]));
     const myRepostSet = new Set((myRepostsRes.data ?? []).map((r: any) => r.post_id));
 
-    let assembled: PostRow[] = rawPosts.map((p) => ({
+    let assembled: PostRow[] = rawPosts.map((p: any) => ({
       id: p.id, body: p.body, created_at: p.created_at, author_id: p.author_id,
       is_promoted: p.is_promoted,
+      media_url: p.media_url ?? null,
+      media_type: (p.media_type as "image" | "video" | null) ?? null,
       author_handle: profMap.get(p.author_id)?.handle ?? "anon",
       author_avatar: profMap.get(p.author_id)?.avatar_url ?? null,
       upvotes: upMap[p.id] ?? 0,
