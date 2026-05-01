@@ -67,8 +67,10 @@ const PostDetail = () => {
     const parsed = commentSchema.safeParse({ body });
     if (!parsed.success) return toast.error(parsed.error.errors[0].message);
     if (containsSurname(parsed.data.body)) return toast.error("1st Amendment: no surnames.");
-    if (!user || !id) return;
-    const { error } = await supabase.from("comments").insert({ post_id: id, author_id: user.id, body: parsed.data.body });
+    if (!user || !id || !post) return;
+    const { error } = await supabase.from("comments").insert({
+      post_id: id, author_id: user.id, body: parsed.data.body, community_id: post.community_id,
+    });
     if (error) return toast.error(error.message);
     setBody("");
     load();

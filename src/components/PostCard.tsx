@@ -29,18 +29,18 @@ export type PostRow = {
 };
 
 export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => void }) => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [busy, setBusy] = useState(false);
   const score = post.upvotes - post.downvotes;
 
   const vote = async (value: "up" | "down") => {
-    if (!user || busy) return;
+    if (!user || !profile || busy) return;
     setBusy(true);
     if (post.my_vote === value) {
       await supabase.from("votes").delete().match({ user_id: user.id, target_type: "post", target_id: post.id });
     } else {
       await supabase.from("votes").upsert(
-        { user_id: user.id, target_type: "post", target_id: post.id, value },
+        { user_id: user.id, target_type: "post", target_id: post.id, value, community_id: profile.community_id },
         { onConflict: "user_id,target_type,target_id" }
       );
     }
@@ -49,12 +49,12 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
   };
 
   const repost = async () => {
-    if (!user || busy) return;
+    if (!user || !profile || busy) return;
     setBusy(true);
     if (post.my_repost) {
       await supabase.from("reposts").delete().match({ user_id: user.id, post_id: post.id });
     } else {
-      await supabase.from("reposts").insert({ user_id: user.id, post_id: post.id });
+      await supabase.from("reposts").insert({ user_id: user.id, post_id: post.id, community_id: profile.community_id });
     }
     setBusy(false);
     onChange();
