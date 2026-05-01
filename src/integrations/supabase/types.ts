@@ -411,9 +411,44 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          avatar_url: string | null
+          community_id: string | null
+          created_at: string | null
+          handle: string | null
+          handle_suffix: string | null
+          id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          community_id?: string | null
+          created_at?: string | null
+          handle?: string | null
+          handle_suffix?: string | null
+          id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          community_id?: string | null
+          created_at?: string | null
+          handle?: string | null
+          handle_suffix?: string | null
+          id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
+      community_member_count: { Args: never; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

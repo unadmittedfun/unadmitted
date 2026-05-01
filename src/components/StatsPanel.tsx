@@ -17,14 +17,14 @@ export const StatsPanel = () => {
     since.setDate(since.getDate() - 7);
     const sinceIso = since.toISOString();
 
-    const [{ count: m }, { count: p }, recentPosts, recentComments, weekPostsRes] = await Promise.all([
-      supabase.from("profiles").select("*", { count: "exact", head: true }),
+    const [memberCountRes, { count: p }, recentPosts, recentComments, weekPostsRes] = await Promise.all([
+      supabase.rpc("community_member_count"),
       supabase.from("posts").select("*", { count: "exact", head: true }),
       supabase.from("posts").select("author_id").gte("created_at", sinceIso),
       supabase.from("comments").select("author_id").gte("created_at", sinceIso),
       supabase.from("posts").select("id, author_id").gte("created_at", sinceIso),
     ]);
-    setMembers(m ?? 0);
+    setMembers(Number(memberCountRes.data ?? 0));
     setPosts(p ?? 0);
     const activeSet = new Set<string>();
     (recentPosts.data ?? []).forEach((r: any) => activeSet.add(r.author_id));
@@ -51,7 +51,7 @@ export const StatsPanel = () => {
       .slice(0, 3);
     if (top.length === 0) { setLeaders([]); return; }
     const { data: profs } = await supabase
-      .from("profiles").select("id, handle, avatar_url")
+      .from("public_profiles").select("id, handle, avatar_url")
       .in("id", top.map(([id]) => id));
     const profMap = new Map((profs ?? []).map((p: any) => [p.id, p]));
     setLeaders(top.map(([id, score]) => {

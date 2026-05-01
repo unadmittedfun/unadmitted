@@ -21,7 +21,7 @@ export const usePostFeed = (mode: "new" | "trending") => {
     const authorIds = [...new Set(rawPosts.map((p) => p.author_id))];
 
     const [profilesRes, votesRes, commentsRes, repostsRes, myVotesRes, myRepostsRes] = await Promise.all([
-      supabase.from("profiles").select("id, handle, avatar_url").in("id", authorIds),
+      supabase.from("public_profiles").select("id, handle, avatar_url").in("id", authorIds),
       supabase.from("votes").select("target_id, value").eq("target_type", "post").in("target_id", ids),
       supabase.from("comments").select("post_id").in("post_id", ids),
       supabase.from("reposts").select("post_id").in("post_id", ids),
