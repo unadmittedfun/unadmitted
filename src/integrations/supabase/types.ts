@@ -176,23 +176,29 @@ export type Database = {
       profiles: {
         Row: {
           accepted_amendments: boolean
+          avatar_url: string | null
           created_at: string
           email: string
           handle: string
+          handle_suffix: string
           id: string
         }
         Insert: {
           accepted_amendments?: boolean
+          avatar_url?: string | null
           created_at?: string
           email: string
           handle: string
+          handle_suffix: string
           id: string
         }
         Update: {
           accepted_amendments?: boolean
+          avatar_url?: string | null
           created_at?: string
           email?: string
           handle?: string
+          handle_suffix?: string
           id?: string
         }
         Relationships: []
@@ -283,6 +289,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      update_my_handle_suffix: { Args: { _suffix: string }; Returns: string }
     }
     Enums: {
       ad_status: "pending" | "approved" | "rejected" | "live" | "completed"
