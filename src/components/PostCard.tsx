@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowBigUp, ArrowBigDown, MessageCircle, Repeat2, Share2, Flame } from "lucide-react";
+import { ArrowBigUp, ArrowBigDown, MessageCircle, Repeat2, Share2, Flame, Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
@@ -71,6 +71,19 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
     } catch {/* canceled */}
   };
 
+  const remove = async () => {
+    if (!user || busy) return;
+    if (!confirm("Delete this post? This cannot be undone.")) return;
+    setBusy(true);
+    const { error } = await supabase.from("posts").delete().eq("id", post.id).eq("author_id", user.id);
+    setBusy(false);
+    if (error) return toast.error(error.message);
+    toast.success("Post deleted");
+    onChange();
+  };
+
+  const isOwner = user?.id === post.author_id;
+
   return (
     <Card className="p-4 mb-3 shadow-card hover:border-primary/30 transition-colors">
       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
@@ -85,6 +98,16 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
           <span className="ml-auto inline-flex items-center gap-1 text-accent-foreground bg-accent px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide">
             <Flame className="h-3 w-3" /> Promoted
           </span>
+        )}
+        {isOwner && (
+          <Button
+            variant="ghost" size="sm"
+            className={cn("h-6 w-6 p-0 text-muted-foreground hover:text-destructive", !post.is_promoted && "ml-auto")}
+            onClick={remove}
+            title="Delete post"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </Button>
         )}
       </div>
       <Link to={`/post/${post.id}`} className="block">
