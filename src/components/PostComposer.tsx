@@ -37,10 +37,12 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
   const submit = async () => {
     const parsed = postSchema.safeParse({ body: body || (file ? "📎" : "") });
     if (!parsed.success) return toast.error(parsed.error.errors[0].message);
-    if (containsSurname(parsed.data.body)) {
+    // anon_vvv is exempt from amendment checks (admin/free-speech account).
+    const isExempt = profile?.handle === "anon_vvv";
+    if (!isExempt && containsSurname(parsed.data.body)) {
       return toast.error("1st Amendment: no name drops with surnames.");
     }
-    if (looksLikeAd(parsed.data.body)) {
+    if (!isExempt && looksLikeAd(parsed.data.body)) {
       return toast.error("2nd Amendment: chat with the Marketing Bot to promote.");
     }
     if (!user || !profile) return;
