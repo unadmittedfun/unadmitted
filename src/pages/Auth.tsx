@@ -95,28 +95,51 @@ const Auth = () => {
           <div className="mb-4 px-3 py-2 rounded-md bg-secondary border border-border text-xs text-muted-foreground">
             <span className="font-semibold text-foreground">Not affiliated with The American College of Greece.</span> Independent, student-run. <span className="font-semibold">#gogriffins</span>
           </div>
-          <h2 className="text-3xl font-bold mb-1">{mode === "signup" ? "Create account" : "Welcome back"}</h2>
-          <p className="text-muted-foreground mb-6">Use your <span className="font-semibold text-foreground">@acg.edu</span> email.</p>
+          <h2 className="text-3xl font-bold mb-1">
+            {mode === "signup" ? "Create account" : mode === "signin" ? "Welcome back" : "Reset password"}
+          </h2>
+          <p className="text-muted-foreground mb-6">
+            {mode === "forgot"
+              ? "We'll email a reset link to your @acg.edu address."
+              : <>Use your <span className="font-semibold text-foreground">@acg.edu</span> email.</>}
+          </p>
           <form onSubmit={submit} className="space-y-4">
             <div>
               <Label htmlFor="email">ACG email</Label>
               <Input id="email" type="email" placeholder="you@acg.edu" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
-            </div>
+            {mode !== "forgot" && (
+              <div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Password</Label>
+                  {mode === "signin" && (
+                    <button type="button" onClick={() => setMode("forgot")} className="text-xs text-primary hover:underline">
+                      Forgot password?
+                    </button>
+                  )}
+                </div>
+                <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+              </div>
+            )}
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "..." : mode === "signup" ? "Sign up" : "Sign in"}
+              {loading ? "..." : mode === "signup" ? "Sign up" : mode === "signin" ? "Sign in" : "Send reset link"}
             </Button>
           </form>
-          <button
-            type="button"
-            onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
-            className="text-sm text-muted-foreground mt-4 hover:text-foreground block"
-          >
-            {mode === "signup" ? "Already have an account? Sign in" : "New here? Sign up"}
-          </button>
+          <div className="mt-4 space-y-1">
+            {mode === "forgot" ? (
+              <button type="button" onClick={() => setMode("signin")} className="text-sm text-muted-foreground hover:text-foreground block">
+                Back to sign in
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
+                className="text-sm text-muted-foreground hover:text-foreground block"
+              >
+                {mode === "signup" ? "Already have an account? Sign in" : "New here? Sign up"}
+              </button>
+            )}
+          </div>
           <p className="text-xs text-muted-foreground mt-6 pt-4 border-t">
             We will <span className="font-semibold text-foreground">never</span> read, store, or use your data beyond what's needed to run the app.{" "}
             <a href="/privacy" className="text-primary hover:underline">Read our privacy promise →</a>
