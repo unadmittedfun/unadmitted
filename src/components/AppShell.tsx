@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { GraduationCap, Home, Flame, MessageSquare, Megaphone, LogOut } from "lucide-react";
+import { GraduationCap, Home, Flame, MessageSquare, Megaphone, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { StatsPanel } from "@/components/StatsPanel";
+import { ProfileSettings } from "@/components/ProfileSettings";
 
 const tabs = [
   { to: "/", label: "New", icon: Home },
@@ -15,25 +19,36 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
   const { profile, signOut } = useAuth();
   const loc = useLocation();
   const nav = useNavigate();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 bg-background/85 backdrop-blur border-b border-border">
-        <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 font-bold">
             <GraduationCap className="h-5 w-5 text-primary" />
             <span>ACG Unadmitted</span>
           </Link>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground hidden sm:inline">
-              {profile?.handle}
-            </span>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setSettingsOpen(true)}
+              className="flex items-center gap-2 px-2 py-1 rounded-full hover:bg-secondary transition-colors"
+            >
+              <Avatar className="h-7 w-7">
+                <AvatarImage src={profile?.avatar_url ?? undefined} />
+                <AvatarFallback className="text-[10px] font-mono">
+                  {profile?.handle.slice(5, 7).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-xs font-mono hidden sm:inline">{profile?.handle}</span>
+              <Settings className="h-3.5 w-3.5 text-muted-foreground" />
+            </button>
             <Button variant="ghost" size="icon" onClick={async () => { await signOut(); nav("/auth"); }}>
               <LogOut className="h-4 w-4" />
             </Button>
           </div>
         </div>
-        <nav className="max-w-3xl mx-auto px-2 flex">
+        <nav className="max-w-6xl mx-auto px-2 flex">
           {tabs.map((t) => {
             const active = loc.pathname === t.to;
             return (
@@ -41,7 +56,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
                 key={t.to}
                 to={t.to}
                 className={cn(
-                  "flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium border-b-2 transition-colors",
+                  "flex-1 sm:flex-none sm:px-6 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium border-b-2 transition-colors",
                   active
                     ? "border-primary text-foreground"
                     : "border-transparent text-muted-foreground hover:text-foreground"
@@ -54,7 +69,15 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
           })}
         </nav>
       </header>
-      <main className="max-w-3xl mx-auto px-4 py-6">{children}</main>
+      <div className="max-w-6xl mx-auto px-4 py-6 grid lg:grid-cols-[1fr_280px] gap-6">
+        <main className="min-w-0">{children}</main>
+        <div className="hidden lg:block">
+          <div className="sticky top-28">
+            <StatsPanel />
+          </div>
+        </div>
+      </div>
+      <ProfileSettings open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>
   );
 };
