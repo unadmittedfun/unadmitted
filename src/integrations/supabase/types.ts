@@ -448,6 +448,7 @@ export type Database = {
       }
     }
     Functions: {
+      community_member_count: { Args: never; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
