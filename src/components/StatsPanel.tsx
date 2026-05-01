@@ -24,7 +24,7 @@ export const StatsPanel = () => {
       supabase.from("comments").select("author_id").gte("created_at", sinceIso),
       supabase.from("posts").select("id, author_id").gte("created_at", sinceIso),
     ]);
-    setMembers((memberCountRes.data as number) ?? 0);
+    setMembers(Number(memberCountRes.data ?? 0));
     setPosts(p ?? 0);
     const activeSet = new Set<string>();
     (recentPosts.data ?? []).forEach((r: any) => activeSet.add(r.author_id));
