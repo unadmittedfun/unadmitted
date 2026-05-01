@@ -12,6 +12,7 @@ import DMs from "./pages/DMs.tsx";
 import Marketing from "./pages/Marketing.tsx";
 import Auth from "./pages/Auth.tsx";
 import Amendments from "./pages/Amendments.tsx";
+import Privacy from "./pages/Privacy.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/post/:id" element={<ProtectedRoute><PostDetail /></ProtectedRoute>} />
             <Route path="/dms" element={<ProtectedRoute><DMs /></ProtectedRoute>} />
             <Route path="/marketing" element={<ProtectedRoute><Marketing /></ProtectedRoute>} />
+            <Route path="/privacy" element={<Privacy />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

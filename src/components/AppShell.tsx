@@ -77,6 +77,12 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
           </div>
         </div>
       </div>
+      <footer className="max-w-6xl mx-auto px-4 py-6 border-t border-border mt-6">
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+          <p>🔒 We never read, store, or use your data.</p>
+          <Link to="/privacy" className="hover:text-foreground underline-offset-4 hover:underline">Privacy promise</Link>
+        </div>
+      </footer>
       <ProfileSettings open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>
   );
