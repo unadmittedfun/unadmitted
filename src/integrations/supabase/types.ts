@@ -153,6 +153,8 @@ export type Database = {
           created_at: string
           id: string
           is_promoted: boolean
+          media_type: string | null
+          media_url: string | null
           promoted_until: string | null
         }
         Insert: {
@@ -161,6 +163,8 @@ export type Database = {
           created_at?: string
           id?: string
           is_promoted?: boolean
+          media_type?: string | null
+          media_url?: string | null
           promoted_until?: string | null
         }
         Update: {
@@ -169,6 +173,8 @@ export type Database = {
           created_at?: string
           id?: string
           is_promoted?: boolean
+          media_type?: string | null
+          media_url?: string | null
           promoted_until?: string | null
         }
         Relationships: []
