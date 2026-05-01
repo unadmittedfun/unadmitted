@@ -18,6 +18,8 @@ export type PostRow = {
   is_promoted: boolean;
   author_handle: string;
   author_avatar: string | null;
+  media_url: string | null;
+  media_type: "image" | "video" | null;
   upvotes: number;
   downvotes: number;
   comment_count: number;
