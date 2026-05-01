@@ -15,6 +15,7 @@ export type PostRow = {
   body: string;
   created_at: string;
   author_id: string;
+  community_id: string;
   is_promoted: boolean;
   author_handle: string;
   author_avatar: string | null;
