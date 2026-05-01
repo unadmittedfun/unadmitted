@@ -27,7 +27,7 @@ const DMs = () => {
     const { data } = await supabase.from("conversations").select("*").or(`user_a.eq.${user.id},user_b.eq.${user.id}`);
     if (!data) return;
     const otherIds = data.map((c) => (c.user_a === user.id ? c.user_b : c.user_a));
-    const { data: profs } = await supabase.from("profiles").select("id, handle").in("id", otherIds);
+    const { data: profs } = await supabase.from("public_profiles").select("id, handle").in("id", otherIds);
     const map = new Map((profs ?? []).map((p) => [p.id, p.handle]));
     setConvs(data.map((c) => {
       const otherId = c.user_a === user.id ? c.user_b : c.user_a;
@@ -58,7 +58,7 @@ const DMs = () => {
     if (!user || !profile) return;
     const handle = newHandle.trim();
     if (!handle) return;
-    const { data: prof } = await supabase.from("profiles").select("id").eq("handle", handle).maybeSingle();
+    const { data: prof } = await supabase.from("public_profiles").select("id").eq("handle", handle).maybeSingle();
     if (!prof) return toast.error("Handle not found");
     if (prof.id === user.id) return toast.error("That's you.");
     const [a, b] = [user.id, prof.id].sort();
