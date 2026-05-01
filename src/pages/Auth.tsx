@@ -66,6 +66,7 @@ const Auth = () => {
         </div>
         <div className="space-y-1 text-xs text-primary-foreground/70">
           <p className="font-semibold text-primary-foreground/90">🔒 We never read, store, or use your data.</p>
+          <p className="text-primary-foreground/90">⚠️ Not affiliated with ACG. <span className="font-semibold">#gogriffins</span></p>
           <p className="text-primary-foreground/60">By DEREE students, for DEREE students.</p>
         </div>
       </div>
@@ -74,6 +75,9 @@ const Auth = () => {
           <div className="lg:hidden flex items-center gap-2 font-semibold mb-6">
             <GraduationCap className="h-6 w-6 text-primary" />
             <span>ACG Unadmitted</span>
+          </div>
+          <div className="mb-4 px-3 py-2 rounded-md bg-secondary border border-border text-xs text-muted-foreground">
+            <span className="font-semibold text-foreground">Not affiliated with The American College of Greece.</span> Independent, student-run. <span className="font-semibold">#gogriffins</span>
           </div>
           <h2 className="text-3xl font-bold mb-1">{mode === "signup" ? "Create account" : "Welcome back"}</h2>
           <p className="text-muted-foreground mb-6">Use your <span className="font-semibold text-foreground">@acg.edu</span> email.</p>
