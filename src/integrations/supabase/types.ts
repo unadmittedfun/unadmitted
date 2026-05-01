@@ -14,16 +14,281 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ad_requests: {
+        Row: {
+          conversation_id: string | null
+          created_at: string
+          details: Json
+          id: string
+          package_label: string
+          price_eur: number
+          status: Database["public"]["Enums"]["ad_status"]
+          user_id: string
+        }
+        Insert: {
+          conversation_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          package_label: string
+          price_eur: number
+          status?: Database["public"]["Enums"]["ad_status"]
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          package_label?: string
+          price_eur?: number
+          status?: Database["public"]["Enums"]["ad_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_requests_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comments: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          post_id: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string
+          id?: string
+          post_id: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversations: {
+        Row: {
+          created_at: string
+          id: string
+          is_marketing_bot: boolean
+          user_a: string
+          user_b: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_marketing_bot?: boolean
+          user_a: string
+          user_b: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_marketing_bot?: boolean
+          user_a?: string
+          user_b?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string
+          id: string
+          is_bot: boolean
+          sender_id: string | null
+        }
+        Insert: {
+          body: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          is_bot?: boolean
+          sender_id?: string | null
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          is_bot?: boolean
+          sender_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          is_promoted: boolean
+          promoted_until: string | null
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string
+          id?: string
+          is_promoted?: boolean
+          promoted_until?: string | null
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          is_promoted?: boolean
+          promoted_until?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          accepted_amendments: boolean
+          created_at: string
+          email: string
+          handle: string
+          id: string
+        }
+        Insert: {
+          accepted_amendments?: boolean
+          created_at?: string
+          email: string
+          handle: string
+          id: string
+        }
+        Update: {
+          accepted_amendments?: boolean
+          created_at?: string
+          email?: string
+          handle?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      reposts: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reposts_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      votes: {
+        Row: {
+          created_at: string
+          id: string
+          target_id: string
+          target_type: Database["public"]["Enums"]["target_type"]
+          user_id: string
+          value: Database["public"]["Enums"]["vote_value"]
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          target_id: string
+          target_type: Database["public"]["Enums"]["target_type"]
+          user_id: string
+          value: Database["public"]["Enums"]["vote_value"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          target_id?: string
+          target_type?: Database["public"]["Enums"]["target_type"]
+          user_id?: string
+          value?: Database["public"]["Enums"]["vote_value"]
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      ad_status: "pending" | "approved" | "rejected" | "live" | "completed"
+      app_role: "admin" | "moderator" | "user"
+      target_type: "post" | "comment"
+      vote_value: "up" | "down"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +415,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      ad_status: ["pending", "approved", "rejected", "live", "completed"],
+      app_role: ["admin", "moderator", "user"],
+      target_type: ["post", "comment"],
+      vote_value: ["up", "down"],
+    },
   },
 } as const
