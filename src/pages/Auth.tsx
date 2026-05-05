@@ -72,8 +72,12 @@ const Auth = () => {
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
-        toast.success(`Welcome to ${community.name}`);
-        nav("/amendments");
+        toast.success(
+          `Check your @${domain} inbox to verify your email before signing in.`,
+          { duration: 8000 }
+        );
+        setMode("signin");
+        setPassword("");
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: emailParsed.data, password,
