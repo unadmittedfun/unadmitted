@@ -26,9 +26,11 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 bg-background/75 backdrop-blur-xl border-b border-border/60">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 font-bold">
-            <GraduationCap className="h-5 w-5 text-primary" />
-            <span>{brand}</span>
+          <Link to="/" className="flex items-center gap-2 group">
+            <span className="h-7 w-7 rounded-lg bg-gradient-hero grid place-items-center shadow-card transition-transform group-hover:rotate-[-6deg]">
+              <GraduationCap className="h-4 w-4 text-primary-foreground" />
+            </span>
+            <span className="font-display text-lg font-semibold tracking-tight" style={{ fontFamily: "'Fraunces', serif" }}>{brand}</span>
           </Link>
           <div className="flex items-center gap-1">
             <button
