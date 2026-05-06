@@ -5,7 +5,6 @@ import { AppShell } from "@/components/AppShell";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { containsSurname } from "@/lib/validation";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
@@ -20,22 +19,15 @@ const DMs = () => {
   const [active, setActive] = useState<Conv | null>(null);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [body, setBody] = useState("");
-  const [newHandle, setNewHandle] = useState("");
 
   const loadConvs = async () => {
     if (!user) return;
     const { data } = await supabase.from("conversations").select("*").or(`user_a.eq.${user.id},user_b.eq.${user.id}`).eq("is_marketing_bot", false);
     if (!data) return;
-    const otherIds = data.map((c) => (c.user_a === user.id ? c.user_b : c.user_a));
-    const { data: profs } = await supabase.from("public_profiles").select("id, handle").in("id", otherIds);
-    const map = new Map((profs ?? []).map((p) => [p.id, p.handle]));
-    setConvs(data.map((c) => {
-      const otherId = c.user_a === user.id ? c.user_b : c.user_a;
-      return {
-        id: c.id, user_a: c.user_a, user_b: c.user_b, is_marketing_bot: c.is_marketing_bot,
-        other_handle: c.is_marketing_bot ? "Marketing Bot 🤖" : (map.get(otherId) ?? "anon"),
-      };
-    }));
+    setConvs(data.map((c) => ({
+      id: c.id, user_a: c.user_a, user_b: c.user_b, is_marketing_bot: c.is_marketing_bot,
+      other_handle: c.is_marketing_bot ? "marketing bot 🤖" : "anonymous",
+    })));
   };
 
   const loadMessages = async (cid: string) => {
@@ -54,31 +46,9 @@ const DMs = () => {
     return () => { supabase.removeChannel(ch); };
   }, [active]);
 
-  const startConvo = async () => {
-    if (!user || !profile) return;
-    const handle = newHandle.trim();
-    if (!handle) return;
-    const { data: prof } = await supabase.from("public_profiles").select("id").eq("handle", handle).maybeSingle();
-    if (!prof) return toast.error("Handle not found");
-    if (prof.id === user.id) return toast.error("That's you.");
-    const [a, b] = [user.id, prof.id].sort();
-    const { data: existing } = await supabase.from("conversations").select("*").eq("user_a", a).eq("user_b", b).maybeSingle();
-    if (existing) {
-      setActive({ ...(existing as any), other_handle: handle });
-      setNewHandle("");
-      return;
-    }
-    const { data: created, error } = await supabase
-      .from("conversations").insert({ user_a: a, user_b: b, community_id: profile.community_id }).select().single();
-    if (error) return toast.error(error.message);
-    setActive({ ...(created as any), other_handle: handle });
-    setNewHandle("");
-    loadConvs();
-  };
-
   const send = async () => {
     if (!user || !profile || !active || !body.trim()) return;
-    if (containsSurname(body)) return toast.error("1st Amendment: no surnames.");
+    if (containsSurname(body)) return toast.error("1st amendment: no surnames.");
     const { error } = await supabase.from("messages").insert({
       conversation_id: active.id, sender_id: user.id, body: body.trim(), community_id: profile.community_id,
     });
@@ -90,7 +60,7 @@ const DMs = () => {
     return (
       <AppShell>
         <button onClick={() => setActive(null)} className="inline-flex items-center gap-1 text-sm text-muted-foreground mb-3 hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" /> All chats
+          <ArrowLeft className="h-4 w-4" /> all chats
         </button>
         <Card className="p-3 mb-3 shadow-card">
           <p className="font-semibold">{active.other_handle}</p>
@@ -111,7 +81,7 @@ const DMs = () => {
           })}
         </div>
         <div className="sticky bottom-2 flex gap-2">
-          <Input value={body} onChange={(e) => setBody(e.target.value)} placeholder="Message…" onKeyDown={(e) => e.key === "Enter" && send()} />
+          <Input value={body} onChange={(e) => setBody(e.target.value)} placeholder="message…" onKeyDown={(e) => e.key === "Enter" && send()} />
           <Button onClick={send} size="icon"><Send className="h-4 w-4" /></Button>
         </div>
       </AppShell>
@@ -122,17 +92,10 @@ const DMs = () => {
     <AppShell>
       <div className="flex items-center gap-2 mb-2 lg:mb-4">
         <MessageSquare className="h-5 w-5 text-primary" />
-        <h1 className="text-xl lg:text-2xl font-bold">Direct Messages</h1>
+        <h1 className="text-xl lg:text-2xl font-bold">direct messages</h1>
       </div>
-      <Card className="p-3 mb-4 shadow-card">
-        <p className="text-sm font-medium mb-2">Start a chat</p>
-        <div className="flex gap-2">
-          <Input placeholder="anon_xxxxxxxx" value={newHandle} onChange={(e) => setNewHandle(e.target.value)} />
-          <Button onClick={startConvo}>Start</Button>
-        </div>
-      </Card>
       <div className="space-y-2">
-        {convs.length === 0 && <p className="text-center text-muted-foreground py-10 text-sm">No conversations yet.</p>}
+        {convs.length === 0 && <p className="text-center text-muted-foreground py-10 text-sm">no conversations yet.</p>}
         {convs.map((c) => (
           <Card key={c.id} className="p-3 shadow-card cursor-pointer hover:border-primary/40" onClick={() => setActive(c)}>
             <p className="font-semibold">{c.other_handle}</p>
