@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { GraduationCap, X, LogIn } from "lucide-react";
 import { SnakeBackground } from "@/components/SnakeBackground";
+import { isAcceptedEduEmail } from "@/config/universities";
 import { TERMS_VERSION } from "@/pages/Terms";
 
 const Auth = () => {
@@ -57,6 +58,9 @@ const Auth = () => {
 
     const domain = emailParsed.data.split("@")[1]?.toLowerCase();
     if (!domain) return toast.error("Enter a valid university email");
+    if (!isAcceptedEduEmail(emailParsed.data)) {
+      return toast.error("Sorry — you are not an active student. Use your official .edu email.");
+    }
 
     setLoading(true);
     try {
