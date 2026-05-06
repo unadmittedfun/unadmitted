@@ -25,6 +25,7 @@ const Marketing = () => {
   const [selectedPackage, setSelectedPackage] = useState(PACKAGES[0]);
   const [input, setInput] = useState("");
   const [sent, setSent] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   const send = async () => {
     if (!user || !profile || !input.trim()) return;
