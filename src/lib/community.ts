@@ -76,5 +76,6 @@ export const applyCommunityTheme = (c: Community | null) => {
   }
   root.style.setProperty("--primary", c.primary_hsl);
   root.style.setProperty("--ring", c.primary_hsl);
-  root.style.setProperty("--accent", c.accent_hsl);
+  // Note: we intentionally ignore c.accent_hsl — the design system uses a
+  // single purple accent (no per-community orange override).
 };
