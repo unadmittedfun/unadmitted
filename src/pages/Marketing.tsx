@@ -29,6 +29,7 @@ const Marketing = () => {
 
   const send = async () => {
     if (!user || !profile || !input.trim()) return;
+    if (!agreed) return toast.error("Please agree to the ad content policy first");
     const text = input.trim();
     const requestId = crypto.randomUUID();
     const { error } = await supabase.from("ad_requests").insert({
