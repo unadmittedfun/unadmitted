@@ -8,8 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { GraduationCap } from "lucide-react";
+import { TERMS_VERSION } from "@/pages/Terms";
 
 const Auth = () => {
   const nav = useNavigate();
@@ -17,6 +19,7 @@ const Auth = () => {
   const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signup");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [acceptedLegal, setAcceptedLegal] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // Branding falls back to a generic look until the user is logged in or we
@@ -66,10 +69,18 @@ const Auth = () => {
       }
 
       if (mode === "signup") {
+        if (!acceptedLegal) {
+          toast.error("Please accept the Terms of Service and Privacy Policy to continue.");
+          setLoading(false);
+          return;
+        }
         const { error } = await supabase.auth.signUp({
           email: emailParsed.data,
           password,
-          options: { emailRedirectTo: window.location.origin },
+          options: {
+            emailRedirectTo: window.location.origin,
+            data: { accepted_terms_version: TERMS_VERSION },
+          },
         });
         if (error) throw error;
         toast.success(
@@ -83,6 +94,18 @@ const Auth = () => {
           email: emailParsed.data, password,
         });
         if (error) throw error;
+        // Record consent on first sign-in if missing (covers users who signed up before).
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase
+            .from("profiles")
+            .update({
+              accepted_terms_at: new Date().toISOString(),
+              accepted_terms_version: TERMS_VERSION,
+            })
+            .eq("id", user.id)
+            .is("accepted_terms_at", null);
+        }
         nav("/amendments");
       }
     } catch (err: any) {
@@ -156,7 +179,22 @@ const Auth = () => {
                 <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
               </div>
             )}
-            <Button type="submit" className="w-full" disabled={loading}>
+            {mode === "signup" && (
+              <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
+                <Checkbox
+                  checked={acceptedLegal}
+                  onCheckedChange={(v) => setAcceptedLegal(v === true)}
+                  className="mt-0.5"
+                />
+                <span>
+                  I am at least 16 years old and I agree to the{" "}
+                  <a href="/terms" target="_blank" rel="noreferrer" className="text-primary hover:underline">Terms of Service</a>{" "}
+                  and{" "}
+                  <a href="/privacy" target="_blank" rel="noreferrer" className="text-primary hover:underline">Privacy Policy</a>.
+                </span>
+              </label>
+            )}
+            <Button type="submit" className="w-full" disabled={loading || (mode === "signup" && !acceptedLegal)}>
               {loading ? "..." : mode === "signup" ? "Sign up" : mode === "signin" ? "Sign in" : "Send reset link"}
             </Button>
           </form>
