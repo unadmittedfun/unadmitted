@@ -75,7 +75,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
           })}
         </nav>
       </header>
-      <div className="max-w-6xl mx-auto px-4 py-4 lg:py-6 grid lg:grid-cols-[1fr_280px] gap-3 lg:gap-6 flex-1 w-full">
+      <div className="max-w-6xl mx-auto px-4 py-3 lg:py-6 grid lg:grid-cols-[1fr_280px] gap-1 lg:gap-6 flex-1 w-full">
         <main className="min-w-0 order-2 lg:order-1">{children}</main>
         <div className="order-1 lg:order-2">
           <div className="lg:sticky lg:top-28">
