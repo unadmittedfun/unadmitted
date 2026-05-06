@@ -75,7 +75,7 @@ const Auth = () => {
         });
         if (error) throw error;
         toast.success(
-          `Check your @${domain} inbox to verify your email before signing in.`,
+          `check your @${domain} inbox to verify your email before signing in.`,
           { duration: 8000 }
         );
         setMode("signin");
@@ -130,7 +130,7 @@ const Auth = () => {
             className="group inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-3 shadow-card hover:shadow-glow hover:border-primary/40 transition-all"
           >
             <LogIn className="h-4 w-4 text-primary" />
-            <span className="text-sm font-semibold">Open sign in</span>
+            <span className="text-sm font-semibold">open sign in</span>
           </button>
         ) : (
         <Card className="relative w-full p-6 shadow-card max-h-[calc(100vh-2rem)] overflow-y-auto">
@@ -148,9 +148,9 @@ const Auth = () => {
           </div>
           <div className="mb-4 px-3 py-2 rounded-md bg-secondary border border-border text-xs text-muted-foreground">
             <span className="font-semibold text-foreground">
-              Not affiliated with {shortName ? shortName : "any university"}.
+              not affiliated with {shortName ? shortName : "any university"}.
             </span>{" "}
-            Independent, student-run. <span className="font-semibold">{hashtag}</span>
+            independent, student-run. <span className="font-semibold">{hashtag}</span>
           </div>
 
           <h2 className="text-3xl font-bold mb-1">
