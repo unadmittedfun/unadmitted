@@ -179,7 +179,22 @@ const Auth = () => {
                 <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
               </div>
             )}
-            <Button type="submit" className="w-full" disabled={loading}>
+            {mode === "signup" && (
+              <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
+                <Checkbox
+                  checked={acceptedLegal}
+                  onCheckedChange={(v) => setAcceptedLegal(v === true)}
+                  className="mt-0.5"
+                />
+                <span>
+                  I am at least 16 years old and I agree to the{" "}
+                  <a href="/terms" target="_blank" rel="noreferrer" className="text-primary hover:underline">Terms of Service</a>{" "}
+                  and{" "}
+                  <a href="/privacy" target="_blank" rel="noreferrer" className="text-primary hover:underline">Privacy Policy</a>.
+                </span>
+              </label>
+            )}
+            <Button type="submit" className="w-full" disabled={loading || (mode === "signup" && !acceptedLegal)}>
               {loading ? "..." : mode === "signup" ? "Sign up" : mode === "signin" ? "Sign in" : "Send reset link"}
             </Button>
           </form>
