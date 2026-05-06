@@ -5,7 +5,6 @@ import { AppShell } from "@/components/AppShell";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { containsSurname } from "@/lib/validation";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
@@ -20,22 +19,15 @@ const DMs = () => {
   const [active, setActive] = useState<Conv | null>(null);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [body, setBody] = useState("");
-  const [newHandle, setNewHandle] = useState("");
 
   const loadConvs = async () => {
     if (!user) return;
     const { data } = await supabase.from("conversations").select("*").or(`user_a.eq.${user.id},user_b.eq.${user.id}`).eq("is_marketing_bot", false);
     if (!data) return;
-    const otherIds = data.map((c) => (c.user_a === user.id ? c.user_b : c.user_a));
-    const { data: profs } = await supabase.from("public_profiles").select("id, handle").in("id", otherIds);
-    const map = new Map((profs ?? []).map((p) => [p.id, p.handle]));
-    setConvs(data.map((c) => {
-      const otherId = c.user_a === user.id ? c.user_b : c.user_a;
-      return {
-        id: c.id, user_a: c.user_a, user_b: c.user_b, is_marketing_bot: c.is_marketing_bot,
-        other_handle: c.is_marketing_bot ? "marketing bot 🤖" : "anonymous",
-      };
-    }));
+    setConvs(data.map((c) => ({
+      id: c.id, user_a: c.user_a, user_b: c.user_b, is_marketing_bot: c.is_marketing_bot,
+      other_handle: c.is_marketing_bot ? "marketing bot 🤖" : "anonymous",
+    })));
   };
 
   const loadMessages = async (cid: string) => {
