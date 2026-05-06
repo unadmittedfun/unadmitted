@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { postSchema, containsSurname, looksLikeAd } from "@/lib/validation";
+import { postSchema, containsSurname, looksLikeAd, countWords, POST_MAX_WORDS } from "@/lib/validation";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
