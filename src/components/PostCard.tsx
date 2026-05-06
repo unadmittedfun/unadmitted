@@ -35,6 +35,7 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
   const { user, profile } = useAuth();
   const [busy, setBusy] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  const navigate = useNavigate();
   const score = post.upvotes - post.downvotes;
 
   const vote = async (value: "up" | "down") => {
