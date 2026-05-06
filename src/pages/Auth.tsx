@@ -69,10 +69,18 @@ const Auth = () => {
       }
 
       if (mode === "signup") {
+        if (!acceptedLegal) {
+          toast.error("Please accept the Terms of Service and Privacy Policy to continue.");
+          setLoading(false);
+          return;
+        }
         const { error } = await supabase.auth.signUp({
           email: emailParsed.data,
           password,
-          options: { emailRedirectTo: window.location.origin },
+          options: {
+            emailRedirectTo: window.location.origin,
+            data: { accepted_terms_version: TERMS_VERSION },
+          },
         });
         if (error) throw error;
         toast.success(
@@ -86,6 +94,18 @@ const Auth = () => {
           email: emailParsed.data, password,
         });
         if (error) throw error;
+        // Record consent on first sign-in if missing (covers users who signed up before).
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase
+            .from("profiles")
+            .update({
+              accepted_terms_at: new Date().toISOString(),
+              accepted_terms_version: TERMS_VERSION,
+            })
+            .eq("id", user.id)
+            .is("accepted_terms_at", null);
+        }
         nav("/amendments");
       }
     } catch (err: any) {
