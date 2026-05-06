@@ -11,6 +11,7 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { GraduationCap } from "lucide-react";
+import { SnakeBackground } from "@/components/SnakeBackground";
 import { TERMS_VERSION } from "@/pages/Terms";
 
 const Auth = () => {
@@ -117,12 +118,14 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
-      <div className="hidden lg:flex flex-col justify-between p-12 bg-primary text-primary-foreground relative overflow-hidden">
-        <div className="flex items-center gap-2 font-semibold">
+      <div className="hidden lg:flex flex-col justify-between p-12 text-primary-foreground relative overflow-hidden bg-[#0a0a0a]">
+        <SnakeBackground className="absolute inset-0 w-full h-full opacity-70 [mask-image:radial-gradient(ellipse_at_center,black_55%,transparent_100%)]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a]/20 via-transparent to-[#0a0a0a]/80 pointer-events-none" />
+        <div className="relative z-10 flex items-center gap-2 font-semibold">
           <GraduationCap className="h-6 w-6" />
           <span>{brand}</span>
         </div>
-        <div>
+        <div className="relative z-10">
           <h1 className="text-5xl font-black leading-[0.95] mb-4">
             The unfiltered<br/>{shortName || "university"} community.
           </h1>
@@ -130,7 +133,7 @@ const Auth = () => {
             Anonymous. Honest. {hostCommunity ? <>Strictly @{handle} only — no exceptions.</> : "Sign in with your official university email — we'll do the rest."}
           </p>
         </div>
-        <div className="space-y-1 text-xs text-primary-foreground/70">
+        <div className="relative z-10 space-y-1 text-xs text-primary-foreground/70">
           <p className="font-semibold text-primary-foreground/90">🔒 We never read, store, or use your data.</p>
           <p className="text-primary-foreground/90">
             ⚠️ Not affiliated with {shortName || "your university"}. <span className="font-semibold">{hashtag}</span>
