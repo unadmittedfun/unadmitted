@@ -118,47 +118,28 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen grid md:grid-cols-2">
-      <div className="hidden md:flex flex-col justify-between p-12 text-primary-foreground relative overflow-hidden bg-[#0a0a0a]">
-        <SnakeBackground className="absolute inset-0 opacity-80 [mask-image:radial-gradient(ellipse_at_center,black_60%,transparent_100%)]" />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a]/10 via-transparent to-[#0a0a0a]/70 pointer-events-none" />
-        <div className="relative z-10 flex items-center gap-2 font-semibold">
-          <GraduationCap className="h-6 w-6" />
-          <span>{brand}</span>
-        </div>
-        <div className="relative z-10">
-          <h1 className="text-5xl font-black leading-[0.95] mb-4">
-            The unfiltered<br/>{shortName || "university"} community.
-          </h1>
-          <p className="text-primary-foreground/80 max-w-sm">
-            Anonymous. Honest. {hostCommunity ? <>Strictly @{handle} only — no exceptions.</> : "Sign in with your official university email — we'll do the rest."}
-          </p>
-        </div>
-        <div className="relative z-10 space-y-1 text-xs text-primary-foreground/70">
-          <p className="font-semibold text-primary-foreground/90">🔒 We never read, store, or use your data.</p>
-          <p className="text-primary-foreground/90">
-            ⚠️ Not affiliated with {shortName || "your university"}. <span className="font-semibold">{hashtag}</span>
-          </p>
-          <p className="text-primary-foreground/60">By students, for students.</p>
-        </div>
+    <div className="fixed inset-0 overflow-hidden bg-[#0a0a0a]">
+      <SnakeBackground className="absolute inset-0" />
+
+      {/* Brand mark */}
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-2 font-semibold text-white/80 pointer-events-none">
+        <GraduationCap className="h-5 w-5" />
+        <span>{brand}</span>
       </div>
-      <div className="relative flex flex-col items-center justify-center p-6 pb-24 md:bg-transparent overflow-hidden">
-        {/* Mobile-only snake backdrop */}
-        <div className="md:hidden absolute inset-0 bg-[#0a0a0a]">
-          <SnakeBackground className="absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_100%)]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/40 via-background/60 to-background pointer-events-none" />
-        </div>
+
+      {/* Sign in trigger / form, top-left */}
+      <div className="absolute top-4 left-4 z-10 w-[calc(100%-2rem)] max-w-md">
         {!formOpen ? (
-        <button
-          type="button"
-          onClick={() => setFormOpen(true)}
-          className="relative z-10 group inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-3 shadow-card hover:shadow-glow hover:border-primary/40 transition-all"
-        >
+          <button
+            type="button"
+            onClick={() => setFormOpen(true)}
+            className="group inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-3 shadow-card hover:shadow-glow hover:border-primary/40 transition-all"
+          >
             <LogIn className="h-4 w-4 text-primary" />
             <span className="text-sm font-semibold">Open sign in</span>
           </button>
         ) : (
-        <Card className="relative z-10 w-full max-w-md p-8 shadow-card">
+        <Card className="relative w-full p-6 shadow-card max-h-[calc(100vh-2rem)] overflow-y-auto">
           <button
             type="button"
             onClick={() => setFormOpen(false)}
