@@ -20,9 +20,10 @@ const Auth = () => {
   const nav = useNavigate();
   const { hostCommunity } = useAuth();
   const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signup");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => localStorage.getItem("unadmitted.rememberedEmail") ?? "");
   const [password, setPassword] = useState("");
   const [acceptedLegal, setAcceptedLegal] = useState(false);
+  const [rememberMe, setRememberMe] = useState(() => !!localStorage.getItem("unadmitted.rememberedEmail"));
   const [loading, setLoading] = useState(false);
   const [formOpen, setFormOpen] = useState(true);
 
