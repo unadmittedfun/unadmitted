@@ -378,6 +378,7 @@ export type Database = {
           handle: string
           handle_suffix: string
           id: string
+          welcome_email_sent_at: string | null
         }
         Insert: {
           accepted_amendments?: boolean
@@ -390,6 +391,7 @@ export type Database = {
           handle: string
           handle_suffix: string
           id: string
+          welcome_email_sent_at?: string | null
         }
         Update: {
           accepted_amendments?: boolean
@@ -402,6 +404,7 @@ export type Database = {
           handle?: string
           handle_suffix?: string
           id?: string
+          welcome_email_sent_at?: string | null
         }
         Relationships: [
           {

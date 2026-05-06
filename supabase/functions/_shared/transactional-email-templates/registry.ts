@@ -10,7 +10,9 @@ export interface TemplateEntry {
 }
 
 import { template as adRequestNotification } from './ad-request-notification.tsx'
+import { template as accountVerified } from './account-verified.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'ad-request-notification': adRequestNotification,
+  'account-verified': accountVerified,
 }
