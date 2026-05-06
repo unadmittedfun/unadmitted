@@ -5,14 +5,19 @@ import { AppShell } from "@/components/AppShell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Check, Megaphone, Send } from "lucide-react";
 import { toast } from "sonner";
 
 const PACKAGES = [
-  { id: "front_day", label: "Front of Trending — 1 day", price: 1 },
-  { id: "front_3day", label: "Front of Trending — 3 days", price: 2.5 },
-  { id: "pinned_week", label: "Pinned post — 1 week", price: 5 },
-  { id: "story_blast", label: "Top-of-feed blast (1 hour)", price: 1.5 },
+  { id: "front_day", label: "Front of Trending — 1 day", price: 9 },
+  { id: "front_3day", label: "Front of Trending — 3 days", price: 22 },
+  { id: "pinned_week", label: "Pinned post — 1 week", price: 35 },
+  { id: "story_blast", label: "Top-of-feed blast — 1 hour", price: 7 },
+  { id: "weekly_digest", label: "Featured in weekly digest email", price: 15 },
+  { id: "login_banner", label: "Banner on login/signup screen — 1 day", price: 25 },
+  { id: "campus_bundle", label: "Campus bundle (all placements, 3 days)", price: 49 },
+  { id: "monthly_sponsor", label: "Recurring monthly sponsor slot", price: 79 },
 ];
 
 const Marketing = () => {
@@ -20,9 +25,11 @@ const Marketing = () => {
   const [selectedPackage, setSelectedPackage] = useState(PACKAGES[0]);
   const [input, setInput] = useState("");
   const [sent, setSent] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   const send = async () => {
     if (!user || !profile || !input.trim()) return;
+    if (!agreed) return toast.error("Please agree to the ad content policy first");
     const text = input.trim();
     const requestId = crypto.randomUUID();
     const { error } = await supabase.from("ad_requests").insert({
@@ -75,8 +82,26 @@ const Marketing = () => {
         </div>
         <p className="text-[11px] text-muted-foreground mt-3 flex items-start gap-1">
           <Check className="h-3 w-3 mt-0.5 flex-shrink-0" />
-          All ads must comply with the 1st Amendment (no surnames).
+          All ads must comply with our community guidelines.
         </p>
+      </Card>
+
+      <Card className="p-4 mb-4 shadow-card space-y-3">
+        <p className="text-sm font-semibold">Ad content policy</p>
+        <ul className="text-xs text-muted-foreground list-disc pl-4 space-y-1">
+          <li>Every promoted post displays a visible "Sponsored" label.</li>
+          <li>No hate speech.</li>
+          <li>No misleading claims.</li>
+          <li>No targeting individuals by name.</li>
+          <li>No adult content.</li>
+          <li>We reserve the right to reject any ad.</li>
+        </ul>
+        <div>
+          <p className="text-sm font-semibold mb-1">Refund policy</p>
+          <p className="text-xs text-muted-foreground">
+            If an ad is rejected after payment, a full refund is issued within 5 business days.
+          </p>
+        </div>
       </Card>
 
       <Card className="p-4 shadow-card">
@@ -86,9 +111,15 @@ const Marketing = () => {
           placeholder="Do you have anything unadmitted in mind?"
           className="min-h-28 resize-none mb-3"
         />
+        <div className="flex items-start gap-2 mb-3">
+          <Checkbox id="agree-policy" checked={agreed} onCheckedChange={(v) => setAgreed(v === true)} className="mt-0.5" />
+          <label htmlFor="agree-policy" className="text-xs text-muted-foreground leading-snug cursor-pointer">
+            I agree to the ad content policy and community guidelines.
+          </label>
+        </div>
         <div className="flex items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">Selected: {selectedPackage.label} · €{selectedPackage.price}</p>
-          <Button onClick={send} disabled={!input.trim()}><Send className="h-4 w-4" /> Send</Button>
+          <Button onClick={send} disabled={!input.trim() || !agreed}><Send className="h-4 w-4" /> Send</Button>
         </div>
         {sent && (
           <p className="text-sm font-medium text-primary mt-3">
