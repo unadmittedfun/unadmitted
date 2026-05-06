@@ -91,11 +91,15 @@
     font-feature-settings: "ss01", "ss02", "cv11";
     text-transform: lowercase;
   }
-  /* Inputs / placeholders / form controls keep the user's actual casing */
-  input, textarea, select, [contenteditable="true"], code, kbd, pre, .font-mono,
-  .preserve-case, .preserve-case * {
+  /* Inputs and code keep the user's actual casing */
+  input, textarea, select, [contenteditable="true"], code, kbd, pre, .font-mono {
     text-transform: none;
   }
+  /* Tailwind .uppercase / .lowercase / .capitalize / .normal-case must win
+     over the global lowercase rule above. */
+  .uppercase { text-transform: uppercase !important; }
+  .capitalize { text-transform: capitalize !important; }
+  .normal-case { text-transform: none !important; }
   h1, h2, h3, h4 {
     font-family: 'Fraunces', Georgia, serif;
     font-optical-sizing: auto;
