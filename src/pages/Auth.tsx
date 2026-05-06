@@ -155,7 +155,7 @@ const Auth = () => {
           </button>
           <div className="lg:hidden flex items-center gap-2 font-semibold mb-6">
             <GraduationCap className="h-6 w-6 text-primary" />
-            <span>{brand}</span>
+            <Brand />
           </div>
           <div className="mb-4 px-3 py-2 rounded-md bg-secondary border border-border text-xs text-muted-foreground">
             <span className="font-semibold text-foreground">
