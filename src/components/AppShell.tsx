@@ -24,7 +24,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-30 bg-background/85 backdrop-blur border-b border-border">
+      <header className="sticky top-0 z-30 bg-background/75 backdrop-blur-xl border-b border-border/60">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 font-bold">
             <GraduationCap className="h-5 w-5 text-primary" />
