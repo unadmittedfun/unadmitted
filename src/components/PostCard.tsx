@@ -53,16 +53,22 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
     onChange();
   };
 
-  const repost = async () => {
+  const messageAuthor = async () => {
     if (!user || !profile || busy) return;
+    if (post.author_id === user.id) return toast.error("that's you.");
     setBusy(true);
-    if (post.my_repost) {
-      await supabase.from("reposts").delete().match({ user_id: user.id, post_id: post.id });
-    } else {
-      await supabase.from("reposts").insert({ user_id: user.id, post_id: post.id, community_id: profile.community_id });
+    const [a, b] = [user.id, post.author_id].sort();
+    const { data: existing } = await supabase
+      .from("conversations").select("id").eq("user_a", a).eq("user_b", b).maybeSingle();
+    let cid = existing?.id;
+    if (!cid) {
+      const { data: created, error } = await supabase
+        .from("conversations").insert({ user_a: a, user_b: b, community_id: profile.community_id }).select("id").single();
+      if (error) { setBusy(false); return toast.error(error.message); }
+      cid = created.id;
     }
     setBusy(false);
-    onChange();
+    navigate(`/dms?c=${cid}`);
   };
 
   const share = async () => {
