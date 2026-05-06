@@ -111,9 +111,15 @@ const Marketing = () => {
           placeholder="Do you have anything unadmitted in mind?"
           className="min-h-28 resize-none mb-3"
         />
+        <div className="flex items-start gap-2 mb-3">
+          <Checkbox id="agree-policy" checked={agreed} onCheckedChange={(v) => setAgreed(v === true)} className="mt-0.5" />
+          <label htmlFor="agree-policy" className="text-xs text-muted-foreground leading-snug cursor-pointer">
+            I agree to the ad content policy and community guidelines.
+          </label>
+        </div>
         <div className="flex items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">Selected: {selectedPackage.label} · €{selectedPackage.price}</p>
-          <Button onClick={send} disabled={!input.trim()}><Send className="h-4 w-4" /> Send</Button>
+          <Button onClick={send} disabled={!input.trim() || !agreed}><Send className="h-4 w-4" /> Send</Button>
         </div>
         {sent && (
           <p className="text-sm font-medium text-primary mt-3">
