@@ -72,6 +72,7 @@ export type Database = {
           community_id: string
           created_at: string
           id: string
+          is_hidden: boolean
           post_id: string
         }
         Insert: {
@@ -80,6 +81,7 @@ export type Database = {
           community_id: string
           created_at?: string
           id?: string
+          is_hidden?: boolean
           post_id: string
         }
         Update: {
@@ -88,6 +90,7 @@ export type Database = {
           community_id?: string
           created_at?: string
           id?: string
+          is_hidden?: boolean
           post_id?: string
         }
         Relationships: [
@@ -323,6 +326,7 @@ export type Database = {
           community_id: string
           created_at: string
           id: string
+          is_hidden: boolean
           is_promoted: boolean
           media_type: string | null
           media_url: string | null
@@ -334,6 +338,7 @@ export type Database = {
           community_id: string
           created_at?: string
           id?: string
+          is_hidden?: boolean
           is_promoted?: boolean
           media_type?: string | null
           media_url?: string | null
@@ -345,6 +350,7 @@ export type Database = {
           community_id?: string
           created_at?: string
           id?: string
+          is_hidden?: boolean
           is_promoted?: boolean
           media_type?: string | null
           media_url?: string | null
@@ -406,6 +412,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      reports: {
+        Row: {
+          community_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          reason: Database["public"]["Enums"]["report_reason"]
+          reporter_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["report_status"]
+          target_id: string
+          target_type: Database["public"]["Enums"]["report_target"]
+        }
+        Insert: {
+          community_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          reason: Database["public"]["Enums"]["report_reason"]
+          reporter_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
+          target_id: string
+          target_type: Database["public"]["Enums"]["report_target"]
+        }
+        Update: {
+          community_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          reason?: Database["public"]["Enums"]["report_reason"]
+          reporter_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["report_status"]
+          target_id?: string
+          target_type?: Database["public"]["Enums"]["report_target"]
+        }
+        Relationships: []
       }
       reposts: {
         Row: {
@@ -604,6 +652,15 @@ export type Database = {
     Enums: {
       ad_status: "pending" | "approved" | "rejected" | "live" | "completed"
       app_role: "admin" | "moderator" | "user"
+      report_reason:
+        | "harassment"
+        | "spam"
+        | "inappropriate"
+        | "hate"
+        | "self_harm"
+        | "other"
+      report_status: "pending" | "reviewed" | "dismissed" | "actioned"
+      report_target: "post" | "comment"
       target_type: "post" | "comment"
       vote_value: "up" | "down"
     }
@@ -735,6 +792,16 @@ export const Constants = {
     Enums: {
       ad_status: ["pending", "approved", "rejected", "live", "completed"],
       app_role: ["admin", "moderator", "user"],
+      report_reason: [
+        "harassment",
+        "spam",
+        "inappropriate",
+        "hate",
+        "self_harm",
+        "other",
+      ],
+      report_status: ["pending", "reviewed", "dismissed", "actioned"],
+      report_target: ["post", "comment"],
       target_type: ["post", "comment"],
       vote_value: ["up", "down"],
     },
