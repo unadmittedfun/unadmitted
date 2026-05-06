@@ -5,18 +5,11 @@ import { AppShell } from "@/components/AppShell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Megaphone, Send, Bot, User as UserIcon, Check } from "lucide-react";
+import { Megaphone, Send, Bot, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 
 type Msg = { id: string; body: string; sender_id: string | null; is_bot: boolean; created_at: string };
-
-const PACKAGES = [
-  { id: "front_day", label: "Front of Trending — 1 day", price: 1 },
-  { id: "front_3day", label: "Front of Trending — 3 days", price: 2.5 },
-  { id: "pinned_week", label: "Pinned post — 1 week", price: 5 },
-  { id: "story_blast", label: "Top-of-feed blast (1 hour)", price: 1.5 },
-];
 
 const Marketing = () => {
   const { user, profile } = useAuth();
