@@ -165,6 +165,7 @@ export const SnakeBackground = ({ className = "" }: { className?: string }) => {
     <canvas
       ref={ref}
       aria-hidden
+      style={{ width: "100%", height: "100%", display: "block" }}
       className={`pointer-events-none select-none ${className}`}
     />
   );
