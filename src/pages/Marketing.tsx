@@ -62,7 +62,7 @@ const Marketing = () => {
 
     setInput("");
     setSent(true);
-    toast.success("Sent for review");
+    toast.success("sent for review");
   };
 
   return (
