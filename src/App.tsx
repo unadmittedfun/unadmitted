@@ -12,6 +12,7 @@ import DMs from "./pages/DMs.tsx";
 import Marketing from "./pages/Marketing.tsx";
 import Auth from "./pages/Auth.tsx";
 import Amendments from "./pages/Amendments.tsx";
+import Welcome from "./pages/Welcome.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import Terms from "./pages/Terms.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
@@ -30,6 +31,7 @@ const App = () => (
           <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route path="/amendments" element={<ProtectedRoute><Amendments /></ProtectedRoute>} />
+            <Route path="/welcome" element={<ProtectedRoute><Welcome /></ProtectedRoute>} />
             <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
             <Route path="/trending" element={<ProtectedRoute><Trending /></ProtectedRoute>} />
             <Route path="/post/:id" element={<ProtectedRoute><PostDetail /></ProtectedRoute>} />
