@@ -92,12 +92,7 @@ const Welcome = () => {
             Need a spark? Try one of these
           </p>
           <div className="flex flex-wrap gap-2">
-            {[
-              "Hot take: the worst policy on campus is…",
-              "What's a rule everyone secretly ignores?",
-              "Best unknown spot to study?",
-              "Confession: I actually like…",
-            ].map((p) => (
+            {sparks.map((p) => (
               <button
                 key={p}
                 onClick={() => {
