@@ -9,5 +9,8 @@ export interface TemplateEntry {
   previewData?: Record<string, any>
 }
 
+import { template as newSignupNotification } from './new-signup-notification.tsx'
+
 export const TEMPLATES: Record<string, TemplateEntry> = {
+  'new-signup-notification': newSignupNotification,
 }
