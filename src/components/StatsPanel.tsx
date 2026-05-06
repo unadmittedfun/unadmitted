@@ -69,18 +69,18 @@ export const StatsPanel = () => {
   return (
     <aside className="grid grid-cols-2 gap-2 lg:grid-cols-1 lg:gap-3">
       <Card className="p-2.5 lg:p-4 shadow-card">
-        <h3 className="text-[10px] lg:text-xs uppercase tracking-wider text-muted-foreground font-bold mb-2 lg:mb-3">Live stats</h3>
+        <h3 className="text-[10px] lg:text-xs uppercase tracking-wider text-muted-foreground font-bold mb-2 lg:mb-3">live stats</h3>
         <div className="space-y-1 lg:space-y-2">
-          <Stat icon={<Activity className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-upvote" />} label="Active this week" value={active} />
-          <Stat icon={<Users className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-primary" />} label="Total members" value={members} />
-          <Stat icon={<FileText className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-accent" />} label="Total posts" value={posts} />
+          <Stat icon={<Activity className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-upvote" />} label="active this week" value={active} />
+          <Stat icon={<Users className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-primary" />} label="total members" value={members} />
+          <Stat icon={<FileText className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-accent" />} label="total posts" value={posts} />
         </div>
       </Card>
 
       <Card className="p-2.5 lg:p-4 shadow-card">
         <div className="flex items-center gap-1.5 lg:gap-2 mb-2 lg:mb-3">
           <Trophy className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-accent" />
-          <h3 className="text-[10px] lg:text-xs uppercase tracking-wider text-muted-foreground font-bold">Top 3 this week</h3>
+          <h3 className="text-[10px] lg:text-xs uppercase tracking-wider text-muted-foreground font-bold">top 3 this week</h3>
         </div>
         {leaders.length === 0 && (
           <p className="text-[11px] lg:text-xs text-muted-foreground py-1">No power moves yet.</p>
