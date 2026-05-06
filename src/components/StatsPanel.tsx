@@ -67,7 +67,7 @@ export const StatsPanel = () => {
   }, []);
 
   return (
-    <aside className="grid grid-cols-1 gap-2 lg:gap-3">
+    <aside className="grid grid-cols-2 gap-2 lg:grid-cols-1 lg:gap-3">
       <Card className="p-2.5 lg:p-4 shadow-card">
         <h3 className="text-[10px] lg:text-xs uppercase tracking-wider text-muted-foreground font-bold mb-2 lg:mb-3">live stats</h3>
         <div className="space-y-1 lg:space-y-2">
