@@ -53,7 +53,7 @@
 
     --shadow-card: 0 1px 0 hsl(220 25% 10% / 0.04), 0 8px 24px -12px hsl(252 60% 30% / 0.12);
     --shadow-glow: 0 0 0 4px hsl(var(--primary) / 0.14);
-    --gradient-hero: linear-gradient(135deg, hsl(252 88% 60%) 0%, hsl(268 85% 58%) 50%, hsl(282 80% 56%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 50%, hsl(var(--accent)) 100%);
   }
 
   .dark {
