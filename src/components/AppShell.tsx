@@ -32,7 +32,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
             <span className="h-7 w-7 rounded-lg bg-gradient-hero grid place-items-center shadow-card transition-transform group-hover:rotate-[-6deg]">
               <GraduationCap className="h-4 w-4 text-primary-foreground" />
             </span>
-            <span className="font-display text-lg font-semibold tracking-tight" style={{ fontFamily: "'Fraunces', serif" }}>{brand}</span>
+            <Brand className="font-display text-lg tracking-tight" />
           </Link>
           <div className="flex items-center gap-1">
             <ThemeToggle />
