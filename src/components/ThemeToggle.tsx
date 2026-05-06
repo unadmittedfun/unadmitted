@@ -115,27 +115,8 @@ export const ThemeToggle = () => {
                 borderRadius: 4,
               }}
             />
-            <label className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">Saturation</span>
-              <span className="font-mono">{sat}%</span>
-            </label>
-            <input type="range" min={0} max={100} value={sat}
-              onChange={(e) => setSat(Number(e.target.value))} className="w-full" />
-            <label className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">Lightness</span>
-              <span className="font-mono">{light}%</span>
-            </label>
-            <input type="range" min={20} max={80} value={light}
-              onChange={(e) => setLight(Number(e.target.value))} className="w-full" />
           </div>
-          <div className="flex items-center justify-between pt-2 border-t border-border">
-            <div className="flex items-center gap-2 text-xs">
-              <span
-                className="h-5 w-5 rounded-full border border-border"
-                style={{ background: `hsl(${hue} ${sat}% ${light}%)` }}
-              />
-              <span className="font-mono text-muted-foreground">preview</span>
-            </div>
+          <div className="flex items-center justify-end pt-2 border-t border-border">
             <button
               onClick={() => { setHue(DEFAULTS.hue); setSat(DEFAULTS.sat); setLight(DEFAULTS.light); }}
               className="text-xs text-primary hover:underline"

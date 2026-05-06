@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { postSchema, containsSurname, looksLikeAd } from "@/lib/validation";
+import { postSchema, containsSurname, looksLikeAd, countWords, POST_MAX_WORDS } from "@/lib/validation";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -97,7 +97,6 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
         onChange={(e) => setBody(e.target.value)}
         placeholder="What's on your mind, unadmitted one?"
         className="min-h-[90px] resize-none border-0 focus-visible:ring-0 px-0 text-base"
-        maxLength={2000}
       />
       {previewUrl && file && (
         <div className="relative inline-block rounded-lg overflow-hidden border border-border mt-2">
@@ -137,7 +136,7 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground">{body.length}/2000</span>
+          <span className={`text-xs ${countWords(body) > POST_MAX_WORDS ? "text-destructive" : "text-muted-foreground"}`}>{countWords(body)}/{POST_MAX_WORDS} words</span>
           <Button onClick={submit} disabled={posting || (!body.trim() && !file)} size="sm">
             {posting ? "…" : "Post"}
           </Button>
