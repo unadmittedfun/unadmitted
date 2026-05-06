@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { StatsPanel } from "@/components/StatsPanel";
 import { ProfileSettings } from "@/components/ProfileSettings";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Brand } from "@/components/Brand";
 
 const tabs = [
   { to: "/", label: "New", icon: Home },
