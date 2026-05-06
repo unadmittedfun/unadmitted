@@ -4,8 +4,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowBigUp, ArrowBigDown, MessageCircle, Repeat2, Share2, Flame, Trash2 } from "lucide-react";
+import { ArrowBigUp, ArrowBigDown, MessageCircle, Repeat2, Share2, Flame, Trash2, MoreHorizontal, Flag } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ReportDialog } from "@/components/ReportDialog";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -32,6 +36,7 @@ export type PostRow = {
 export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => void }) => {
   const { user, profile } = useAuth();
   const [busy, setBusy] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
   const score = post.upvotes - post.downvotes;
 
   const vote = async (value: "up" | "down") => {
@@ -100,17 +105,35 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
             <Flame className="h-3 w-3" /> Promoted
           </span>
         )}
-        {isOwner && (
-          <Button
-            variant="ghost" size="sm"
-            className={cn("h-6 w-6 p-0 text-muted-foreground hover:text-destructive", !post.is_promoted && "ml-auto")}
-            onClick={remove}
-            title="Delete post"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </Button>
-        )}
+        <div className={cn(!post.is_promoted && "ml-auto")}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground">
+                <MoreHorizontal className="h-3.5 w-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              {!isOwner && (
+                <DropdownMenuItem onClick={() => setReportOpen(true)} className="text-sm">
+                  <Flag className="h-3.5 w-3.5 mr-2" /> Report post
+                </DropdownMenuItem>
+              )}
+              {isOwner && (
+                <DropdownMenuItem onClick={remove} className="text-sm text-destructive focus:text-destructive">
+                  <Trash2 className="h-3.5 w-3.5 mr-2" /> Delete post
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
+      <ReportDialog
+        open={reportOpen}
+        onOpenChange={setReportOpen}
+        targetType="post"
+        targetId={post.id}
+        onReported={onChange}
+      />
       <Link to={`/post/${post.id}`} className="block">
         {post.body && post.body !== "📎" && (
           <p className="whitespace-pre-wrap text-foreground leading-relaxed">{post.body}</p>
