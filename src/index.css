@@ -35,9 +35,9 @@
     --muted: 36 20% 94%;
     --muted-foreground: 220 10% 42%;
 
-    /* Spark — lime, used sparingly */
-    --accent: 78 92% 60%;
-    --accent-foreground: 220 25% 10%;
+    /* Accent — deeper violet, used sparingly for highlight chips */
+    --accent: 268 90% 66%;
+    --accent-foreground: 0 0% 100%;
 
     --upvote: 252 88% 60%;
     --downvote: 220 10% 55%;
@@ -53,7 +53,7 @@
 
     --shadow-card: 0 1px 0 hsl(220 25% 10% / 0.04), 0 8px 24px -12px hsl(252 60% 30% / 0.12);
     --shadow-glow: 0 0 0 4px hsl(var(--primary) / 0.14);
-    --gradient-hero: linear-gradient(135deg, hsl(252 88% 60%) 0%, hsl(282 80% 56%) 60%, hsl(312 78% 60%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(252 88% 60%) 0%, hsl(268 85% 58%) 50%, hsl(282 80% 56%) 100%);
   }
 
   .dark {
@@ -70,7 +70,7 @@
     --secondary-foreground: 36 24% 96%;
     --muted: 230 18% 13%;
     --muted-foreground: 230 10% 65%;
-    --accent: 78 90% 62%;
+    --accent: 268 95% 72%;
     --accent-foreground: 230 22% 7%;
     --upvote: 252 95% 70%;
     --downvote: 230 10% 55%;
