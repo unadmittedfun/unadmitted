@@ -158,7 +158,7 @@ const Auth = () => {
             <span className="text-sm font-semibold">Open sign in</span>
           </button>
         ) : (
-        <Card className="w-full max-w-md p-8 shadow-card relative">
+        <Card className="relative z-10 w-full max-w-md p-8 shadow-card">
           <button
             type="button"
             onClick={() => setFormOpen(false)}
