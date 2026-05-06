@@ -121,7 +121,7 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
         className="hidden"
         onChange={(e) => pickFile(e.target.files?.[0] ?? null)}
       />
-      <div className="flex items-center justify-between pt-2 border-t border-border mt-3">
+      <div className="flex items-center justify-between pt-1.5 lg:pt-2 border-t border-border mt-2 lg:mt-3">
         <div className="flex items-center gap-2">
           <Button
             type="button" variant="ghost" size="sm"
