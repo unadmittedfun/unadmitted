@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { GraduationCap, X, LogIn } from "lucide-react";
 import { SnakeBackground } from "@/components/SnakeBackground";
+import { Brand } from "@/components/Brand";
 import { isAcceptedEduEmail } from "@/config/universities";
 import { TERMS_VERSION } from "@/pages/Terms";
 
@@ -128,7 +129,7 @@ const Auth = () => {
       {/* Brand mark */}
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2 font-semibold text-white/80 pointer-events-none">
         <GraduationCap className="h-5 w-5" />
-        <span>{brand}</span>
+        <Brand />
       </div>
 
       {/* Sign in trigger / form, top-left */}
@@ -154,7 +155,7 @@ const Auth = () => {
           </button>
           <div className="lg:hidden flex items-center gap-2 font-semibold mb-6">
             <GraduationCap className="h-6 w-6 text-primary" />
-            <span>{brand}</span>
+            <Brand />
           </div>
           <div className="mb-4 px-3 py-2 rounded-md bg-secondary border border-border text-xs text-muted-foreground">
             <span className="font-semibold text-foreground">
