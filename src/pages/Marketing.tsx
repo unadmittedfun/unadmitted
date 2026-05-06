@@ -86,7 +86,7 @@ const Marketing = () => {
     supabase.functions.invoke("send-transactional-email", {
       body: {
         templateName: "ad-request-notification",
-        recipientEmail: "v.mastrogiannoudis@acg.edu",
+        recipientEmail: "unadmittedfun@gmail.com",
         idempotencyKey: `ad-request-${requestId}`,
         templateData: {
           handle: profile.handle,

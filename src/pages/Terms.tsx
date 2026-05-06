@@ -131,7 +131,7 @@ const Terms = () => (
 
         <Section title="12. Contact">
           <p>
-            Operator contact: <a className="text-primary hover:underline" href="mailto:v.mastrogiannoudis@acg.edu">v.mastrogiannoudis@acg.edu</a>.
+            Operator contact: <a className="text-primary hover:underline" href="mailto:unadmittedfun@gmail.com">unadmittedfun@gmail.com</a>.
             For privacy/data requests, see the{" "}
             <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>.
           </p>

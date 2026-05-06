@@ -80,8 +80,8 @@ const Privacy = () => (
         <Block title="Data controller">
           <p>
             The data controller for this service is the operator, reachable at{" "}
-            <a className="text-primary hover:underline" href="mailto:v.mastrogiannoudis@acg.edu">
-              v.mastrogiannoudis@acg.edu
+            <a className="text-primary hover:underline" href="mailto:unadmittedfun@gmail.com">
+              unadmittedfun@gmail.com
             </a>
             . The platform is independent and not operated by any university.
           </p>
@@ -132,8 +132,8 @@ const Privacy = () => (
           </ul>
           <p>
             To exercise any right, email{" "}
-            <a className="text-primary hover:underline" href="mailto:v.mastrogiannoudis@acg.edu">
-              v.mastrogiannoudis@acg.edu
+            <a className="text-primary hover:underline" href="mailto:unadmittedfun@gmail.com">
+              unadmittedfun@gmail.com
             </a>
             . We respond within 30 days.
           </p>
@@ -185,8 +185,8 @@ const Privacy = () => (
 
       <p className="text-xs text-muted-foreground text-center mt-6">
         Questions? Email{" "}
-        <a className="text-primary hover:underline" href="mailto:v.mastrogiannoudis@acg.edu">
-          v.mastrogiannoudis@acg.edu
+        <a className="text-primary hover:underline" href="mailto:unadmittedfun@gmail.com">
+          unadmittedfun@gmail.com
         </a>
         .
       </p>
