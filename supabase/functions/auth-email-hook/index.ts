@@ -256,6 +256,20 @@ async function handleWebhook(req: Request): Promise<Response> {
 
   console.log('Auth email enqueued', { emailType, email: payload.data.email, run_id })
 
+  // Fire-and-forget: notify admin about the new signup
+  try {
+    await supabase.functions.invoke('send-transactional-email', {
+      body: {
+        templateName: 'new-signup-notification',
+        recipientEmail: 'unadmittedfun@gmail.com',
+        idempotencyKey: `new-signup-${payload.data.email}-${run_id}`,
+        templateData: { newUserEmail: payload.data.email },
+      },
+    })
+  } catch (e) {
+    console.error('Failed to send admin signup notification', e)
+  }
+
   return new Response(
     JSON.stringify({ success: true, queued: true }),
     { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
