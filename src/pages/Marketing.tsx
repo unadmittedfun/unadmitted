@@ -26,17 +26,9 @@ const Marketing = () => {
 
   const ensureConv = async () => {
     if (!user || !profile) return null;
-    const { data: existing } = await supabase
-      .from("conversations").select("id")
-      .eq("is_marketing_bot", true).eq("user_a", user.id).maybeSingle();
-    if (existing) return existing.id;
-    const { data: created, error } = await supabase
-      .from("conversations").insert({
-        user_a: user.id, user_b: user.id, is_marketing_bot: true, community_id: profile.community_id,
-      })
-      .select("id").single();
+    const { data, error } = await supabase.rpc("ensure_marketing_bot_conversation");
     if (error) { toast.error(error.message); return null; }
-    return created.id;
+    return data as string;
   };
 
   useEffect(() => {
