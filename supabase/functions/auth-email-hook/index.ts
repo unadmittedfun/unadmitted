@@ -12,7 +12,7 @@ const corsHeaders = {
 }
 
 const EMAIL_SUBJECTS: Record<string, string> = {
-  signup: 'Confirm your email',
+  signup: 'confirm your email',
 }
 
 // Template mapping
