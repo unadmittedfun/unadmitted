@@ -102,6 +102,11 @@ const Auth = () => {
           email: emailParsed.data, password,
         });
         if (error) throw error;
+        if (rememberMe) {
+          localStorage.setItem("unadmitted.rememberedEmail", emailParsed.data);
+        } else {
+          localStorage.removeItem("unadmitted.rememberedEmail");
+        }
         // Record consent on first sign-in if missing (covers users who signed up before).
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
