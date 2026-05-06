@@ -92,8 +92,8 @@ export const SnakeBackground = ({ className = "", interactive = true }: { classN
 
     const tick = () => {
       if (gameOver) return;
-      // After 4s of no input, drift back to autopilot.
-      if (!userControlling || Date.now() - lastInputAt > 4000) {
+      // Autopilot when not interactive, or after 4s of no input.
+      if (!interactiveRef.current || !userControlling || Date.now() - lastInputAt > 4000) {
         userControlling = false;
         autoChooseDir();
       }
