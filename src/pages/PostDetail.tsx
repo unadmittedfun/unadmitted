@@ -28,13 +28,11 @@ const PostDetail = () => {
     if (!id || !user) return;
     const { data: p } = await supabase.from("posts").select("*").eq("id", id).maybeSingle();
     if (!p) { setLoading(false); return; }
-    const [profileRes, votesRes, commentsRes, repostsRes, myVoteRes, myRepostRes] = await Promise.all([
+    const [profileRes, votesRes, commentsRes, myVoteRes] = await Promise.all([
       supabase.from("public_profiles").select("handle, avatar_url").eq("id", p.author_id).maybeSingle(),
       supabase.from("votes").select("value").eq("target_type","post").eq("target_id", id),
       supabase.from("comments").select("id, body, created_at, author_id").eq("post_id", id).order("created_at", { ascending: true }),
-      supabase.from("reposts").select("id").eq("post_id", id),
       supabase.from("votes").select("value").eq("target_type","post").eq("target_id", id).eq("user_id", user.id).maybeSingle(),
-      supabase.from("reposts").select("id").eq("post_id", id).eq("user_id", user.id).maybeSingle(),
     ]);
     const up = (votesRes.data ?? []).filter((v: any) => v.value === "up").length;
     const down = (votesRes.data ?? []).filter((v: any) => v.value === "down").length;
@@ -54,9 +52,7 @@ const PostDetail = () => {
       author_avatar: profileRes.data?.avatar_url ?? null,
       upvotes: up, downvotes: down,
       comment_count: commentsRes.data?.length ?? 0,
-      repost_count: repostsRes.data?.length ?? 0,
       my_vote: (myVoteRes.data?.value as any) ?? null,
-      my_repost: !!myRepostRes.data,
     });
     setComments((commentsRes.data ?? []).map((c: any) => ({
       ...c, handle: profMap.get(c.author_id) ?? "anon",
