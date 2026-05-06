@@ -120,9 +120,9 @@ const DMs = () => {
 
   return (
     <AppShell>
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-2 lg:mb-4">
         <MessageSquare className="h-5 w-5 text-primary" />
-        <h1 className="text-2xl font-bold">Direct Messages</h1>
+        <h1 className="text-xl lg:text-2xl font-bold">Direct Messages</h1>
       </div>
       <Card className="p-3 mb-4 shadow-card">
         <p className="text-sm font-medium mb-2">Start a chat</p>
