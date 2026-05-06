@@ -23,6 +23,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
   const nav = useNavigate();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const brand = community?.name ?? "Unadmitted";
+  const showStats = loc.pathname === "/";
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -75,13 +76,20 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
           })}
         </nav>
       </header>
-      <div className="max-w-6xl mx-auto px-4 py-3 lg:py-6 grid lg:grid-cols-[1fr_280px] gap-1 lg:gap-6 flex-1 w-full">
+      <div className={cn(
+        "max-w-6xl mx-auto px-4 flex-1 w-full",
+        showStats
+          ? "py-3 lg:py-6 grid lg:grid-cols-[1fr_280px] gap-1 lg:gap-6"
+          : "pt-2 pb-3 lg:py-6"
+      )}>
         <main className="min-w-0 order-2 lg:order-1">{children}</main>
-        <div className="order-1 lg:order-2">
-          <div className="lg:sticky lg:top-28">
-            <StatsPanel />
+        {showStats && (
+          <div className="order-1 lg:order-2">
+            <div className="lg:sticky lg:top-28">
+              <StatsPanel />
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <footer className="border-t border-border mt-6"><div className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
