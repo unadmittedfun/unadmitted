@@ -65,7 +65,7 @@ const Welcome = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">House rules</h2>
             <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
-              3 / 3
+              {rules.length} / {rules.length}
             </span>
           </div>
           <ul className="space-y-4">
