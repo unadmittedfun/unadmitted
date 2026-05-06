@@ -19,7 +19,7 @@ import { TERMS_VERSION } from "@/pages/Terms";
 const Auth = () => {
   const nav = useNavigate();
   const { hostCommunity } = useAuth();
-  const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signup");
+  const [mode, setMode] = useState<"signin" | "signup">("signup");
   const [email, setEmail] = useState(() => localStorage.getItem("unadmitted.rememberedEmail") ?? "");
   const [password, setPassword] = useState("");
   const [acceptedLegal, setAcceptedLegal] = useState(false);
@@ -37,31 +37,14 @@ const Auth = () => {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (mode === "forgot") {
-      const emailParsed = signUpSchema.shape.email.safeParse(email);
-      if (!emailParsed.success) return toast.error(emailParsed.error.errors[0].message);
-      setLoading(true);
-      try {
-        const { error } = await supabase.auth.resetPasswordForEmail(emailParsed.data, {
-          redirectTo: `${window.location.origin}/reset-password`,
-        });
-        if (error) throw error;
-        toast.success("Reset link sent — check your inbox");
-        setMode("signin");
-      } catch (err: any) {
-        toast.error(err.message ?? "Something went wrong");
-      } finally { setLoading(false); }
-      return;
-    }
-
     const emailParsed = signUpSchema.shape.email.safeParse(email);
     if (!emailParsed.success) return toast.error(emailParsed.error.errors[0].message);
-    if (password.length < 8) return toast.error("Password must be at least 8 characters");
+    if (password.length < 8) return toast.error("password must be at least 8 characters");
 
     const domain = emailParsed.data.split("@")[1]?.toLowerCase();
-    if (!domain) return toast.error("Enter a valid university email");
+    if (!domain) return toast.error("enter a valid university email");
     if (!isAcceptedEduEmail(emailParsed.data)) {
-      return toast.error("Sorry — you are not an active student. Use your official .edu email.");
+      return toast.error("sorry — you are not an active student. use your official .edu email.");
     }
 
     setLoading(true);
@@ -78,7 +61,7 @@ const Auth = () => {
 
       if (mode === "signup") {
         if (!acceptedLegal) {
-          toast.error("Please accept the Terms of Service and Privacy Policy to continue.");
+          toast.error("please accept the terms of service and privacy policy to continue.");
           setLoading(false);
           return;
         }
@@ -92,7 +75,7 @@ const Auth = () => {
         });
         if (error) throw error;
         toast.success(
-          `Check your @${domain} inbox to verify your email before signing in.`,
+          `check your @${domain} inbox to verify your email before signing in.`,
           { duration: 8000 }
         );
         setMode("signin");
@@ -122,7 +105,7 @@ const Auth = () => {
         nav("/amendments");
       }
     } catch (err: any) {
-      toast.error(err.message ?? "Something went wrong");
+      toast.error(err.message ?? "something went wrong");
     } finally {
       setLoading(false);
     }
@@ -147,7 +130,7 @@ const Auth = () => {
             className="group inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-3 shadow-card hover:shadow-glow hover:border-primary/40 transition-all"
           >
             <LogIn className="h-4 w-4 text-primary" />
-            <span className="text-sm font-semibold">Open sign in</span>
+            <span className="text-sm font-semibold">open sign in</span>
           </button>
         ) : (
         <Card className="relative w-full p-6 shadow-card max-h-[calc(100vh-2rem)] overflow-y-auto">
@@ -165,39 +148,30 @@ const Auth = () => {
           </div>
           <div className="mb-4 px-3 py-2 rounded-md bg-secondary border border-border text-xs text-muted-foreground">
             <span className="font-semibold text-foreground">
-              Not affiliated with {shortName ? shortName : "any university"}.
+              not affiliated with {shortName ? shortName : "any university"}.
             </span>{" "}
-            Independent, student-run. <span className="font-semibold">{hashtag}</span>
+            independent, student-run. <span className="font-semibold">{hashtag}</span>
           </div>
 
           <h2 className="text-3xl font-bold mb-1">
-            {mode === "signup" ? "Create account" : mode === "signin" ? "Welcome back" : "Reset password"}
+            {mode === "signup" ? "create account" : "welcome back"}
           </h2>
           <p className="text-muted-foreground mb-6">
-            {mode === "forgot"
-              ? "We'll email a reset link to your university address."
-              : hostCommunity
-                ? <>Use your <span className="font-semibold text-foreground">@{handle}</span> email.</>
-                : "Use your official university email — your community is set automatically."}
+            {hostCommunity
+              ? <>use your <span className="font-semibold text-foreground">@{handle}</span> email.</>
+              : "use your official university email — your community is set automatically."}
           </p>
           <form onSubmit={submit} className="space-y-4">
             <div>
-              <Label htmlFor="email">University email</Label>
+              <Label htmlFor="email">university email</Label>
               <Input id="email" type="email" placeholder={`you@${handle}`} value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
-            {mode !== "forgot" && (
-              <div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  {mode === "signin" && (
-                    <button type="button" onClick={() => setMode("forgot")} className="text-xs text-primary hover:underline">
-                      Forgot password?
-                    </button>
-                  )}
-                </div>
-                <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+            <div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">password</Label>
               </div>
-            )}
+              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+            </div>
             {mode === "signin" && (
               <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer select-none">
                 <Checkbox
@@ -215,31 +189,25 @@ const Auth = () => {
                   className="mt-0.5"
                 />
                 <span>
-                  I am at least 16 years old and I agree to the{" "}
-                  <a href="/terms" target="_blank" rel="noreferrer" className="text-primary hover:underline">Terms of Service</a>{" "}
+                  i am at least 16 years old and i agree to the{" "}
+                  <a href="/terms" target="_blank" rel="noreferrer" className="text-primary hover:underline">terms of service</a>{" "}
                   and{" "}
-                  <a href="/privacy" target="_blank" rel="noreferrer" className="text-primary hover:underline">Privacy Policy</a>.
+                  <a href="/privacy" target="_blank" rel="noreferrer" className="text-primary hover:underline">privacy policy</a>.
                 </span>
               </label>
             )}
             <Button type="submit" className="w-full" disabled={loading || (mode === "signup" && !acceptedLegal)}>
-              {loading ? "..." : mode === "signup" ? "Sign up" : mode === "signin" ? "Sign in" : "Send reset link"}
+              {loading ? "..." : mode === "signup" ? "sign up" : "sign in"}
             </Button>
           </form>
           <div className="mt-4 space-y-1">
-            {mode === "forgot" ? (
-              <button type="button" onClick={() => setMode("signin")} className="text-sm text-muted-foreground hover:text-foreground block">
-                Back to sign in
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
-                className="text-sm text-muted-foreground hover:text-foreground block"
-              >
-                {mode === "signup" ? "Already have an account? Sign in" : "New here? Sign up"}
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
+              className="text-sm text-muted-foreground hover:text-foreground block"
+            >
+              {mode === "signup" ? "already have an account? sign in" : "new here? sign up"}
+            </button>
           </div>
         </Card>
         )}

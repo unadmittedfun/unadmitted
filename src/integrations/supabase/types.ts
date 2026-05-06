@@ -651,7 +651,6 @@ export type Database = {
           read_ct: number
         }[]
       }
-      update_my_handle_suffix: { Args: { _suffix: string }; Returns: string }
     }
     Enums: {
       ad_status: "pending" | "approved" | "rejected" | "live" | "completed"
