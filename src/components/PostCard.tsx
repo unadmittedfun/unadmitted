@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowBigUp, ArrowBigDown, MessageCircle, Mail, Share2, Flame, Trash2, MoreHorizontal, Flag } from "lucide-react";
+import { ArrowBigUp, ArrowBigDown, MessageCircle, Mail, Flame, Trash2, MoreHorizontal, Flag } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
@@ -55,7 +55,7 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
 
   const messageAuthor = async () => {
     if (!user || !profile || busy) return;
-    if (post.author_id === user.id) return toast.error("that's you.");
+    if (post.author_id === user.id) { navigate("/dms"); return; }
     setBusy(true);
     const [a, b] = [user.id, post.author_id].sort();
     const { data: existing } = await supabase
@@ -71,16 +71,6 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
     navigate(`/dms?c=${cid}`);
   };
 
-  const share = async () => {
-    const url = `${window.location.origin}/post/${post.id}`;
-    try {
-      if (navigator.share) await navigator.share({ url, title: "ACG Unadmitted" });
-      else {
-        await navigator.clipboard.writeText(url);
-        toast.success("Link copied");
-      }
-    } catch {/* canceled */}
-  };
 
   const remove = async () => {
     if (!user || busy) return;
@@ -193,19 +183,14 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
             <span className="text-xs font-semibold">{post.comment_count}</span>
           </Link>
         </Button>
-        {!isOwner && (
-          <Button
-            variant="ghost" size="sm"
-            className="rounded-full text-muted-foreground gap-1.5"
-            onClick={messageAuthor}
-            disabled={busy}
-          >
-            <Mail className="h-4 w-4" />
-            <span className="text-xs font-semibold">message</span>
-          </Button>
-        )}
-        <Button variant="ghost" size="sm" className="rounded-full text-muted-foreground" onClick={share}>
-          <Share2 className="h-4 w-4" />
+        <Button
+          variant="ghost" size="sm"
+          className="rounded-full text-muted-foreground gap-1.5"
+          onClick={messageAuthor}
+          disabled={busy}
+        >
+          <Mail className="h-4 w-4" />
+          <span className="text-xs font-semibold">message</span>
         </Button>
       </div>
     </Card>
