@@ -20,13 +20,11 @@ export const usePostFeed = (mode: "new" | "trending") => {
     const ids = rawPosts.map((p) => p.id);
     const authorIds = [...new Set(rawPosts.map((p) => p.author_id))];
 
-    const [profilesRes, votesRes, commentsRes, repostsRes, myVotesRes, myRepostsRes] = await Promise.all([
+    const [profilesRes, votesRes, commentsRes, myVotesRes] = await Promise.all([
       supabase.from("public_profiles").select("id, handle, avatar_url").in("id", authorIds),
       supabase.from("votes").select("target_id, value").eq("target_type", "post").in("target_id", ids),
       supabase.from("comments").select("post_id").in("post_id", ids),
-      supabase.from("reposts").select("post_id").in("post_id", ids),
       supabase.from("votes").select("target_id, value").eq("target_type", "post").in("target_id", ids).eq("user_id", user.id),
-      supabase.from("reposts").select("post_id").in("post_id", ids).eq("user_id", user.id),
     ]);
 
     const profMap = new Map((profilesRes.data ?? []).map((p: any) => [p.id, p]));
@@ -38,10 +36,7 @@ export const usePostFeed = (mode: "new" | "trending") => {
     });
     const cMap: Record<string, number> = {};
     (commentsRes.data ?? []).forEach((c: any) => { cMap[c.post_id] = (cMap[c.post_id] ?? 0) + 1; });
-    const rMap: Record<string, number> = {};
-    (repostsRes.data ?? []).forEach((r: any) => { rMap[r.post_id] = (rMap[r.post_id] ?? 0) + 1; });
     const myVoteMap = new Map((myVotesRes.data ?? []).map((v: any) => [v.target_id, v.value]));
-    const myRepostSet = new Set((myRepostsRes.data ?? []).map((r: any) => r.post_id));
 
     let assembled: PostRow[] = rawPosts.map((p: any) => ({
       id: p.id, body: p.body, created_at: p.created_at, author_id: p.author_id,
@@ -54,9 +49,7 @@ export const usePostFeed = (mode: "new" | "trending") => {
       upvotes: upMap[p.id] ?? 0,
       downvotes: downMap[p.id] ?? 0,
       comment_count: cMap[p.id] ?? 0,
-      repost_count: rMap[p.id] ?? 0,
       my_vote: (myVoteMap.get(p.id) as any) ?? null,
-      my_repost: myRepostSet.has(p.id),
     }));
 
     if (mode === "trending") {
