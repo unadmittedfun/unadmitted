@@ -58,6 +58,9 @@ const Auth = () => {
 
     const domain = emailParsed.data.split("@")[1]?.toLowerCase();
     if (!domain) return toast.error("Enter a valid university email");
+    if (!isAcceptedEduEmail(emailParsed.data)) {
+      return toast.error("Sorry — you are not an active student. Use your official .edu email.");
+    }
 
     setLoading(true);
     try {
