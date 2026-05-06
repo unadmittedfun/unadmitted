@@ -20,9 +20,10 @@ const Auth = () => {
   const nav = useNavigate();
   const { hostCommunity } = useAuth();
   const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signup");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => localStorage.getItem("unadmitted.rememberedEmail") ?? "");
   const [password, setPassword] = useState("");
   const [acceptedLegal, setAcceptedLegal] = useState(false);
+  const [rememberMe, setRememberMe] = useState(() => !!localStorage.getItem("unadmitted.rememberedEmail"));
   const [loading, setLoading] = useState(false);
   const [formOpen, setFormOpen] = useState(true);
 
@@ -101,6 +102,11 @@ const Auth = () => {
           email: emailParsed.data, password,
         });
         if (error) throw error;
+        if (rememberMe) {
+          localStorage.setItem("unadmitted.rememberedEmail", emailParsed.data);
+        } else {
+          localStorage.removeItem("unadmitted.rememberedEmail");
+        }
         // Record consent on first sign-in if missing (covers users who signed up before).
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
@@ -191,6 +197,15 @@ const Auth = () => {
                 </div>
                 <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
               </div>
+            )}
+            {mode === "signin" && (
+              <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer select-none">
+                <Checkbox
+                  checked={rememberMe}
+                  onCheckedChange={(v) => setRememberMe(v === true)}
+                />
+                <span>remember me on this device</span>
+              </label>
             )}
             {mode === "signup" && (
               <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
