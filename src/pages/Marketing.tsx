@@ -10,14 +10,14 @@ import { Check, ChevronDown, Megaphone, Send } from "lucide-react";
 import { toast } from "sonner";
 
 const PACKAGES = [
-  { id: "front_day", label: "Front of Trending — 1 day", price: 9 },
-  { id: "front_3day", label: "Front of Trending — 3 days", price: 22 },
-  { id: "pinned_week", label: "Pinned post — 1 week", price: 35 },
-  { id: "story_blast", label: "Top-of-feed blast — 1 hour", price: 7 },
-  { id: "weekly_digest", label: "Featured in weekly digest email", price: 15 },
-  { id: "login_banner", label: "Banner on login/signup screen — 1 day", price: 25 },
-  { id: "campus_bundle", label: "Campus bundle (all placements, 3 days)", price: 49 },
-  { id: "monthly_sponsor", label: "Recurring monthly sponsor slot", price: 79 },
+  { id: "front_day", label: "front of trending — 1 day", price: 9 },
+  { id: "front_3day", label: "front of trending — 3 days", price: 22 },
+  { id: "pinned_week", label: "pinned post — 1 week", price: 35 },
+  { id: "story_blast", label: "top-of-feed blast — 1 hour", price: 7 },
+  { id: "weekly_digest", label: "featured in weekly digest email", price: 15 },
+  { id: "login_banner", label: "banner on login/signup screen — 1 day", price: 25 },
+  { id: "campus_bundle", label: "campus bundle (all placements, 3 days)", price: 49 },
+  { id: "monthly_sponsor", label: "recurring monthly sponsor slot", price: 79 },
 ];
 
 const Marketing = () => {
