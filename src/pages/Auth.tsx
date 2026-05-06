@@ -22,6 +22,7 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [acceptedLegal, setAcceptedLegal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [formOpen, setFormOpen] = useState(true);
 
   // Branding falls back to a generic look until the user is logged in or we
   // detect their university from the subdomain.
@@ -142,7 +143,25 @@ const Auth = () => {
         </div>
       </div>
       <div className="flex items-center justify-center p-6">
-        <Card className="w-full max-w-md p-8 shadow-card">
+        {!formOpen ? (
+          <button
+            type="button"
+            onClick={() => setFormOpen(true)}
+            className="group inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-3 shadow-card hover:shadow-glow hover:border-primary/40 transition-all"
+          >
+            <LogIn className="h-4 w-4 text-primary" />
+            <span className="text-sm font-semibold">Open sign in</span>
+          </button>
+        ) : (
+        <Card className="w-full max-w-md p-8 shadow-card relative">
+          <button
+            type="button"
+            onClick={() => setFormOpen(false)}
+            aria-label="Close"
+            className="absolute top-3 right-3 h-7 w-7 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary inline-flex items-center justify-center transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
           <div className="lg:hidden flex items-center gap-2 font-semibold mb-6">
             <GraduationCap className="h-6 w-6 text-primary" />
             <span>{brand}</span>
@@ -221,6 +240,7 @@ const Auth = () => {
             <a href="/privacy" className="text-primary hover:underline">Read our privacy promise →</a>
           </p>
         </Card>
+        )}
       </div>
     </div>
   );
