@@ -24,7 +24,7 @@ const DMs = () => {
 
   const loadConvs = async () => {
     if (!user) return;
-    const { data } = await supabase.from("conversations").select("*").or(`user_a.eq.${user.id},user_b.eq.${user.id}`);
+    const { data } = await supabase.from("conversations").select("*").or(`user_a.eq.${user.id},user_b.eq.${user.id}`).eq("is_marketing_bot", false);
     if (!data) return;
     const otherIds = data.map((c) => (c.user_a === user.id ? c.user_b : c.user_a));
     const { data: profs } = await supabase.from("public_profiles").select("id, handle").in("id", otherIds);
