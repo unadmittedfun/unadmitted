@@ -96,7 +96,7 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
         value={body}
         onChange={(e) => setBody(e.target.value)}
         placeholder="do you have anything unadmitted in mind?"
-        className="min-h-[56px] lg:min-h-[90px] resize-none border-0 focus-visible:ring-0 px-0 text-base"
+        className="min-h-[56px] lg:min-h-[90px] resize-none border-0 focus-visible:ring-0 pl-3 lg:pl-4 pr-0 text-xs lg:text-sm placeholder:text-xs lg:placeholder:text-sm"
       />
       {previewUrl && file && (
         <div className="relative inline-block rounded-lg overflow-hidden border border-border mt-2">
