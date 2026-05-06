@@ -110,8 +110,10 @@ export const StatsPanel = () => {
 };
 
 const Stat = ({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) => (
-  <div className="flex items-center justify-between">
-    <div className="flex items-center gap-2 text-sm text-muted-foreground">{icon}<span>{label}</span></div>
-    <span className="font-bold tabular-nums">{value.toLocaleString()}</span>
+  <div className="flex items-center justify-between gap-2">
+    <div className="flex items-center gap-1.5 lg:gap-2 text-[11px] lg:text-sm text-muted-foreground min-w-0">
+      {icon}<span className="truncate">{label}</span>
+    </div>
+    <span className="font-bold tabular-nums text-[11px] lg:text-sm">{value.toLocaleString()}</span>
   </div>
 );
