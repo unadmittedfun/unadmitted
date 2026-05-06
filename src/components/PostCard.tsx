@@ -86,7 +86,7 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
   const isOwner = user?.id === post.author_id;
 
   return (
-    <Card className="p-4 mb-3 shadow-card hover:border-primary/30 transition-colors">
+    <Card className="p-5 mb-3 shadow-card hover:shadow-glow hover:border-primary/40 transition-all duration-200">
       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
         <Avatar className="h-6 w-6">
           <AvatarImage src={post.author_avatar ?? undefined} />
