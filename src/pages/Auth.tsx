@@ -154,33 +154,24 @@ const Auth = () => {
           </div>
 
           <h2 className="text-3xl font-bold mb-1">
-            {mode === "signup" ? "Create account" : mode === "signin" ? "Welcome back" : "Reset password"}
+            {mode === "signup" ? "create account" : "welcome back"}
           </h2>
           <p className="text-muted-foreground mb-6">
-            {mode === "forgot"
-              ? "We'll email a reset link to your university address."
-              : hostCommunity
-                ? <>Use your <span className="font-semibold text-foreground">@{handle}</span> email.</>
-                : "Use your official university email — your community is set automatically."}
+            {hostCommunity
+              ? <>use your <span className="font-semibold text-foreground">@{handle}</span> email.</>
+              : "use your official university email — your community is set automatically."}
           </p>
           <form onSubmit={submit} className="space-y-4">
             <div>
-              <Label htmlFor="email">University email</Label>
+              <Label htmlFor="email">university email</Label>
               <Input id="email" type="email" placeholder={`you@${handle}`} value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
-            {mode !== "forgot" && (
-              <div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  {mode === "signin" && (
-                    <button type="button" onClick={() => setMode("forgot")} className="text-xs text-primary hover:underline">
-                      Forgot password?
-                    </button>
-                  )}
-                </div>
-                <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+            <div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">password</Label>
               </div>
-            )}
+              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+            </div>
             {mode === "signin" && (
               <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer select-none">
                 <Checkbox
@@ -198,31 +189,25 @@ const Auth = () => {
                   className="mt-0.5"
                 />
                 <span>
-                  I am at least 16 years old and I agree to the{" "}
-                  <a href="/terms" target="_blank" rel="noreferrer" className="text-primary hover:underline">Terms of Service</a>{" "}
+                  i am at least 16 years old and i agree to the{" "}
+                  <a href="/terms" target="_blank" rel="noreferrer" className="text-primary hover:underline">terms of service</a>{" "}
                   and{" "}
-                  <a href="/privacy" target="_blank" rel="noreferrer" className="text-primary hover:underline">Privacy Policy</a>.
+                  <a href="/privacy" target="_blank" rel="noreferrer" className="text-primary hover:underline">privacy policy</a>.
                 </span>
               </label>
             )}
             <Button type="submit" className="w-full" disabled={loading || (mode === "signup" && !acceptedLegal)}>
-              {loading ? "..." : mode === "signup" ? "Sign up" : mode === "signin" ? "Sign in" : "Send reset link"}
+              {loading ? "..." : mode === "signup" ? "sign up" : "sign in"}
             </Button>
           </form>
           <div className="mt-4 space-y-1">
-            {mode === "forgot" ? (
-              <button type="button" onClick={() => setMode("signin")} className="text-sm text-muted-foreground hover:text-foreground block">
-                Back to sign in
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
-                className="text-sm text-muted-foreground hover:text-foreground block"
-              >
-                {mode === "signup" ? "Already have an account? Sign in" : "New here? Sign up"}
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
+              className="text-sm text-muted-foreground hover:text-foreground block"
+            >
+              {mode === "signup" ? "already have an account? sign in" : "new here? sign up"}
+            </button>
           </div>
         </Card>
         )}
