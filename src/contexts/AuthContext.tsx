@@ -42,32 +42,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const loadProfile = async (uid: string) => {
     const { data } = await supabase.from("profiles").select("*").eq("id", uid).maybeSingle();
-    const p = data as (Profile & { welcome_email_sent_at?: string | null }) | null;
+    const p = data as Profile | null;
     setProfile(p);
     if (p?.community_id) {
       const c = await fetchCommunityById(p.community_id);
       setCommunity(c);
       applyCommunityTheme(c);
-    }
-    // fire-and-forget welcome email — only once per user
-    if (p && !p.welcome_email_sent_at && p.email) {
-      const { data: claimed } = await supabase
-        .from("profiles")
-        .update({ welcome_email_sent_at: new Date().toISOString() })
-        .eq("id", uid)
-        .is("welcome_email_sent_at", null)
-        .select("id")
-        .maybeSingle();
-      if (claimed) {
-        supabase.functions.invoke("send-transactional-email", {
-          body: {
-            templateName: "account-verified",
-            recipientEmail: p.email,
-            idempotencyKey: `account-verified-${uid}`,
-            templateData: { handle: p.handle, appUrl: window.location.origin },
-          },
-        }).catch(() => {/* non-blocking */});
-      }
     }
   };
 
