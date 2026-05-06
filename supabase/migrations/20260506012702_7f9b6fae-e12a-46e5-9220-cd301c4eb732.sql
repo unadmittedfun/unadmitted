@@ -1,0 +1,1 @@
+UPDATE public.messages SET body = 'let''s work' WHERE id = 'e3c44045-8829-4b33-88da-f9e214648c94';
