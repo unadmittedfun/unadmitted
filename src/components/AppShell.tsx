@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { StatsPanel } from "@/components/StatsPanel";
 import { ProfileSettings } from "@/components/ProfileSettings";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const tabs = [
   { to: "/", label: "New", icon: Home },
