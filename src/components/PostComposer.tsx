@@ -136,7 +136,7 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground">{body.length}/2000</span>
+          <span className={`text-xs ${countWords(body) > POST_MAX_WORDS ? "text-destructive" : "text-muted-foreground"}`}>{countWords(body)}/{POST_MAX_WORDS} words</span>
           <Button onClick={submit} disabled={posting || (!body.trim() && !file)} size="sm">
             {posting ? "…" : "Post"}
           </Button>
