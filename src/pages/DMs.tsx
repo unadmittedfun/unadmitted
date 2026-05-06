@@ -44,6 +44,22 @@ const DMs = () => {
   };
 
   useEffect(() => { loadConvs(); }, [user, searchParams]);
+
+  // Realtime: refresh conversation list when a new conversation is created involving this user
+  useEffect(() => {
+    if (!user) return;
+    const ch = supabase.channel(`convs-${user.id}`)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "conversations" },
+        (payload) => {
+          const c: any = payload.new;
+          if (c.user_a === user.id || c.user_b === user.id) loadConvs();
+        })
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" },
+        () => loadConvs())
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [user]);
+
   useEffect(() => {
     if (!active) return;
     loadMessages(active.id);
