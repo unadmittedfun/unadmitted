@@ -69,12 +69,12 @@ const Marketing = () => {
     <AppShell>
       <div className="flex items-center gap-2 mb-3 lg:mb-4">
         <Megaphone className="h-5 w-5 text-primary" />
-        <h1 className="text-xl lg:text-2xl font-bold">Promote</h1>
+        <h1 className="text-xl lg:text-2xl font-bold">promote</h1>
       </div>
 
       <Card className="mb-3 shadow-card overflow-hidden">
         <button onClick={() => toggle("packages")} className="w-full flex items-center justify-between p-4 text-left">
-          <span className="text-sm font-semibold">Paid promotion packages</span>
+          <span className="text-sm font-semibold">paid promotion packages</span>
           <ChevronDown className={`h-4 w-4 transition-transform ${openSection === "packages" ? "rotate-180" : ""}`} />
         </button>
         {openSection === "packages" && (
@@ -89,7 +89,7 @@ const Marketing = () => {
             </div>
             <p className="text-[11px] text-muted-foreground mt-3 flex items-start gap-1">
               <Check className="h-3 w-3 mt-0.5 flex-shrink-0" />
-              All ads must comply with our community guidelines.
+              all ads must comply with our community guidelines.
             </p>
           </div>
         )}
@@ -97,23 +97,23 @@ const Marketing = () => {
 
       <Card className="mb-3 shadow-card overflow-hidden">
         <button onClick={() => toggle("policy")} className="w-full flex items-center justify-between p-4 text-left">
-          <span className="text-sm font-semibold">Ad content & refund policy</span>
+          <span className="text-sm font-semibold">ad content & refund policy</span>
           <ChevronDown className={`h-4 w-4 transition-transform ${openSection === "policy" ? "rotate-180" : ""}`} />
         </button>
         {openSection === "policy" && (
           <div className="px-4 pb-4 space-y-3">
             <ul className="text-xs text-muted-foreground list-disc pl-4 space-y-1">
-              <li>Every promoted post displays a visible "Sponsored" label.</li>
-              <li>No hate speech.</li>
-              <li>No misleading claims.</li>
-              <li>No targeting individuals by name.</li>
-              <li>No adult content.</li>
-              <li>We reserve the right to reject any ad.</li>
+              <li>every promoted post displays a visible "sponsored" label.</li>
+              <li>no hate speech.</li>
+              <li>no misleading claims.</li>
+              <li>no targeting individuals by name.</li>
+              <li>no adult content.</li>
+              <li>we reserve the right to reject any ad.</li>
             </ul>
             <div>
-              <p className="text-sm font-semibold mb-1">Refund policy</p>
+              <p className="text-sm font-semibold mb-1">refund policy</p>
               <p className="text-xs text-muted-foreground">
-                If an ad is rejected after payment, a full refund is issued within 5 business days.
+                if an ad is rejected after payment, a full refund is issued within 5 business days.
               </p>
             </div>
           </div>
@@ -122,7 +122,7 @@ const Marketing = () => {
 
       <Card className="shadow-card overflow-hidden">
         <button onClick={() => toggle("compose")} className="w-full flex items-center justify-between p-4 text-left">
-          <span className="text-sm font-semibold">Compose your ad</span>
+          <span className="text-sm font-semibold">compose your ad</span>
           <ChevronDown className={`h-4 w-4 transition-transform ${openSection === "compose" ? "rotate-180" : ""}`} />
         </button>
         {openSection === "compose" && (
@@ -136,16 +136,16 @@ const Marketing = () => {
             <div className="flex items-start gap-2 mb-3">
               <Checkbox id="agree-policy" checked={agreed} onCheckedChange={(v) => setAgreed(v === true)} className="mt-0.5" />
               <label htmlFor="agree-policy" className="text-xs text-muted-foreground leading-snug cursor-pointer">
-                I agree to the ad content policy and community guidelines.
+                i agree to the ad content policy and community guidelines.
               </label>
             </div>
             <div className="flex items-center justify-between gap-3">
-              <p className="text-xs text-muted-foreground">Selected: {selectedPackage.label} · €{selectedPackage.price}</p>
-              <Button onClick={send} disabled={!input.trim() || !agreed}><Send className="h-4 w-4" /> Send</Button>
+              <p className="text-xs text-muted-foreground">selected: {selectedPackage.label} · €{selectedPackage.price}</p>
+              <Button onClick={send} disabled={!input.trim() || !agreed}><Send className="h-4 w-4" /> send</Button>
             </div>
             {sent && (
               <p className="text-sm font-medium text-primary mt-3">
-                Sent to unadmitted.fun for checking. It normally takes around 30 minutes to 1 hour to get back to you.
+                sent to unadmitted.fun for checking. it normally takes around 30 minutes to 1 hour to get back to you.
               </p>
             )}
           </div>
