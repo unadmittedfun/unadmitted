@@ -40,21 +40,16 @@ const Welcome = () => {
           <Sparkles className="h-3.5 w-3.5" /> Welcome
         </p>
         <h1 className="text-4xl sm:text-5xl font-semibold leading-[1.05] mb-4 text-balance">
-          The unfiltered <span className="italic">{brand}</span> group chat.
+          {uni ? uni.welcome.headline(brand) : `The unfiltered ${brand} group chat.`}
         </h1>
         <p className="text-base sm:text-lg text-muted-foreground text-pretty max-w-xl mb-10">
-          Unadmitted is anonymous, university-only, and built for honest takes on
-          campus life — the rules, the rumors, the rants. No followers, no clout,
-          no main characters. Just your community.
+          {uni?.welcome.subhead ??
+            "Anonymous, university-only, and built for honest takes on campus life."}
         </p>
 
         {/* What you get */}
         <div className="grid sm:grid-cols-3 gap-3 mb-10">
-          {[
-            { icon: EyeOff, label: "Anonymous handle" },
-            { icon: ShieldCheck, label: "Verified students only" },
-            { icon: MessageSquare, label: "Posts, DMs, polls" },
-          ].map((f) => (
+          {chips.map((f) => (
             <div
               key={f.label}
               className="rounded-xl border border-border bg-card px-4 py-3 flex items-center gap-2.5"
