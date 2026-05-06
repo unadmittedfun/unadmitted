@@ -83,7 +83,7 @@ const Marketing = () => {
         <Textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Write what you want to promote…"
+          placeholder="Do you have anything unadmitted in mind?"
           className="min-h-28 resize-none mb-3"
         />
         <div className="flex items-center justify-between gap-3">
