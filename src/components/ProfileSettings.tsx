@@ -1,30 +1,15 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Camera } from "lucide-react";
 import { toast } from "sonner";
 
 export const ProfileSettings = ({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) => {
   const { user, profile, refreshProfile } = useAuth();
-  const [suffix, setSuffix] = useState(profile?.handle_suffix ?? "");
-  const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
-
-  const saveSuffix = async () => {
-    if (!suffix.trim()) return;
-    setSaving(true);
-    const { error } = await supabase.rpc("update_my_handle_suffix", { _suffix: suffix });
-    setSaving(false);
-    if (error) return toast.error(error.message);
-    toast.success("Handle updated");
-    await refreshProfile();
-  };
 
   const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
