@@ -71,16 +71,6 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
     navigate(`/dms?c=${cid}`);
   };
 
-  const share = async () => {
-    const url = `${window.location.origin}/post/${post.id}`;
-    try {
-      if (navigator.share) await navigator.share({ url, title: "ACG Unadmitted" });
-      else {
-        await navigator.clipboard.writeText(url);
-        toast.success("Link copied");
-      }
-    } catch {/* canceled */}
-  };
 
   const remove = async () => {
     if (!user || busy) return;
