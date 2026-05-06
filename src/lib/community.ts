@@ -65,17 +65,13 @@ export const fetchCommunityByEmailDomain = async (
 };
 
 /** Apply community theme to :root CSS variables. */
-export const applyCommunityTheme = (c: Community | null) => {
+export const applyCommunityTheme = (_c: Community | null) => {
   if (typeof document === "undefined") return;
   const root = document.documentElement;
-  if (!c) {
-    root.style.removeProperty("--primary");
-    root.style.removeProperty("--accent");
-    root.style.removeProperty("--ring");
-    return;
-  }
-  root.style.setProperty("--primary", c.primary_hsl);
-  root.style.setProperty("--ring", c.primary_hsl);
-  // Note: we intentionally ignore c.accent_hsl — the design system uses a
-  // single purple accent (no per-community orange override).
+  // Design system uses a single purple primary across all communities — we
+  // intentionally ignore per-community primary/accent overrides (no orange).
+  root.style.removeProperty("--primary");
+  root.style.removeProperty("--accent");
+  root.style.removeProperty("--ring");
 };
+
