@@ -52,30 +52,8 @@ const Marketing = () => {
     }).select().single();
     if (u) setMessages((m) => [...m, u as Msg]);
 
-    const reply =
-      "Got it. Here are our cheap packages — pick one and I'll get you live:\n\n" +
-      PACKAGES.map((p) => `• ${p.label} — €${p.price}`).join("\n") +
-      "\n\nReply with the package name to request approval.";
-    const { data: b } = await supabase.from("messages").insert({
-      conversation_id: convId, sender_id: undefined, is_bot: true, body: reply, community_id: profile.community_id,
-    }).select().single();
-    if (b) setMessages((m) => [...m, b as Msg]);
-  };
-
-  const choose = async (pkg: typeof PACKAGES[number]) => {
-    if (!user || !profile || !convId) return;
+    // Notify admin via email — fire-and-forget
     const requestId = crypto.randomUUID();
-    const lastUserMsg = [...messages].reverse().find((m) => !m.is_bot)?.body ?? "";
-    const { error } = await supabase.from("ad_requests").insert({
-      id: requestId,
-      user_id: user.id, conversation_id: convId,
-      package_label: pkg.label, price_eur: pkg.price,
-      details: { package_id: pkg.id, request_text: lastUserMsg },
-      community_id: profile.community_id,
-    });
-    if (error) return toast.error(error.message);
-
-    // Notify admin via email — fire-and-forget, do NOT block the user
     supabase.functions.invoke("send-transactional-email", {
       body: {
         templateName: "ad-request-notification",
@@ -83,22 +61,21 @@ const Marketing = () => {
         idempotencyKey: `ad-request-${requestId}`,
         templateData: {
           handle: profile.handle,
-          packageLabel: pkg.label,
-          priceEur: pkg.price,
-          details: lastUserMsg || "(no extra context — student picked a package without describing the ad)",
+          packageLabel: "Custom request",
+          priceEur: 0,
+          details: text,
           community: "ACG Unadmitted",
           requestId,
         },
       },
     }).catch((e) => console.error("admin notify failed", e));
 
+    const reply = "✅ Sent to unadmitted.fun for checking. It normally takes around 30 minutes to 1 hour to get back to you.";
     const { data: b } = await supabase.from("messages").insert({
-      conversation_id: convId, sender_id: undefined, is_bot: true,
-      body: `✅ Request for "${pkg.label}" (€${pkg.price}) submitted. We'll DM you to confirm copy and payment.`,
-      community_id: profile.community_id,
+      conversation_id: convId, sender_id: undefined, is_bot: true, body: reply, community_id: profile.community_id,
     }).select().single();
     if (b) setMessages((m) => [...m, b as Msg]);
-    toast.success("Ad request submitted");
+    toast.success("Sent for review");
   };
 
   return (
