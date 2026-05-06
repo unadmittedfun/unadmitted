@@ -24,7 +24,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
   const brand = community?.name ?? "Unadmitted";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <header className="sticky top-0 z-30 bg-background/75 backdrop-blur-xl border-b border-border/60">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group">
@@ -74,7 +74,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
           })}
         </nav>
       </header>
-      <div className="max-w-6xl mx-auto px-4 py-6 grid lg:grid-cols-[1fr_280px] gap-6">
+      <div className="max-w-6xl mx-auto px-4 py-6 grid lg:grid-cols-[1fr_280px] gap-6 flex-1 w-full">
         <main className="min-w-0">{children}</main>
         <div className="hidden lg:block">
           <div className="sticky top-28">
@@ -82,7 +82,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
           </div>
         </div>
       </div>
-      <footer className="max-w-6xl mx-auto px-4 py-6 border-t border-border mt-6">
+      <footer className="border-t border-border mt-6"><div className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
           <p>🔒 We never read, store, or use your data.</p>
           <p className="hidden md:block">
@@ -91,7 +91,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
           </p>
           <Link to="/privacy" className="hover:text-foreground underline-offset-4 hover:underline">Privacy promise</Link>
         </div>
-      </footer>
+      </div></footer>
       <ProfileSettings open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>
   );
