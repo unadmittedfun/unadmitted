@@ -34,6 +34,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
             <span className="font-display text-lg font-semibold tracking-tight" style={{ fontFamily: "'Fraunces', serif" }}>{brand}</span>
           </Link>
           <div className="flex items-center gap-1">
+            <ThemeToggle />
             <button
               onClick={() => setSettingsOpen(true)}
               className="flex items-center gap-2 px-2 py-1 rounded-full hover:bg-secondary transition-colors"
