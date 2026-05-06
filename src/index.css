@@ -2,82 +2,114 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Unadmitted design system
+  ------------------------
+  Editorial-meets-Gen-Z. Warm off-white paper, deep ink type,
+  Fraunces display serif for personality, Space Grotesk for body,
+  JetBrains Mono for handles. Single vibrant accent (electric violet)
+  with a lime "spark" used sparingly for delight.
+*/
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 215 28% 12%;
+    /* Surfaces — warm paper */
+    --background: 36 30% 97%;     /* #FAF7F2 */
+    --foreground: 220 25% 10%;    /* near-black ink */
 
     --card: 0 0% 100%;
-    --card-foreground: 215 28% 12%;
+    --card-foreground: 220 25% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 28% 12%;
+    --popover-foreground: 220 25% 10%;
 
-    /* Clean blue */
-    --primary: 217 91% 50%;
+    /* Brand — electric violet */
+    --primary: 252 88% 60%;
     --primary-foreground: 0 0% 100%;
+    --primary-glow: 252 100% 72%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 215 28% 18%;
+    /* Subtle surfaces */
+    --secondary: 36 24% 93%;
+    --secondary-foreground: 220 25% 14%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 45%;
+    --muted: 36 20% 94%;
+    --muted-foreground: 220 10% 42%;
 
-    --accent: 217 91% 50%;
-    --accent-foreground: 0 0% 100%;
+    /* Spark — lime, used sparingly */
+    --accent: 78 92% 60%;
+    --accent-foreground: 220 25% 10%;
 
-    --upvote: 217 91% 50%;
-    --downvote: 215 16% 55%;
+    --upvote: 252 88% 60%;
+    --downvote: 220 10% 55%;
 
-    --destructive: 0 75% 50%;
+    --destructive: 4 78% 52%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 217 91% 50%;
+    --border: 36 18% 86%;
+    --input: 36 18% 86%;
+    --ring: 252 88% 60%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    --shadow-card: 0 1px 2px hsl(215 28% 12% / 0.04), 0 2px 8px hsl(217 91% 50% / 0.06);
-    --shadow-glow: 0 0 0 4px hsl(var(--primary) / 0.12);
+    --shadow-card: 0 1px 0 hsl(220 25% 10% / 0.04), 0 8px 24px -12px hsl(252 60% 30% / 0.12);
+    --shadow-glow: 0 0 0 4px hsl(var(--primary) / 0.14);
+    --gradient-hero: linear-gradient(135deg, hsl(252 88% 60%) 0%, hsl(282 80% 56%) 60%, hsl(312 78% 60%) 100%);
   }
 
   .dark {
-    --background: 215 28% 8%;
-    --foreground: 210 40% 98%;
-    --card: 215 28% 11%;
-    --card-foreground: 210 40% 98%;
-    --popover: 215 28% 11%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 215 28% 16%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 215 28% 14%;
-    --muted-foreground: 215 16% 65%;
-    --accent: 217 91% 60%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 75% 50%;
+    --background: 230 22% 7%;
+    --foreground: 36 24% 96%;
+    --card: 230 22% 10%;
+    --card-foreground: 36 24% 96%;
+    --popover: 230 22% 10%;
+    --popover-foreground: 36 24% 96%;
+    --primary: 252 95% 70%;
+    --primary-foreground: 230 22% 7%;
+    --primary-glow: 252 100% 80%;
+    --secondary: 230 18% 14%;
+    --secondary-foreground: 36 24% 96%;
+    --muted: 230 18% 13%;
+    --muted-foreground: 230 10% 65%;
+    --accent: 78 90% 62%;
+    --accent-foreground: 230 22% 7%;
+    --upvote: 252 95% 70%;
+    --downvote: 230 10% 55%;
+    --destructive: 4 78% 58%;
     --destructive-foreground: 0 0% 100%;
-    --border: 215 28% 18%;
-    --input: 215 28% 18%;
-    --ring: 217 91% 60%;
+    --border: 230 18% 18%;
+    --input: 230 18% 18%;
+    --ring: 252 95% 70%;
   }
 }
 
 @layer base {
   * { @apply border-border; }
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "ss01", "cv11";
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-feature-settings: "ss01", "ss02", "cv11";
   }
-  h1,h2,h3,h4 { font-family: 'Fraunces', Georgia, serif; letter-spacing: -0.01em; }
+  h1, h2, h3, h4 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-optical-sizing: auto;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  code, kbd, .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  /* Selection */
+  ::selection { background: hsl(var(--accent)); color: hsl(var(--accent-foreground)); }
 }
 
 @layer utilities {
   .shadow-card { box-shadow: var(--shadow-card); }
+  .shadow-glow { box-shadow: var(--shadow-glow); }
   .text-upvote { color: hsl(var(--upvote)); }
   .text-downvote { color: hsl(var(--downvote)); }
   .bg-upvote\/10 { background-color: hsl(var(--upvote) / 0.1); }
   .bg-downvote\/10 { background-color: hsl(var(--downvote) / 0.1); }
+  .bg-gradient-hero { background-image: var(--gradient-hero); }
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
 }
