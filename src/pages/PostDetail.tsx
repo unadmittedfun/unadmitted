@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 import { commentSchema, containsSurname } from "@/lib/validation";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Flag } from "lucide-react";
+import { ReportDialog } from "@/components/ReportDialog";
 
 type Comment = { id: string; body: string; created_at: string; author_id: string; handle: string };
 
@@ -21,6 +22,7 @@ const PostDetail = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [body, setBody] = useState("");
   const [loading, setLoading] = useState(true);
+  const [reportingComment, setReportingComment] = useState<string | null>(null);
 
   const load = async () => {
     if (!id || !user) return;
@@ -93,14 +95,35 @@ const PostDetail = () => {
       </Card>
       <div className="space-y-2">
         {comments.map((c) => (
-          <Card key={c.id} className="p-3 shadow-card">
-            <div className="text-xs text-muted-foreground mb-1">
-              <span className="font-mono">{c.handle}</span> · {formatDistanceToNow(new Date(c.created_at), { addSuffix: true })}
+          <Card key={c.id} className="p-3 shadow-card group">
+            <div className="text-xs text-muted-foreground mb-1 flex items-center">
+              <span className="font-mono">{c.handle}</span>
+              <span className="mx-1">·</span>
+              <span>{formatDistanceToNow(new Date(c.created_at), { addSuffix: true })}</span>
+              {user?.id !== c.author_id && (
+                <button
+                  type="button"
+                  onClick={() => setReportingComment(c.id)}
+                  className="ml-auto opacity-0 group-hover:opacity-100 focus:opacity-100 inline-flex items-center gap-1 text-[11px] hover:text-destructive transition-opacity"
+                  aria-label="Report comment"
+                >
+                  <Flag className="h-3 w-3" /> Report
+                </button>
+              )}
             </div>
             <p className="whitespace-pre-wrap text-sm">{c.body}</p>
           </Card>
         ))}
       </div>
+      {reportingComment && (
+        <ReportDialog
+          open={!!reportingComment}
+          onOpenChange={(o) => !o && setReportingComment(null)}
+          targetType="comment"
+          targetId={reportingComment}
+          onReported={load}
+        />
+      )}
     </AppShell>
   );
 };
