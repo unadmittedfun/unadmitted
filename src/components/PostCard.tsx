@@ -28,9 +28,7 @@ export type PostRow = {
   upvotes: number;
   downvotes: number;
   comment_count: number;
-  repost_count: number;
   my_vote: "up" | "down" | null;
-  my_repost: boolean;
 };
 
 export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => void }) => {
