@@ -39,12 +39,12 @@ const Auth = () => {
 
     const emailParsed = signUpSchema.shape.email.safeParse(email);
     if (!emailParsed.success) return toast.error(emailParsed.error.errors[0].message);
-    if (password.length < 8) return toast.error("Password must be at least 8 characters");
+    if (password.length < 8) return toast.error("password must be at least 8 characters");
 
     const domain = emailParsed.data.split("@")[1]?.toLowerCase();
-    if (!domain) return toast.error("Enter a valid university email");
+    if (!domain) return toast.error("enter a valid university email");
     if (!isAcceptedEduEmail(emailParsed.data)) {
-      return toast.error("Sorry — you are not an active student. Use your official .edu email.");
+      return toast.error("sorry — you are not an active student. use your official .edu email.");
     }
 
     setLoading(true);
@@ -61,7 +61,7 @@ const Auth = () => {
 
       if (mode === "signup") {
         if (!acceptedLegal) {
-          toast.error("Please accept the Terms of Service and Privacy Policy to continue.");
+          toast.error("please accept the terms of service and privacy policy to continue.");
           setLoading(false);
           return;
         }
@@ -105,7 +105,7 @@ const Auth = () => {
         nav("/amendments");
       }
     } catch (err: any) {
-      toast.error(err.message ?? "Something went wrong");
+      toast.error(err.message ?? "something went wrong");
     } finally {
       setLoading(false);
     }
