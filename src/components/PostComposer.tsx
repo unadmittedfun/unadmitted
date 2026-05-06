@@ -97,7 +97,6 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
         onChange={(e) => setBody(e.target.value)}
         placeholder="What's on your mind, unadmitted one?"
         className="min-h-[90px] resize-none border-0 focus-visible:ring-0 px-0 text-base"
-        maxLength={2000}
       />
       {previewUrl && file && (
         <div className="relative inline-block rounded-lg overflow-hidden border border-border mt-2">
