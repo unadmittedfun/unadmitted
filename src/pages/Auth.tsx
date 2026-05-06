@@ -119,7 +119,7 @@ const Auth = () => {
 
   return (
     <div className="fixed inset-0 overflow-hidden bg-[#0a0a0a]">
-      <SnakeBackground className="absolute inset-0" />
+      <SnakeBackground className="absolute inset-0" interactive={!formOpen} />
 
       {/* Brand mark */}
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2 font-semibold text-white/80 pointer-events-none">
