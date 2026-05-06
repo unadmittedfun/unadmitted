@@ -176,10 +176,10 @@ export const SnakeBackground = ({ className = "", interactive = true }: { classN
     const onKey = (e: KeyboardEvent) => {
       if (!interactiveRef.current) return;
       const k = e.key;
-      if (k === "ArrowUp" || k === "w" || k === "W") { setDir(0, -1); e.preventDefault(); }
-      else if (k === "ArrowDown" || k === "s" || k === "S") { setDir(0, 1); e.preventDefault(); }
-      else if (k === "ArrowLeft" || k === "a" || k === "A") { setDir(-1, 0); e.preventDefault(); }
-      else if (k === "ArrowRight" || k === "d" || k === "D") { setDir(1, 0); e.preventDefault(); }
+      if (k === "ArrowUp") { setDir(0, -1); e.preventDefault(); }
+      else if (k === "ArrowDown") { setDir(0, 1); e.preventDefault(); }
+      else if (k === "ArrowLeft") { setDir(-1, 0); e.preventDefault(); }
+      else if (k === "ArrowRight") { setDir(1, 0); e.preventDefault(); }
     };
 
     let touchX = 0, touchY = 0;
