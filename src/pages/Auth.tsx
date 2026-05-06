@@ -142,18 +142,23 @@ const Auth = () => {
           <p className="text-primary-foreground/60">By students, for students.</p>
         </div>
       </div>
-      <div className="relative flex flex-col items-center justify-center p-6 pb-24">
+      <div className="relative flex flex-col items-center justify-center p-6 pb-24 md:bg-transparent overflow-hidden">
+        {/* Mobile-only snake backdrop */}
+        <div className="md:hidden absolute inset-0 bg-[#0a0a0a]">
+          <SnakeBackground className="absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_100%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/40 via-background/60 to-background pointer-events-none" />
+        </div>
         {!formOpen ? (
-          <button
-            type="button"
-            onClick={() => setFormOpen(true)}
-            className="group inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-3 shadow-card hover:shadow-glow hover:border-primary/40 transition-all"
-          >
+        <button
+          type="button"
+          onClick={() => setFormOpen(true)}
+          className="relative z-10 group inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-3 shadow-card hover:shadow-glow hover:border-primary/40 transition-all"
+        >
             <LogIn className="h-4 w-4 text-primary" />
             <span className="text-sm font-semibold">Open sign in</span>
           </button>
         ) : (
-        <Card className="w-full max-w-md p-8 shadow-card relative">
+        <Card className="relative z-10 w-full max-w-md p-8 shadow-card">
           <button
             type="button"
             onClick={() => setFormOpen(false)}
