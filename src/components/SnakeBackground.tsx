@@ -4,8 +4,10 @@ import { useEffect, useRef } from "react";
  * Playable snake background. Uses arrow keys / WASD on desktop and swipe on
  * touch devices. Falls back to gentle autopilot until the user takes over.
  */
-export const SnakeBackground = ({ className = "" }: { className?: string }) => {
+export const SnakeBackground = ({ className = "", interactive = true }: { className?: string; interactive?: boolean }) => {
   const ref = useRef<HTMLCanvasElement>(null);
+  const interactiveRef = useRef(interactive);
+  useEffect(() => { interactiveRef.current = interactive; }, [interactive]);
 
   useEffect(() => {
     const canvas = ref.current;
