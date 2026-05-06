@@ -129,16 +129,16 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
             onClick={() => fileRef.current?.click()}
           >
             <ImagePlus className="h-4 w-4" />
-            <span className="text-xs font-semibold">Media</span>
+            <span className="text-xs font-semibold">media</span>
           </Button>
           <span className="hidden sm:inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-            <AlertTriangle className="h-3 w-3" /> No surnames · No store ads · Max 10 MB
+            <AlertTriangle className="h-3 w-3" /> no surnames · no store ads · max 10 mb
           </span>
         </div>
         <div className="flex items-center gap-3">
           <span className={`text-xs ${countWords(body) > POST_MAX_WORDS ? "text-destructive" : "text-muted-foreground"}`}>{countWords(body)}/{POST_MAX_WORDS} words</span>
           <Button onClick={submit} disabled={posting || (!body.trim() && !file)} size="sm">
-            {posting ? "…" : "Post"}
+            {posting ? "…" : "post"}
           </Button>
         </div>
       </div>
