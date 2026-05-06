@@ -193,14 +193,17 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
             <span className="text-xs font-semibold">{post.comment_count}</span>
           </Link>
         </Button>
-        <Button
-          variant="ghost" size="sm"
-          className={cn("rounded-full text-muted-foreground gap-1.5", post.my_repost && "text-primary")}
-          onClick={repost}
-        >
-          <Repeat2 className="h-4 w-4" />
-          <span className="text-xs font-semibold">{post.repost_count}</span>
-        </Button>
+        {!isOwner && (
+          <Button
+            variant="ghost" size="sm"
+            className="rounded-full text-muted-foreground gap-1.5"
+            onClick={messageAuthor}
+            disabled={busy}
+          >
+            <Mail className="h-4 w-4" />
+            <span className="text-xs font-semibold">message</span>
+          </Button>
+        )}
         <Button variant="ghost" size="sm" className="rounded-full text-muted-foreground" onClick={share}>
           <Share2 className="h-4 w-4" />
         </Button>
