@@ -33,7 +33,7 @@ const DMs = () => {
       const otherId = c.user_a === user.id ? c.user_b : c.user_a;
       return {
         id: c.id, user_a: c.user_a, user_b: c.user_b, is_marketing_bot: c.is_marketing_bot,
-        other_handle: c.is_marketing_bot ? "Marketing Bot 🤖" : (map.get(otherId) ?? "anon"),
+        other_handle: c.is_marketing_bot ? "marketing bot 🤖" : "anonymous",
       };
     }));
   };
