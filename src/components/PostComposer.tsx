@@ -95,7 +95,7 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
       <Textarea
         value={body}
         onChange={(e) => setBody(e.target.value)}
-        placeholder="What's on your mind, unadmitted one?"
+        placeholder="do you have anything unadmitted in mind?"
         className="min-h-[90px] resize-none border-0 focus-visible:ring-0 px-0 text-base"
       />
       {previewUrl && file && (
