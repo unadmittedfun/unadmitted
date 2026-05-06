@@ -13,6 +13,7 @@ import Marketing from "./pages/Marketing.tsx";
 import Auth from "./pages/Auth.tsx";
 import Amendments from "./pages/Amendments.tsx";
 import Privacy from "./pages/Privacy.tsx";
+import Terms from "./pages/Terms.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import Unsubscribe from "./pages/Unsubscribe.tsx";
 import NotFound from "./pages/NotFound.tsx";
