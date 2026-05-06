@@ -67,7 +67,7 @@ const DMs = () => {
   if (active) {
     return (
       <AppShell>
-        <button onClick={() => setActive(null)} className="inline-flex items-center gap-1 text-sm text-muted-foreground mb-3 hover:text-foreground">
+        <button onClick={() => { setActive(null); setSearchParams({}); }} className="inline-flex items-center gap-1 text-sm text-muted-foreground mb-3 hover:text-foreground">
           <ArrowLeft className="h-4 w-4" /> all chats
         </button>
         <Card className="p-3 mb-3 shadow-card">
