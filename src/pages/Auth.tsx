@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { GraduationCap, X, LogIn } from "lucide-react";
 import { SnakeBackground } from "@/components/SnakeBackground";
+import { Brand } from "@/components/Brand";
 import { isAcceptedEduEmail } from "@/config/universities";
 import { TERMS_VERSION } from "@/pages/Terms";
 
