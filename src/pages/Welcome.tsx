@@ -17,6 +17,12 @@ const Welcome = () => {
   const brand = uni?.short_name ?? "your campus";
   const rules = uni?.welcome.rules ?? [];
   const chips = uni?.welcome.feature_chips ?? [];
+  // Mark onboarded as soon as the user has seen the rules — so it never shows again,
+  // even if they navigate away without clicking a CTA.
+  useEffect(() => {
+    if (user) markOnboarded(user.id);
+  }, [user]);
+
   const sparks = uni?.welcome.sparks ?? [];
 
   const finish = (to: string) => {
