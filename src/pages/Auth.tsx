@@ -142,7 +142,7 @@ const Auth = () => {
           <p className="text-primary-foreground/60">By students, for students.</p>
         </div>
       </div>
-      <div className="flex items-center justify-center p-6">
+      <div className="relative flex flex-col items-center justify-center p-6 pb-24">
         {!formOpen ? (
           <button
             type="button"
@@ -235,12 +235,12 @@ const Auth = () => {
               </button>
             )}
           </div>
-          <p className="text-xs text-muted-foreground mt-6 pt-4 border-t">
-            We will <span className="font-semibold text-foreground">never</span> read, store, or use your data beyond what's needed to run the app.{" "}
-            <a href="/privacy" className="text-primary hover:underline">Read our privacy promise →</a>
-          </p>
         </Card>
         )}
+        <p className="absolute bottom-4 left-0 right-0 px-6 text-center text-xs text-muted-foreground">
+          We will <span className="font-semibold text-foreground">never</span> read, store, or use your data beyond what's needed to run the app.{" "}
+          <a href="/privacy" className="text-primary hover:underline">Read our privacy promise →</a>
+        </p>
       </div>
     </div>
   );
