@@ -56,6 +56,13 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
       return toast.error("2nd Amendment: chat with the Marketing Bot to promote.");
     }
     if (!user || !profile) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast.error("your session expired — please sign in again");
+      await supabase.auth.signOut();
+      window.location.href = "/auth";
+      return;
+    }
     setPosting(true);
     try {
       let media_url: string | null = null;
