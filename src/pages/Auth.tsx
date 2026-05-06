@@ -11,6 +11,7 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { GraduationCap } from "lucide-react";
+import { SnakeBackground } from "@/components/SnakeBackground";
 import { TERMS_VERSION } from "@/pages/Terms";
 
 const Auth = () => {
@@ -117,7 +118,9 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
-      <div className="hidden lg:flex flex-col justify-between p-12 bg-primary text-primary-foreground relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-between p-12 text-primary-foreground relative overflow-hidden bg-[#0a0a0a]">
+        <SnakeBackground className="absolute inset-0 w-full h-full opacity-70 [mask-image:radial-gradient(ellipse_at_center,black_55%,transparent_100%)]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a]/20 via-transparent to-[#0a0a0a]/80 pointer-events-none" />
         <div className="flex items-center gap-2 font-semibold">
           <GraduationCap className="h-6 w-6" />
           <span>{brand}</span>
