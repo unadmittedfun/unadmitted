@@ -82,8 +82,26 @@ const Marketing = () => {
         </div>
         <p className="text-[11px] text-muted-foreground mt-3 flex items-start gap-1">
           <Check className="h-3 w-3 mt-0.5 flex-shrink-0" />
-          All ads must comply with the 1st Amendment (no surnames).
+          All ads must comply with our community guidelines.
         </p>
+      </Card>
+
+      <Card className="p-4 mb-4 shadow-card space-y-3">
+        <p className="text-sm font-semibold">Ad content policy</p>
+        <ul className="text-xs text-muted-foreground list-disc pl-4 space-y-1">
+          <li>Every promoted post displays a visible "Sponsored" label.</li>
+          <li>No hate speech.</li>
+          <li>No misleading claims.</li>
+          <li>No targeting individuals by name.</li>
+          <li>No adult content.</li>
+          <li>We reserve the right to reject any ad.</li>
+        </ul>
+        <div>
+          <p className="text-sm font-semibold mb-1">Refund policy</p>
+          <p className="text-xs text-muted-foreground">
+            If an ad is rejected after payment, a full refund is issued within 5 business days.
+          </p>
+        </div>
       </Card>
 
       <Card className="p-4 shadow-card">
