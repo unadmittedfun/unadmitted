@@ -363,6 +363,8 @@ export type Database = {
       profiles: {
         Row: {
           accepted_amendments: boolean
+          accepted_terms_at: string | null
+          accepted_terms_version: string | null
           avatar_url: string | null
           community_id: string
           created_at: string
@@ -373,6 +375,8 @@ export type Database = {
         }
         Insert: {
           accepted_amendments?: boolean
+          accepted_terms_at?: string | null
+          accepted_terms_version?: string | null
           avatar_url?: string | null
           community_id: string
           created_at?: string
@@ -383,6 +387,8 @@ export type Database = {
         }
         Update: {
           accepted_amendments?: boolean
+          accepted_terms_at?: string | null
+          accepted_terms_version?: string | null
           avatar_url?: string | null
           community_id?: string
           created_at?: string
