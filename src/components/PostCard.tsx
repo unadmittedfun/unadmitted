@@ -55,7 +55,7 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
 
   const messageAuthor = async () => {
     if (!user || !profile || busy) return;
-    if (post.author_id === user.id) return toast.error("that's you.");
+    if (post.author_id === user.id) { navigate("/dms"); return; }
     setBusy(true);
     const [a, b] = [user.id, post.author_id].sort();
     const { data: existing } = await supabase
