@@ -101,22 +101,6 @@ const Marketing = () => {
         ))}
       </div>
 
-      <Card className="p-4 mb-4 shadow-card">
-        <p className="text-sm font-semibold mb-3">Quick packages</p>
-        <div className="grid sm:grid-cols-2 gap-2">
-          {PACKAGES.map((p) => (
-            <Button key={p.id} variant="outline" className="justify-between h-auto py-3" onClick={() => choose(p)}>
-              <span className="text-left text-xs">{p.label}</span>
-              <span className="font-bold text-primary">€{p.price}</span>
-            </Button>
-          ))}
-        </div>
-        <p className="text-[11px] text-muted-foreground mt-3 flex items-start gap-1">
-          <Check className="h-3 w-3 mt-0.5 flex-shrink-0" />
-          All ads must comply with the 1st Amendment (no surnames).
-        </p>
-      </Card>
-
       <div className="flex gap-2">
         <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Tell the bot what you want to promote…" onKeyDown={(e) => e.key === "Enter" && send()} />
         <Button onClick={send} size="icon"><Send className="h-4 w-4" /></Button>
