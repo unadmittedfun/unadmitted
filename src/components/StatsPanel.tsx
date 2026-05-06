@@ -67,38 +67,38 @@ export const StatsPanel = () => {
   }, []);
 
   return (
-    <aside className="space-y-3">
-      <Card className="p-4 shadow-card">
-        <h3 className="text-xs uppercase tracking-wider text-muted-foreground font-bold mb-3">Live stats</h3>
-        <div className="space-y-2">
-          <Stat icon={<Activity className="h-4 w-4 text-upvote" />} label="Active this week" value={active} />
-          <Stat icon={<Users className="h-4 w-4 text-primary" />} label="Total members" value={members} />
-          <Stat icon={<FileText className="h-4 w-4 text-accent" />} label="Total posts" value={posts} />
+    <aside className="grid grid-cols-2 gap-2 lg:grid-cols-1 lg:gap-3">
+      <Card className="p-2.5 lg:p-4 shadow-card">
+        <h3 className="text-[10px] lg:text-xs uppercase tracking-wider text-muted-foreground font-bold mb-2 lg:mb-3">Live stats</h3>
+        <div className="space-y-1 lg:space-y-2">
+          <Stat icon={<Activity className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-upvote" />} label="Active this week" value={active} />
+          <Stat icon={<Users className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-primary" />} label="Total members" value={members} />
+          <Stat icon={<FileText className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-accent" />} label="Total posts" value={posts} />
         </div>
       </Card>
 
-      <Card className="p-4 shadow-card">
-        <div className="flex items-center gap-2 mb-3">
-          <Trophy className="h-4 w-4 text-accent" />
-          <h3 className="text-xs uppercase tracking-wider text-muted-foreground font-bold">Top 3 this week</h3>
+      <Card className="p-2.5 lg:p-4 shadow-card">
+        <div className="flex items-center gap-1.5 lg:gap-2 mb-2 lg:mb-3">
+          <Trophy className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-accent" />
+          <h3 className="text-[10px] lg:text-xs uppercase tracking-wider text-muted-foreground font-bold">Top 3 this week</h3>
         </div>
         {leaders.length === 0 && (
-          <p className="text-xs text-muted-foreground py-2">No power moves yet.</p>
+          <p className="text-[11px] lg:text-xs text-muted-foreground py-1">No power moves yet.</p>
         )}
-        <ol className="space-y-2">
+        <ol className="space-y-1.5 lg:space-y-2">
           {leaders.map((l, i) => (
-            <li key={l.id} className="flex items-center gap-2.5">
-              <span className={`h-6 w-6 rounded-full flex items-center justify-center text-xs font-black ${
+            <li key={l.id} className="flex items-center gap-1.5 lg:gap-2.5">
+              <span className={`h-5 w-5 lg:h-6 lg:w-6 rounded-full flex items-center justify-center text-[10px] lg:text-xs font-black ${
                 i === 0 ? "bg-accent text-accent-foreground" :
                 i === 1 ? "bg-secondary text-foreground" :
                 "bg-muted text-muted-foreground"
               }`}>{i + 1}</span>
-              <Avatar className="h-7 w-7">
+              <Avatar className="h-5 w-5 lg:h-7 lg:w-7 hidden sm:block">
                 <AvatarImage src={l.avatar_url ?? undefined} />
-                <AvatarFallback className="text-[10px] font-mono">{l.handle.slice(5, 7).toUpperCase()}</AvatarFallback>
+                <AvatarFallback className="text-[9px] font-mono">{l.handle.slice(5, 7).toUpperCase()}</AvatarFallback>
               </Avatar>
-              <span className="font-mono text-xs flex-1 truncate">{l.handle}</span>
-              <span className={`text-xs font-bold tabular-nums ${l.score >= 0 ? "text-upvote" : "text-downvote"}`}>
+              <span className="font-mono text-[11px] lg:text-xs flex-1 truncate">{l.handle}</span>
+              <span className={`text-[11px] lg:text-xs font-bold tabular-nums ${l.score >= 0 ? "text-upvote" : "text-downvote"}`}>
                 {l.score > 0 ? "+" : ""}{l.score}
               </span>
             </li>
@@ -110,8 +110,10 @@ export const StatsPanel = () => {
 };
 
 const Stat = ({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) => (
-  <div className="flex items-center justify-between">
-    <div className="flex items-center gap-2 text-sm text-muted-foreground">{icon}<span>{label}</span></div>
-    <span className="font-bold tabular-nums">{value.toLocaleString()}</span>
+  <div className="flex items-center justify-between gap-2">
+    <div className="flex items-center gap-1.5 lg:gap-2 text-[11px] lg:text-sm text-muted-foreground min-w-0">
+      {icon}<span className="truncate">{label}</span>
+    </div>
+    <span className="font-bold tabular-nums text-[11px] lg:text-sm">{value.toLocaleString()}</span>
   </div>
 );
