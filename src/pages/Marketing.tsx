@@ -44,22 +44,6 @@ const Marketing = () => {
     });
     if (error) return toast.error(error.message);
 
-    supabase.functions.invoke("send-transactional-email", {
-      body: {
-        templateName: "ad-request-notification",
-        recipientEmail: "unadmittedfun@gmail.com",
-        idempotencyKey: `ad-request-${requestId}`,
-        templateData: {
-          handle: profile.handle,
-          packageLabel: selectedPackage.label,
-          priceEur: selectedPackage.price,
-          details: text,
-          community: "ACG Unadmitted",
-          requestId,
-        },
-      },
-    }).catch((e) => console.error("admin notify failed", e));
-
     setInput("");
     setSent(true);
     toast.success("sent for review");
