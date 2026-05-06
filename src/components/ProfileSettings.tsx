@@ -40,7 +40,7 @@ export const ProfileSettings = ({ open, onOpenChange }: { open: boolean; onOpenC
             <button onClick={() => fileRef.current?.click()} className="relative group" disabled={uploading}>
               <Avatar className="h-20 w-20">
                 <AvatarImage src={profile?.avatar_url ?? undefined} />
-                <AvatarFallback className="font-mono">{profile?.handle.slice(5, 7).toUpperCase()}</AvatarFallback>
+                <AvatarFallback className="font-mono">AN</AvatarFallback>
               </Avatar>
               <div className="absolute inset-0 bg-foreground/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <Camera className="h-5 w-5 text-background" />
@@ -48,18 +48,9 @@ export const ProfileSettings = ({ open, onOpenChange }: { open: boolean; onOpenC
             </button>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onFile} />
             <div>
-              <p className="font-mono font-semibold">{profile?.handle}</p>
-              <p className="text-xs text-muted-foreground">{uploading ? "Uploading…" : "Tap photo to change"}</p>
+              <p className="font-mono font-semibold">anonymous</p>
+              <p className="text-xs text-muted-foreground">{uploading ? "uploading…" : "tap photo to change"}</p>
             </div>
-          </div>
-          <div>
-            <Label htmlFor="suffix">Custom handle (after <span className="font-mono">anon_</span>)</Label>
-            <div className="flex gap-2 mt-1.5">
-              <div className="flex items-center px-3 bg-muted rounded-md font-mono text-sm text-muted-foreground">anon_</div>
-              <Input id="suffix" value={suffix} onChange={(e) => setSuffix(e.target.value)} placeholder="yourname" maxLength={20} />
-              <Button onClick={saveSuffix} disabled={saving}>Save</Button>
-            </div>
-            <p className="text-[11px] text-muted-foreground mt-1.5">3–20 chars. Letters, numbers, underscore. No surnames (1st Amendment).</p>
           </div>
         </div>
       </DialogContent>
