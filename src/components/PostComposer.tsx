@@ -88,15 +88,15 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
   };
 
   return (
-    <Card className="p-4 mb-4 shadow-card">
-      <div className="text-xs text-muted-foreground mb-2">
+    <Card className="p-3 lg:p-4 mb-3 lg:mb-4 shadow-card">
+      <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 lg:mb-2">
         Posting as <span className="font-mono text-foreground">{profile?.handle}</span> · anonymous
       </div>
       <Textarea
         value={body}
         onChange={(e) => setBody(e.target.value)}
         placeholder="do you have anything unadmitted in mind?"
-        className="min-h-[90px] resize-none border-0 focus-visible:ring-0 px-0 text-base"
+        className="min-h-[56px] lg:min-h-[90px] resize-none border-0 focus-visible:ring-0 px-0 text-base"
       />
       {previewUrl && file && (
         <div className="relative inline-block rounded-lg overflow-hidden border border-border mt-2">
