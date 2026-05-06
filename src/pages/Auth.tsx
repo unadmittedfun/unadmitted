@@ -19,7 +19,7 @@ import { TERMS_VERSION } from "@/pages/Terms";
 const Auth = () => {
   const nav = useNavigate();
   const { hostCommunity } = useAuth();
-  const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signup");
+  const [mode, setMode] = useState<"signin" | "signup">("signup");
   const [email, setEmail] = useState(() => localStorage.getItem("unadmitted.rememberedEmail") ?? "");
   const [password, setPassword] = useState("");
   const [acceptedLegal, setAcceptedLegal] = useState(false);
@@ -36,23 +36,6 @@ const Auth = () => {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (mode === "forgot") {
-      const emailParsed = signUpSchema.shape.email.safeParse(email);
-      if (!emailParsed.success) return toast.error(emailParsed.error.errors[0].message);
-      setLoading(true);
-      try {
-        const { error } = await supabase.auth.resetPasswordForEmail(emailParsed.data, {
-          redirectTo: `${window.location.origin}/reset-password`,
-        });
-        if (error) throw error;
-        toast.success("Reset link sent — check your inbox");
-        setMode("signin");
-      } catch (err: any) {
-        toast.error(err.message ?? "Something went wrong");
-      } finally { setLoading(false); }
-      return;
-    }
 
     const emailParsed = signUpSchema.shape.email.safeParse(email);
     if (!emailParsed.success) return toast.error(emailParsed.error.errors[0].message);
