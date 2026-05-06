@@ -198,6 +198,15 @@ const Auth = () => {
                 <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
               </div>
             )}
+            {mode === "signin" && (
+              <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer select-none">
+                <Checkbox
+                  checked={rememberMe}
+                  onCheckedChange={(v) => setRememberMe(v === true)}
+                />
+                <span>remember me on this device</span>
+              </label>
+            )}
             {mode === "signup" && (
               <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
                 <Checkbox
