@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { postSchema, containsSurname, looksLikeAd } from "@/lib/validation";
@@ -18,6 +18,16 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Pre-fill from a "spark" prompt picked on the welcome screen.
+  useEffect(() => {
+    const draft = sessionStorage.getItem("unadmitted:draft");
+    if (draft) {
+      setBody(draft);
+      sessionStorage.removeItem("unadmitted:draft");
+    }
+  }, []);
+
 
   const pickFile = (f: File | null) => {
     if (!f) return;
