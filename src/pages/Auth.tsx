@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, X, LogIn } from "lucide-react";
 import { SnakeBackground } from "@/components/SnakeBackground";
 import { TERMS_VERSION } from "@/pages/Terms";
 
