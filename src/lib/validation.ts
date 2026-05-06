@@ -22,9 +22,17 @@ export const emailDomainSchema = (domain: string) =>
     { message: `Only @${domain} emails are allowed` }
   );
 
+const MAX_WORDS = 1000;
+const wordCount = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
 export const postSchema = z.object({
-  body: z.string().trim().min(1, "Cannot be empty").max(2000, "Too long (max 2000)"),
+  body: z
+    .string()
+    .trim()
+    .min(1, "Cannot be empty")
+    .refine((v) => wordCount(v) <= MAX_WORDS, `Too long (max ${MAX_WORDS} words)`),
 });
+export const countWords = wordCount;
+export const POST_MAX_WORDS = MAX_WORDS;
 
 export const commentSchema = z.object({
   body: z.string().trim().min(1).max(1000),
