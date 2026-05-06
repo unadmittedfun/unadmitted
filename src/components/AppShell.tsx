@@ -91,7 +91,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
           </p>
           <Link to="/privacy" className="hover:text-foreground underline-offset-4 hover:underline">Privacy promise</Link>
         </div>
-      </footer>
+      </div></footer>
       <ProfileSettings open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>
   );
