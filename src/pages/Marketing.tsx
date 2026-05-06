@@ -72,61 +72,83 @@ const Marketing = () => {
         <h1 className="text-xl lg:text-2xl font-bold">Promote</h1>
       </div>
 
-      <Card className="p-4 mb-4 shadow-card">
-        <p className="text-sm font-semibold mb-3">Paid promotion packages</p>
-        <div className="grid sm:grid-cols-2 gap-2">
-          {PACKAGES.map((p) => (
-            <Button key={p.id} variant={selectedPackage.id === p.id ? "default" : "outline"} className="justify-between h-auto py-3" onClick={() => setSelectedPackage(p)}>
-              <span className="text-left text-xs">{p.label}</span>
-              <span className="font-bold">€{p.price}</span>
-            </Button>
-          ))}
-        </div>
-        <p className="text-[11px] text-muted-foreground mt-3 flex items-start gap-1">
-          <Check className="h-3 w-3 mt-0.5 flex-shrink-0" />
-          All ads must comply with our community guidelines.
-        </p>
+      <Card className="mb-3 shadow-card overflow-hidden">
+        <button onClick={() => toggle("packages")} className="w-full flex items-center justify-between p-4 text-left">
+          <span className="text-sm font-semibold">Paid promotion packages</span>
+          <ChevronDown className={`h-4 w-4 transition-transform ${openSection === "packages" ? "rotate-180" : ""}`} />
+        </button>
+        {openSection === "packages" && (
+          <div className="px-4 pb-4">
+            <div className="grid sm:grid-cols-2 gap-2">
+              {PACKAGES.map((p) => (
+                <Button key={p.id} variant={selectedPackage.id === p.id ? "default" : "outline"} className="justify-between h-auto py-3" onClick={() => setSelectedPackage(p)}>
+                  <span className="text-left text-xs">{p.label}</span>
+                  <span className="font-bold">€{p.price}</span>
+                </Button>
+              ))}
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-3 flex items-start gap-1">
+              <Check className="h-3 w-3 mt-0.5 flex-shrink-0" />
+              All ads must comply with our community guidelines.
+            </p>
+          </div>
+        )}
       </Card>
 
-      <Card className="p-4 mb-4 shadow-card space-y-3">
-        <p className="text-sm font-semibold">Ad content policy</p>
-        <ul className="text-xs text-muted-foreground list-disc pl-4 space-y-1">
-          <li>Every promoted post displays a visible "Sponsored" label.</li>
-          <li>No hate speech.</li>
-          <li>No misleading claims.</li>
-          <li>No targeting individuals by name.</li>
-          <li>No adult content.</li>
-          <li>We reserve the right to reject any ad.</li>
-        </ul>
-        <div>
-          <p className="text-sm font-semibold mb-1">Refund policy</p>
-          <p className="text-xs text-muted-foreground">
-            If an ad is rejected after payment, a full refund is issued within 5 business days.
-          </p>
-        </div>
+      <Card className="mb-3 shadow-card overflow-hidden">
+        <button onClick={() => toggle("policy")} className="w-full flex items-center justify-between p-4 text-left">
+          <span className="text-sm font-semibold">Ad content & refund policy</span>
+          <ChevronDown className={`h-4 w-4 transition-transform ${openSection === "policy" ? "rotate-180" : ""}`} />
+        </button>
+        {openSection === "policy" && (
+          <div className="px-4 pb-4 space-y-3">
+            <ul className="text-xs text-muted-foreground list-disc pl-4 space-y-1">
+              <li>Every promoted post displays a visible "Sponsored" label.</li>
+              <li>No hate speech.</li>
+              <li>No misleading claims.</li>
+              <li>No targeting individuals by name.</li>
+              <li>No adult content.</li>
+              <li>We reserve the right to reject any ad.</li>
+            </ul>
+            <div>
+              <p className="text-sm font-semibold mb-1">Refund policy</p>
+              <p className="text-xs text-muted-foreground">
+                If an ad is rejected after payment, a full refund is issued within 5 business days.
+              </p>
+            </div>
+          </div>
+        )}
       </Card>
 
-      <Card className="p-4 shadow-card">
-        <Textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Do you have anything unadmitted in mind?"
-          className="min-h-28 resize-none mb-3"
-        />
-        <div className="flex items-start gap-2 mb-3">
-          <Checkbox id="agree-policy" checked={agreed} onCheckedChange={(v) => setAgreed(v === true)} className="mt-0.5" />
-          <label htmlFor="agree-policy" className="text-xs text-muted-foreground leading-snug cursor-pointer">
-            I agree to the ad content policy and community guidelines.
-          </label>
-        </div>
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-xs text-muted-foreground">Selected: {selectedPackage.label} · €{selectedPackage.price}</p>
-          <Button onClick={send} disabled={!input.trim() || !agreed}><Send className="h-4 w-4" /> Send</Button>
-        </div>
-        {sent && (
-          <p className="text-sm font-medium text-primary mt-3">
-            Sent to unadmitted.fun for checking. It normally takes around 30 minutes to 1 hour to get back to you.
-          </p>
+      <Card className="shadow-card overflow-hidden">
+        <button onClick={() => toggle("compose")} className="w-full flex items-center justify-between p-4 text-left">
+          <span className="text-sm font-semibold">Compose your ad</span>
+          <ChevronDown className={`h-4 w-4 transition-transform ${openSection === "compose" ? "rotate-180" : ""}`} />
+        </button>
+        {openSection === "compose" && (
+          <div className="px-4 pb-4">
+            <Textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="do you have anything unadmitted in mind?"
+              className="min-h-28 resize-none mb-3"
+            />
+            <div className="flex items-start gap-2 mb-3">
+              <Checkbox id="agree-policy" checked={agreed} onCheckedChange={(v) => setAgreed(v === true)} className="mt-0.5" />
+              <label htmlFor="agree-policy" className="text-xs text-muted-foreground leading-snug cursor-pointer">
+                I agree to the ad content policy and community guidelines.
+              </label>
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-xs text-muted-foreground">Selected: {selectedPackage.label} · €{selectedPackage.price}</p>
+              <Button onClick={send} disabled={!input.trim() || !agreed}><Send className="h-4 w-4" /> Send</Button>
+            </div>
+            {sent && (
+              <p className="text-sm font-medium text-primary mt-3">
+                Sent to unadmitted.fun for checking. It normally takes around 30 minutes to 1 hour to get back to you.
+              </p>
+            )}
+          </div>
         )}
       </Card>
     </AppShell>
