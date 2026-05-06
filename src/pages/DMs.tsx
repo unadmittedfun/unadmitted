@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { AppShell } from "@/components/AppShell";
@@ -15,6 +16,7 @@ type Msg = { id: string; body: string; sender_id: string | null; is_bot: boolean
 
 const DMs = () => {
   const { user, profile } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [convs, setConvs] = useState<Conv[]>([]);
   const [active, setActive] = useState<Conv | null>(null);
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -24,10 +26,16 @@ const DMs = () => {
     if (!user) return;
     const { data } = await supabase.from("conversations").select("*").or(`user_a.eq.${user.id},user_b.eq.${user.id}`).eq("is_marketing_bot", false);
     if (!data) return;
-    setConvs(data.map((c) => ({
+    const mapped: Conv[] = data.map((c) => ({
       id: c.id, user_a: c.user_a, user_b: c.user_b, is_marketing_bot: c.is_marketing_bot,
       other_handle: c.is_marketing_bot ? "marketing bot 🤖" : "anonymous",
-    })));
+    }));
+    setConvs(mapped);
+    const cid = searchParams.get("c");
+    if (cid && !active) {
+      const found = mapped.find((c) => c.id === cid);
+      if (found) setActive(found);
+    }
   };
 
   const loadMessages = async (cid: string) => {
@@ -35,7 +43,7 @@ const DMs = () => {
     setMessages((data ?? []) as Msg[]);
   };
 
-  useEffect(() => { loadConvs(); }, [user]);
+  useEffect(() => { loadConvs(); }, [user, searchParams]);
   useEffect(() => {
     if (!active) return;
     loadMessages(active.id);
