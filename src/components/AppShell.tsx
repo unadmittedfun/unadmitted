@@ -11,10 +11,10 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Brand } from "@/components/Brand";
 
 const tabs = [
-  { to: "/", label: "New", icon: Home },
-  { to: "/trending", label: "Trending", icon: Flame },
-  { to: "/dms", label: "DMs", icon: MessageSquare },
-  { to: "/marketing", label: "Promote", icon: Megaphone },
+  { to: "/", label: "new", icon: Home },
+  { to: "/trending", label: "trending", icon: Flame },
+  { to: "/dms", label: "dms", icon: MessageSquare },
+  { to: "/marketing", label: "promote", icon: Megaphone },
 ];
 
 export const AppShell = ({ children }: { children: React.ReactNode }) => {
