@@ -129,7 +129,7 @@ const Auth = () => {
       {/* Brand mark */}
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2 font-semibold text-white/80 pointer-events-none">
         <GraduationCap className="h-5 w-5" />
-        <span>{brand}</span>
+        <Brand />
       </div>
 
       {/* Sign in trigger / form, top-left */}
