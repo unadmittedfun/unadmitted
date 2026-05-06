@@ -1,44 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useUniversity } from "@/hooks/useUniversity";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import {
-  GraduationCap,
-  ShieldCheck,
-  EyeOff,
-  Sparkles,
-  MessageSquare,
-  Heart,
-  AlertTriangle,
-  ArrowRight,
-} from "lucide-react";
+import { GraduationCap, Sparkles, ArrowRight } from "lucide-react";
 
 const onboardedKey = (uid: string) => `unadmitted:onboarded:${uid}`;
 export const markOnboarded = (uid: string) => localStorage.setItem(onboardedKey(uid), "1");
 export const isOnboarded = (uid: string) => localStorage.getItem(onboardedKey(uid)) === "1";
 
-const rules = [
-  {
-    icon: EyeOff,
-    title: "Stay anonymous, stay kind",
-    body: "No real names, no doxxing, no targeting individuals — staff or students.",
-  },
-  {
-    icon: Heart,
-    title: "Punch up, never down",
-    body: "Critique policies, vibes, and systems. Not classmates.",
-  },
-  {
-    icon: AlertTriangle,
-    title: "Keep it legal & safe",
-    body: "No threats, no hate speech, no NSFW. Reports are reviewed within 24h.",
-  },
-];
-
 const Welcome = () => {
   const nav = useNavigate();
-  const { user, profile, community } = useAuth();
-  const brand = community?.short_name ?? community?.name?.replace(" Unadmitted", "") ?? "your campus";
+  const { user, profile } = useAuth();
+  const uni = useUniversity();
+  const brand = uni?.short_name ?? "your campus";
+  const rules = uni?.welcome.rules ?? [];
+  const chips = uni?.welcome.feature_chips ?? [];
+  const sparks = uni?.welcome.sparks ?? [];
 
   const finish = (to: string) => {
     if (user) markOnboarded(user.id);
