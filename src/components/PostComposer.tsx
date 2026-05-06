@@ -90,7 +90,7 @@ export const PostComposer = ({ onPosted }: { onPosted: () => void }) => {
   return (
     <Card className="p-3 lg:p-4 mb-3 lg:mb-4 shadow-card">
       <div className="text-[10px] lg:text-xs text-muted-foreground mb-1 lg:mb-2">
-        Posting as <span className="font-mono text-foreground">{profile?.handle}</span> · anonymous
+        posting as <span className="font-mono text-foreground">{profile?.handle}</span> · anonymous
       </div>
       <Textarea
         value={body}
