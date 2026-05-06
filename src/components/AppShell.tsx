@@ -24,7 +24,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
   const brand = community?.name ?? "Unadmitted";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <header className="sticky top-0 z-30 bg-background/75 backdrop-blur-xl border-b border-border/60">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group">
