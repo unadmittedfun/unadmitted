@@ -32,22 +32,4 @@ const App = () => (
             <Routes>
               <Route path="/auth" element={<Auth />} />
               <Route path="/amendments" element={<ProtectedRoute><Amendments /></ProtectedRoute>} />
-              <Route path="/welcome" element={<ProtectedRoute><Welcome /></ProtectedRoute>} />
-              <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-              <Route path="/trending" element={<ProtectedRoute><Trending /></ProtectedRoute>} />
-              <Route path="/post/:id" element={<ProtectedRoute><PostDetail /></ProtectedRoute>} />
-              <Route path="/dms" element={<ProtectedRoute><DMs /></ProtectedRoute>} />
-              <Route path="/marketing" element={<ProtectedRoute><Marketing /></ProtectedRoute>} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/unsubscribe" element={<Unsubscribe />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </EncryptionProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
-
-export default App;
+              <Route path="/welcome" element={<ProtectedRoute><Welcome /></Protecte
