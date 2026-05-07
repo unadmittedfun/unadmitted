@@ -28,7 +28,9 @@ export const ProfileSettings = ({
     setUploading(true);
     const ext = file.name.split(".").pop() ?? "jpg";
     const path = `${user.id}/avatar-${Date.now()}.${ext}`;
-    const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+    const { error: upErr } = await supabase.storage
+      .from("avatars")
+      .upload(path, file, { upsert: true });
     if (upErr) { setUploading(false); return toast.error(upErr.message); }
 
     const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
