@@ -17,6 +17,7 @@ type Profile = {
   avatar_url: string | null;
   handle_suffix: string;
   community_id: string;
+  welcome_email_sent_at: string | null;
 };
 
 type AuthCtx = {
@@ -24,7 +25,7 @@ type AuthCtx = {
   session: Session | null;
   profile: Profile | null;
   community: Community | null;
-  hostCommunity: Community | null; // community implied by current subdomain (may be null)
+  hostCommunity: Community | null;
   loading: boolean;
   refreshProfile: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -44,20 +45,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { data } = await supabase.from("profiles").select("*").eq("id", uid).maybeSingle();
     const p = data as Profile | null;
     setProfile(p);
+
     if (p?.community_id) {
       const c = await fetchCommunityById(p.community_id);
       setCommunity(c);
       applyCommunityTheme(c);
     }
+
+    // Send welcome email once per account (using welcome_email_sent_at — repo 1 schema).
+    // Guard: only attempt if the column is null (never sent) to avoid repeat sends on login.
+    if (p && !p.welcome_email_sent_at) {
+      try {
+        await supabase.functions.invoke("send-welcome-email", {
+          body: { userId: uid },
+        });
+
+        // Stamp the timestamp so we never send again.
+        await supabase
+          .from("profiles")
+          .update({ welcome_email_sent_at: new Date().toISOString() })
+          .eq("id", uid);
+
+        // Refresh in memory so the guard fires correctly next time.
+        const { data: refreshed } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", uid)
+          .maybeSingle();
+        setProfile(refreshed as Profile | null);
+      } catch (error) {
+        console.error("Failed to send welcome email:", error);
+      }
+    }
   };
 
-  // Resolve community from the URL host on first mount (used for the auth/landing screens).
+  // Resolve community from the URL host on first mount (auth/landing screens).
   useEffect(() => {
     const slug = getCommunitySlugFromHost();
     if (!slug) return;
     fetchCommunityBySlug(slug).then((c) => {
       setHostCommunity(c);
-      // Only apply host theme if we don't yet have a logged-in community.
       if (!community) applyCommunityTheme(c);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,12 +102,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         applyCommunityTheme(hostCommunity);
       }
     });
+
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) loadProfile(s.user.id).finally(() => setLoading(false));
       else setLoading(false);
     });
+
     return () => sub.subscription.unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
