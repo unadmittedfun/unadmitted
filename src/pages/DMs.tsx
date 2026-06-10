@@ -323,8 +323,9 @@ const DMs = () => {
                 {messages.map((m) => {
                   const mine = m.sender_id === user?.id;
                   const text = m.is_encrypted
-                    ? (mine ? "🔒 sent (only your recipient can read)" : (plainById[m.id] ?? "🔒 decrypting…"))
+                    ? (plainById[m.id] ?? "🔒 decrypting…")
                     : m.body;
+
                   return (
                     <div
                       key={m.id}
