@@ -18,8 +18,18 @@ import Terms from "./pages/Terms.tsx";
 import Unsubscribe from "./pages/Unsubscribe.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import Landing from "./pages/Landing.tsx";
+import About from "./pages/About.tsx";
+import { useAuth } from "@/contexts/AuthContext";
 
 const queryClient = new QueryClient();
+
+const RootGate = () => {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-muted-foreground">…</div>;
+  if (!user) return <Landing />;
+  return <ProtectedRoute><Index /></ProtectedRoute>;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -37,7 +47,8 @@ const App = () => (
             <Route path="/marketing" element={<Marketing />} />
             <Route path="/amendments" element={<ProtectedRoute><Amendments /></ProtectedRoute>} />
             <Route path="/welcome" element={<ProtectedRoute><Welcome /></ProtectedRoute>} />
-            <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/" element={<RootGate />} />
+            <Route path="/about" element={<About />} />
             <Route path="/trending" element={<ProtectedRoute><Trending /></ProtectedRoute>} />
             <Route path="/post/:id" element={<ProtectedRoute><PostDetail /></ProtectedRoute>} />
             <Route path="/dms" element={<ProtectedRoute><DMs /></ProtectedRoute>} />
