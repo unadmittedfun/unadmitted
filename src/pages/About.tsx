@@ -49,7 +49,7 @@ const About = () => {
             {[
               { icon: GraduationCap, title: "verified at the door", body: "sign-up checks your university email domain. if you aren't a student, you don't get in." },
               { icon: Users, title: "anonymous handles", body: "each account picks a handle. your legal name and email are never shown on posts." },
-              { icon: Lock, title: "end-to-end encrypted dms", body: "direct messages are encrypted on your device. we cannot read them. neither can anyone else." },
+              { icon: Lock, title: "minimal data collection", body: "we store only what is needed to run the community. no behavioral profiles, no shadow accounts." },
               { icon: ShieldCheck, title: "no ad targeting", body: "no third-party trackers, no selling data, no behavioral profiling. ads, if any, are flat sponsorships." },
             ].map((f, i) => (
               <Card key={i} className="p-5 shadow-card">
@@ -65,10 +65,10 @@ const About = () => {
           <h2 className="text-2xl font-serif">privacy, plainly</h2>
           <ul className="space-y-2 text-muted-foreground text-sm list-disc pl-5">
             <li>your email is stored only to verify you belong to a community. it is never shown to other users.</li>
-            <li>direct messages use end-to-end encryption. the server stores ciphertext only.</li>
+            <li>posts are scoped to your campus and never sold or shared with third parties.</li>
             <li>we do not run google analytics, facebook pixel, or any third-party behavioral tracker.</li>
             <li>posts can be deleted by their author at any time, and the database row is removed.</li>
-            <li>account deletion wipes your profile, posts, votes, and message keys.</li>
+            <li>account deletion wipes your profile, posts, and votes.</li>
           </ul>
           <p className="text-xs text-muted-foreground">
             the full policy lives in <Link to="/privacy" className="underline">privacy</Link> and{" "}

@@ -54,7 +54,7 @@ const Landing = () => {
               </Link>
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
-              sign-up requires a verified university email. end-to-end encrypted dms.
+              sign-up requires a verified university email.
             </p>
           </div>
 
@@ -91,7 +91,7 @@ const Landing = () => {
           {[
             { icon: GraduationCap, title: "verified students only", body: "we check your university email at sign-up. no bots, no outsiders, no recruiters." },
             { icon: Lock, title: "anonymous by default", body: "you pick a handle. your real identity never appears on a post, ever." },
-            { icon: ShieldCheck, title: "privacy is the product", body: "end-to-end encrypted dms. no ad targeting. your data is not for sale." },
+            { icon: ShieldCheck, title: "privacy is the product", body: "no ad targeting. your data is not for sale. ever." },
           ].map((f, i) => (
             <Card key={i} className="p-6 shadow-card">
               <f.icon className="h-5 w-5 text-primary mb-3" />
