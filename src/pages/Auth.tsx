@@ -199,6 +199,11 @@ const Auth = () => {
               <p className="text-xs text-destructive mt-1.5 font-medium">
                 do not use your uni password — this is a separate student app.
               </p>
+              {mode === "signup" && (
+                <p className="text-xs text-emerald-400 mt-1.5 font-medium">
+                  privacy matters — everything is end-to-end encrypted.
+                </p>
+              )}
             </div>
             {mode === "signin" && (
               <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer select-none">
