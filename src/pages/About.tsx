@@ -104,8 +104,8 @@ const About = () => {
             next campus goes live.
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <a href="mailto:hello@unadmitted.fun">
-              <Button className="gap-2"><Mail className="h-4 w-4" /> hello@unadmitted.fun</Button>
+            <a href="mailto:unadmittedfun@gmail.com">
+              <Button className="gap-2"><Mail className="h-4 w-4" /> unadmittedfun@gmail.com</Button>
             </a>
             <Link to="/auth">
               <Button variant="outline">create an account</Button>
