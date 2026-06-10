@@ -132,18 +132,7 @@ const Landing = () => {
                   <span className="h-2 w-2 rounded-full bg-primary" />
                   trending · your campus
                 </div>
-                <div className="space-y-3">
-                  {[
-                    { h: "anonymous", t: "the library 3rd floor is the only honest place on this campus." },
-                    { h: "anonymous", t: "professor finally admitted the midterm was unfair. small wins." },
-                    { h: "anonymous", t: "anyone else feel like office hours are just performance art?" },
-                  ].map((p, i) => (
-                    <div key={i} className="rounded-2xl border border-border bg-card p-3">
-                      <div className="font-mono text-[11px] text-muted-foreground mb-1">{p.h}</div>
-                      <p className="text-sm leading-snug">{p.t}</p>
-                    </div>
-                  ))}
-                </div>
+                <MockPosts />
               </Card>
             </div>
           </div>
