@@ -233,10 +233,13 @@ const Auth = () => {
       </Link>
 
       {/* Brand mark */}
-      <div className="absolute top-4 right-4 z-10 flex items-center gap-2 font-semibold text-white/80 pointer-events-none">
+      <Link
+        to="/landing"
+        className="absolute top-4 right-4 z-10 flex items-center gap-2 font-semibold text-white/80 hover:text-white transition-colors"
+      >
         <GraduationCap className="h-5 w-5" />
         <Brand />
-      </div>
+      </Link>
 
       {/* Sign in form / OTP step */}
       <div ref={containerRef} className="absolute top-16 left-4 z-10 w-[calc(100%-2rem)] max-w-md">
