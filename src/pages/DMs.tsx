@@ -9,7 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
-import { MessageSquare, Send, ArrowLeft } from "lucide-react";
+import { MessageSquare, Send, ArrowLeft, ShieldCheck } from "lucide-react";
+import { ensureLocalKeyPair, encryptFor, decryptFrom } from "@/lib/crypto";
 
 type Conv = {
   id: string;
@@ -18,6 +19,7 @@ type Conv = {
   is_marketing_bot: boolean;
   other_handle: string;
   other_avatar: string | null;
+  other_public_key: string | null;
   last_message?: string;
   last_timestamp?: string;
 };
@@ -28,6 +30,8 @@ type Msg = {
   sender_id: string | null;
   is_bot: boolean;
   created_at: string;
+  is_encrypted: boolean;
+  nonce: string | null;
 };
 
 const DMs = () => {
@@ -39,6 +43,13 @@ const DMs = () => {
   const [body, setBody] = useState("");
   const [isSending, setIsSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  // Plaintext view of decrypted messages, keyed by message id.
+  const [plainById, setPlainById] = useState<Record<string, string>>({});
+
+  // Local NaCl keypair for this device (created lazily; AuthContext also seeds it).
+  const myKeys = user ? ensureLocalKeyPair(user.id) : null;
+
 
   const loadConvs = async () => {
     if (!user) return;
