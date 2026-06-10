@@ -44,17 +44,27 @@ function RotatingTagline() {
   );
 }
 
-function useRandomPosts(count: number) {
-  return useMemo(() => {
+function MockPosts() {
+  const posts = useMemo(() => {
     const pool = [...MOCK_POSTS];
     const out = [];
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < 3; i++) {
       const idx = Math.floor(Math.random() * pool.length);
       out.push(pool[idx]);
       pool.splice(idx, 1);
     }
     return out;
   }, []);
+  return (
+    <div className="space-y-3">
+      {posts.map((p, i) => (
+        <div key={i} className="rounded-2xl border border-border bg-card p-3">
+          <div className="font-mono text-[11px] text-muted-foreground mb-1">{p.h}</div>
+          <p className="text-sm leading-snug">{p.t}</p>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 const Landing = () => {
