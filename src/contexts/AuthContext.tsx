@@ -54,7 +54,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setCommunity(c);
       applyCommunityTheme(c);
     }
+    // Ensure this device has a NaCl keypair and the profile's public_key matches.
+    try {
+      const { ensureLocalKeyPair } = await import("@/lib/crypto");
+      const kp = ensureLocalKeyPair(uid);
+      if (p && (p as any).public_key !== kp.publicKey) {
+        await supabase
+          .from("profiles")
+          .update({ public_key: kp.publicKey } as any)
+          .eq("id", uid);
+      }
+    } catch (e) {
+      console.warn("keypair sync failed", e);
+    }
   }, []);
+
 
   const refreshProfile = useCallback(async () => {
     if (user) await loadProfile(user.id);
