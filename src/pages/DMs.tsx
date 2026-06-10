@@ -149,11 +149,17 @@ const DMs = () => {
     setIsSending(true);
     const text = body.trim();
     setBody("");
+    const { data: conv } = await supabase
+      .from("conversations")
+      .select("community_id")
+      .eq("id", active.id)
+      .maybeSingle();
     const { error } = await supabase.from("messages").insert({
       conversation_id: active.id,
       sender_id: user.id,
       body: text,
       is_bot: false,
+      community_id: conv?.community_id ?? "",
     });
     if (error) {
       toast.error(error.message);
