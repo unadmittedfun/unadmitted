@@ -103,7 +103,7 @@ const Privacy = () => (
           <ul className="list-disc pl-5 space-y-1">
             <li><strong className="text-foreground">Other users</strong> see only your anonymous handle, avatar, and content you publish.</li>
             <li><strong className="text-foreground">The operator (sole admin)</strong> can see emails for moderation, abuse response, and legal compliance.</li>
-            <li><strong className="text-foreground">Sub-processors</strong>: Supabase (hosting/database, EU region), Stripe (payments), and Mailgun (transactional email via Lovable). They process data on our behalf under DPAs.</li>
+            <li><strong className="text-foreground">Sub-processors</strong>: Supabase (hosting/database, EU region), Stripe (payments), and Mailgun (transactional email). They process data on our behalf under DPAs.</li>
           </ul>
         </Block>
 
