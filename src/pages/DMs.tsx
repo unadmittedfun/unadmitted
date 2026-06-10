@@ -66,16 +66,30 @@ const DMs = () => {
       const otherId = c.user_a === user.id ? c.user_b : c.user_a;
       const { data: otherProfile } = await supabase
         .from("profiles")
-        .select("handle, avatar_url")
+        .select("handle, avatar_url, public_key")
         .eq("id", otherId)
         .maybeSingle();
       const { data: lastMsg } = await supabase
         .from("messages")
-        .select("body, created_at")
+        .select("body, created_at, is_encrypted, nonce, sender_id")
         .eq("conversation_id", c.id)
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
+
+      // Best-effort preview of the last message (decrypt if it was for us).
+      let preview = lastMsg?.body;
+      if (lastMsg?.is_encrypted && lastMsg?.nonce && otherProfile?.public_key && myKeys) {
+        const senderPub =
+          lastMsg.sender_id === user.id ? myKeys.publicKey : otherProfile.public_key;
+        const plain = decryptFrom(
+          lastMsg.body,
+          lastMsg.nonce,
+          senderPub,
+          myKeys.secretKey,
+        );
+        preview = plain ?? "🔒 encrypted";
+      }
 
       mapped.push({
         id: c.id,
@@ -84,10 +98,12 @@ const DMs = () => {
         is_marketing_bot: c.is_marketing_bot,
         other_handle: otherProfile?.handle ?? "anonymous",
         other_avatar: otherProfile?.avatar_url ?? null,
-        last_message: lastMsg?.body,
+        other_public_key: (otherProfile as any)?.public_key ?? null,
+        last_message: preview,
         last_timestamp: lastMsg?.created_at,
       });
     }
+
 
     mapped.sort(
       (a, b) =>
