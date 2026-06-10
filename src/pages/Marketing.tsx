@@ -73,7 +73,7 @@ const Marketing = () => {
           <div className="px-4 pb-4">
             <div className="grid sm:grid-cols-2 gap-2">
               {PACKAGES.map((p) => (
-                <Button key={p.id} variant={selectedPackage.id === p.id ? "default" : "outline"} className="justify-between h-auto py-3" onClick={() => { setSelectedPackage(p); setModalPkg(p); setRequestText(""); setModalOpen(true); }}>
+                <Button key={p.id} variant={selectedPackage.id === p.id ? "default" : "outline"} className="justify-between h-auto py-3" onClick={() => setSelectedPackage(p)}>
                   <span className="text-left text-xs">{p.label}</span>
                   <span className="font-bold">€{p.price}</span>
                 </Button>
