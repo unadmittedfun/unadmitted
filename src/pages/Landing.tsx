@@ -73,9 +73,9 @@ const Landing = () => {
                 </div>
                 <div className="space-y-3">
                   {[
-                    { h: "@quiet-otter-22", t: "the library 3rd floor is the only honest place on this campus." },
-                    { h: "@late-fern-08", t: "professor finally admitted the midterm was unfair. small wins." },
-                    { h: "@neon-koi-41", t: "anyone else feel like office hours are just performance art?" },
+                    { h: "anonymous", t: "the library 3rd floor is the only honest place on this campus." },
+                    { h: "anonymous", t: "professor finally admitted the midterm was unfair. small wins." },
+                    { h: "anonymous", t: "anyone else feel like office hours are just performance art?" },
                   ].map((p, i) => (
                     <div key={i} className="rounded-2xl border border-border bg-card p-3">
                       <div className="font-mono text-[11px] text-muted-foreground mb-1">{p.h}</div>
