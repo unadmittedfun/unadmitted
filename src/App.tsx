@@ -4,7 +4,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { EncryptionProvider } from "@/contexts/EncryptionContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index.tsx";
 import Trending from "./pages/Trending.tsx";
@@ -17,6 +16,7 @@ import Welcome from "./pages/Welcome.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import Terms from "./pages/Terms.tsx";
 import Unsubscribe from "./pages/Unsubscribe.tsx";
+import ResetPassword from "./pages/ResetPassword.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -28,8 +28,25 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <EncryptionProvider>
-            <Routes>
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/amendments" element={<ProtectedRoute><Amendments /></ProtectedRoute>} />
-              <Route path="/welcome" element={<ProtectedRoute><Welcome /></Protecte
+          <Routes>
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/unsubscribe" element={<Unsubscribe />} />
+            <Route path="/marketing" element={<Marketing />} />
+            <Route path="/amendments" element={<ProtectedRoute><Amendments /></ProtectedRoute>} />
+            <Route path="/welcome" element={<ProtectedRoute><Welcome /></ProtectedRoute>} />
+            <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/trending" element={<ProtectedRoute><Trending /></ProtectedRoute>} />
+            <Route path="/post/:id" element={<ProtectedRoute><PostDetail /></ProtectedRoute>} />
+            <Route path="/dms" element={<ProtectedRoute><DMs /></ProtectedRoute>} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
+
+export default App;
