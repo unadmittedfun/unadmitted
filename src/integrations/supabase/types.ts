@@ -625,6 +625,20 @@ export type Database = {
       }
     }
     Functions: {
+      community_for_email_domain: {
+        Args: { _domain: string }
+        Returns: {
+          accent_hsl: string
+          hashtag: string
+          id: string
+          is_active: boolean
+          name: string
+          primary_hsl: string
+          short_name: string
+          slug: string
+          tagline: string
+        }[]
+      }
       community_member_count: { Args: never; Returns: number }
       delete_email: {
         Args: { message_id: number; queue_name: string }
