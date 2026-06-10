@@ -57,6 +57,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "ad_requests_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "ad_requests_conversation_id_fkey"
             columns: ["conversation_id"]
             isOneToOne: false
@@ -99,6 +106,13 @@ export type Database = {
             columns: ["community_id"]
             isOneToOne: false
             referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities_public"
             referencedColumns: ["id"]
           },
           {
@@ -183,6 +197,13 @@ export type Database = {
             columns: ["community_id"]
             isOneToOne: false
             referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities_public"
             referencedColumns: ["id"]
           },
         ]
@@ -317,6 +338,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "messages_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "messages_conversation_id_fkey"
             columns: ["conversation_id"]
             isOneToOne: false
@@ -370,6 +398,13 @@ export type Database = {
             referencedRelation: "communities"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "posts_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
@@ -421,6 +456,13 @@ export type Database = {
             columns: ["community_id"]
             isOneToOne: false
             referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities_public"
             referencedColumns: ["id"]
           },
         ]
@@ -495,6 +537,13 @@ export type Database = {
             columns: ["community_id"]
             isOneToOne: false
             referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reposts_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities_public"
             referencedColumns: ["id"]
           },
           {
@@ -584,10 +633,56 @@ export type Database = {
             referencedRelation: "communities"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "votes_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
     Views: {
+      communities_public: {
+        Row: {
+          accent_hsl: string | null
+          created_at: string | null
+          hashtag: string | null
+          id: string | null
+          is_active: boolean | null
+          name: string | null
+          primary_hsl: string | null
+          short_name: string | null
+          slug: string | null
+          tagline: string | null
+        }
+        Insert: {
+          accent_hsl?: string | null
+          created_at?: string | null
+          hashtag?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          name?: string | null
+          primary_hsl?: string | null
+          short_name?: string | null
+          slug?: string | null
+          tagline?: string | null
+        }
+        Update: {
+          accent_hsl?: string | null
+          created_at?: string | null
+          hashtag?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          name?: string | null
+          primary_hsl?: string | null
+          short_name?: string | null
+          slug?: string | null
+          tagline?: string | null
+        }
+        Relationships: []
+      }
       public_profiles: {
         Row: {
           avatar_url: string | null
@@ -621,10 +716,31 @@ export type Database = {
             referencedRelation: "communities"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "profiles_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
     Functions: {
+      community_for_email_domain: {
+        Args: { _domain: string }
+        Returns: {
+          accent_hsl: string
+          hashtag: string
+          id: string
+          is_active: boolean
+          name: string
+          primary_hsl: string
+          short_name: string
+          slug: string
+          tagline: string
+        }[]
+      }
       community_member_count: { Args: never; Returns: number }
       delete_email: {
         Args: { message_id: number; queue_name: string }
