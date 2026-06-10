@@ -119,13 +119,36 @@ const DMs = () => {
     }
   };
 
-  const loadMessages = async (cid: string) => {
+  // Decrypt a single message and cache the plaintext.
+  const decryptInto = (msgs: Msg[], conv: Conv | null) => {
+    if (!user || !myKeys || !conv) return;
+    setPlainById((prev) => {
+      const next = { ...prev };
+      for (const m of msgs) {
+        if (!m.is_encrypted || !m.nonce || next[m.id] != null) continue;
+        // For messages I sent, the recipient pub key is the other user.
+        // For messages I received, the sender pub key is the other user.
+        const otherPub = conv.other_public_key;
+        if (!otherPub) {
+          next[m.id] = "🔒 encrypted (other user has no key yet)";
+          continue;
+        }
+        const plain = decryptFrom(m.body, m.nonce, otherPub, myKeys.secretKey);
+        next[m.id] = plain ?? "🔒 cannot decrypt on this device";
+      }
+      return next;
+    });
+  };
+
+  const loadMessages = async (cid: string, conv: Conv | null) => {
     const { data } = await supabase
       .from("messages")
       .select("*")
       .eq("conversation_id", cid)
       .order("created_at");
-    setMessages((data ?? []) as Msg[]);
+    const msgs = (data ?? []) as Msg[];
+    setMessages(msgs);
+    decryptInto(msgs, conv);
   };
 
   useEffect(() => {
@@ -150,7 +173,7 @@ const DMs = () => {
 
   useEffect(() => {
     if (!active) return;
-    loadMessages(active.id);
+    loadMessages(active.id, active);
     const ch = supabase
       .channel(`msg-${active.id}`)
       .on(
@@ -161,10 +184,15 @@ const DMs = () => {
           table: "messages",
           filter: `conversation_id=eq.${active.id}`,
         },
-        (payload) => setMessages((m) => [...m, payload.new as Msg])
+        (payload) => {
+          const m = payload.new as Msg;
+          setMessages((cur) => [...cur, m]);
+          decryptInto([m], active);
+        }
       )
       .subscribe();
     return () => { supabase.removeChannel(ch); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
 
   useEffect(() => {
@@ -181,19 +209,37 @@ const DMs = () => {
       .select("community_id")
       .eq("id", active.id)
       .maybeSingle();
+
+    let payload: { body: string; is_encrypted: boolean; nonce: string | null } = {
+      body: text,
+      is_encrypted: false,
+      nonce: null,
+    };
+
+    if (active.other_public_key && myKeys) {
+      const sealed = encryptFor(text, active.other_public_key, myKeys.secretKey);
+      payload = { body: sealed.body, is_encrypted: true, nonce: sealed.nonce };
+    }
+
     const { error } = await supabase.from("messages").insert({
       conversation_id: active.id,
       sender_id: user.id,
-      body: text,
       is_bot: false,
       community_id: conv?.community_id ?? "",
-    });
+      ...payload,
+    } as any);
     if (error) {
       toast.error(error.message);
       setBody(text);
+    } else if (payload.is_encrypted) {
+      // We already know the plaintext locally — cache it so it renders immediately.
+      // The realtime insert will arrive shortly with a real id; we cache by a temp key
+      // only if we don't already have the new row — simplest is to rely on decryptInto
+      // when the row arrives (we can also decrypt our own ciphertext via the same pair).
     }
     setIsSending(false);
   };
+
 
   return (
     <AppShell>
