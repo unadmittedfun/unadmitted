@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { signUpSchema } from "@/lib/validation";
@@ -26,6 +26,50 @@ const Auth = () => {
   const [rememberMe, setRememberMe] = useState(() => !!localStorage.getItem("unadmitted.rememberedEmail"));
   const [loading, setLoading] = useState(false);
   const [formOpen, setFormOpen] = useState(true);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const dragOffsetRef = useRef({ x: 0, y: 0 });
+  const isDraggingRef = useRef(false);
+  const dragStartRef = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      if (!isDraggingRef.current) return;
+      const x = e.clientX - dragStartRef.current.x;
+      const y = e.clientY - dragStartRef.current.y;
+      dragOffsetRef.current = { x, y };
+      if (containerRef.current) {
+        containerRef.current.style.transform = `translate(${x}px, ${y}px)`;
+      }
+    };
+    const onUp = () => {
+      isDraggingRef.current = false;
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+  }, []);
+
+  const handleDragStart = (e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+    isDraggingRef.current = true;
+    dragStartRef.current = {
+      x: e.clientX - dragOffsetRef.current.x,
+      y: e.clientY - dragOffsetRef.current.y,
+    };
+    e.preventDefault();
+  };
+
+  const closeForm = () => {
+    setFormOpen(false);
+    dragOffsetRef.current = { x: 0, y: 0 };
+    if (containerRef.current) {
+      containerRef.current.style.transform = "";
+    }
+  };
 
   // Branding falls back to a generic look until the user is logged in or we
   // detect their university from the subdomain.
@@ -147,7 +191,7 @@ const Auth = () => {
       </div>
 
       {/* Sign in trigger / form, top-left */}
-      <div className="absolute top-4 left-4 z-10 w-[calc(100%-2rem)] max-w-md">
+      <div ref={containerRef} className="absolute top-4 left-4 z-10 w-[calc(100%-2rem)] max-w-md">
         {!formOpen ? (
           <button
             type="button"
@@ -159,9 +203,15 @@ const Auth = () => {
           </button>
         ) : (
         <Card className="relative w-full p-6 shadow-card max-h-[calc(100vh-2rem)] overflow-y-auto">
+          <div
+            className="flex justify-center mb-2 cursor-grab active:cursor-grabbing select-none"
+            onMouseDown={handleDragStart}
+          >
+            <div className="w-8 h-1 rounded-full bg-muted-foreground/20" />
+          </div>
           <button
             type="button"
-            onClick={() => setFormOpen(false)}
+            onClick={closeForm}
             aria-label="Close"
             className="absolute top-3 right-3 h-7 w-7 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary inline-flex items-center justify-center transition-colors"
           >
