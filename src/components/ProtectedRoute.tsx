@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { isOnboarded } from "@/pages/Welcome";
+import { isOnboardedLocal } from "@/pages/Welcome";
 
 export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const { user, profile, loading } = useAuth();
@@ -11,9 +11,10 @@ export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   if (profile && !profile.accepted_amendments && loc.pathname !== "/amendments") {
     return <Navigate to="/amendments" replace />;
   }
+  const onboarded = !!(profile as any)?.onboarded_at || isOnboardedLocal(user.id);
   if (
     profile?.accepted_amendments &&
-    !isOnboarded(user.id) &&
+    !onboarded &&
     loc.pathname !== "/welcome" &&
     loc.pathname !== "/amendments"
   ) {
@@ -21,4 +22,3 @@ export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   }
   return <>{children}</>;
 };
-

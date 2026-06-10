@@ -384,6 +384,7 @@ export type Database = {
           handle: string
           handle_suffix: string
           id: string
+          onboarded_at: string | null
           public_key: string | null
           welcome_email_sent_at: string | null
         }
@@ -398,6 +399,7 @@ export type Database = {
           handle: string
           handle_suffix: string
           id: string
+          onboarded_at?: string | null
           public_key?: string | null
           welcome_email_sent_at?: string | null
         }
@@ -412,6 +414,7 @@ export type Database = {
           handle?: string
           handle_suffix?: string
           id?: string
+          onboarded_at?: string | null
           public_key?: string | null
           welcome_email_sent_at?: string | null
         }
