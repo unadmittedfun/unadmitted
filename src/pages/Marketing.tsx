@@ -36,6 +36,9 @@ const Marketing = () => {
   const [agreed, setAgreed] = useState(false);
   const [openSection, setOpenSection] = useState<"packages" | "policy" | "compose" | null>(null);
   const toggle = (s: "packages" | "policy" | "compose") => setOpenSection((cur) => (cur === s ? null : s));
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalPkg, setModalPkg] = useState<typeof PACKAGES[0] | null>(null);
+  const [requestText, setRequestText] = useState("");
 
   const send = async () => {
     if (!user || !profile || !input.trim()) return;
