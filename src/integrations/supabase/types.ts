@@ -282,6 +282,8 @@ export type Database = {
           created_at: string
           id: string
           is_bot: boolean
+          is_encrypted: boolean
+          nonce: string | null
           sender_id: string | null
         }
         Insert: {
@@ -291,6 +293,8 @@ export type Database = {
           created_at?: string
           id?: string
           is_bot?: boolean
+          is_encrypted?: boolean
+          nonce?: string | null
           sender_id?: string | null
         }
         Update: {
@@ -300,6 +304,8 @@ export type Database = {
           created_at?: string
           id?: string
           is_bot?: boolean
+          is_encrypted?: boolean
+          nonce?: string | null
           sender_id?: string | null
         }
         Relationships: [
@@ -378,6 +384,7 @@ export type Database = {
           handle: string
           handle_suffix: string
           id: string
+          public_key: string | null
           welcome_email_sent_at: string | null
         }
         Insert: {
@@ -391,6 +398,7 @@ export type Database = {
           handle: string
           handle_suffix: string
           id: string
+          public_key?: string | null
           welcome_email_sent_at?: string | null
         }
         Update: {
@@ -404,6 +412,7 @@ export type Database = {
           handle?: string
           handle_suffix?: string
           id?: string
+          public_key?: string | null
           welcome_email_sent_at?: string | null
         }
         Relationships: [
