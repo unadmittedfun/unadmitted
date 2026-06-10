@@ -43,6 +43,10 @@ const Landing = () => {
               verified by their .edu email, posting under anonymous handles. no scraping,
               no selling, no algorithm chasing rage.
             </p>
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-3.5 py-1.5 text-xs font-semibold text-primary">
+              <Lock className="h-3.5 w-3.5" />
+              encryption end-to-end · your data stays yours
+            </div>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link to="/auth">
                 <Button size="lg" className="gap-2">
@@ -54,7 +58,7 @@ const Landing = () => {
               </Link>
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
-              sign-up requires a verified university email.
+              sign-up requires a verified university email — we send a 6-digit code to confirm.
             </p>
           </div>
 
@@ -87,11 +91,12 @@ const Landing = () => {
 
       {/* values */}
       <section className="border-t border-border/60 bg-secondary/40">
-        <div className="max-w-6xl mx-auto px-5 py-16 grid md:grid-cols-3 gap-6">
+        <div className="max-w-6xl mx-auto px-5 py-16 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { icon: GraduationCap, title: "verified students only", body: "we check your university email at sign-up. no bots, no outsiders, no recruiters." },
-            { icon: Lock, title: "anonymous by default", body: "you pick a handle. your real identity never appears on a post, ever." },
-            { icon: ShieldCheck, title: "privacy is the product", body: "no ad targeting. your data is not for sale. ever." },
+            { icon: Lock, title: "encryption, end to end", body: "your password, session, and direct messages are encrypted in transit and at rest. nobody — not even us — can read your dms." },
+            { icon: ShieldCheck, title: "anonymous by default", body: "you pick a handle. your real identity never appears on a post, ever." },
+            { icon: Sparkles, title: "privacy is the product", body: "no ad targeting. your data is not for sale. ever." },
           ].map((f, i) => (
             <Card key={i} className="p-6 shadow-card">
               <f.icon className="h-5 w-5 text-primary mb-3" />
