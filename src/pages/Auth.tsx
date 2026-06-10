@@ -196,6 +196,9 @@ const Auth = () => {
                 <Label htmlFor="password">password</Label>
               </div>
               <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+              <p className="text-xs text-destructive mt-1.5 font-medium">
+                do not use your ACG password — this is a separate student app.
+              </p>
             </div>
             {mode === "signin" && (
               <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer select-none">
