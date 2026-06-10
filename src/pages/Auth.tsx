@@ -246,11 +246,11 @@ const Auth = () => {
                 <Label htmlFor="password">password</Label>
               </div>
               <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
-              <p className="text-xs text-destructive mt-1.5 font-medium">
+              <p className="text-xs text-destructive mt-1.5 font-medium text-center">
                 do not use your uni password — this is a separate student app.
               </p>
               {mode === "signup" && (
-                <p className="text-xs text-emerald-400 mt-1.5 font-medium">
+                <p className="text-xs text-emerald-400 mt-1.5 font-medium text-center">
                   privacy matters — everything is end-to-end encrypted.
                 </p>
               )}
