@@ -111,6 +111,31 @@ const Auth = () => {
     }
   };
 
+  const resendVerification = async () => {
+    const emailParsed = signUpSchema.shape.email.safeParse(email);
+    if (!emailParsed.success) return toast.error("enter your email above first");
+    if (!isAcceptedEduEmail(emailParsed.data)) {
+      return toast.error("use your official .edu email");
+    }
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: emailParsed.data,
+        options: { emailRedirectTo: window.location.origin },
+      });
+      if (error) throw error;
+      toast.success(
+        `verification email re-sent. check your inbox AND spam/junk folder.`,
+        { duration: 8000 }
+      );
+    } catch (err: any) {
+      toast.error(err.message ?? "couldn't resend — try again in a minute");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 overflow-hidden bg-[#0a0a0a]">
       <SnakeBackground className="absolute inset-0" interactive={!formOpen} />
