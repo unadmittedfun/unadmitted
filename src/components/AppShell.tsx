@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { GraduationCap, Home, Flame, MessageSquare, Megaphone, LogOut, Settings } from "lucide-react";
+import { GraduationCap, Home, Flame, MessageSquare, Megaphone, ScrollText, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,7 @@ const tabs = [
   { to: "/trending", label: "trending", icon: Flame },
   { to: "/dms", label: "dms", icon: MessageSquare },
   { to: "/marketing", label: "promote", icon: Megaphone },
+  { to: "/amendments", label: "amendments", icon: ScrollText },
 ];
 
 export const AppShell = ({ children }: { children: React.ReactNode }) => {

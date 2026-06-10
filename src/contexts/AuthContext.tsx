@@ -18,6 +18,7 @@ type Profile = {
   handle_suffix: string;
   community_id: string;
   welcome_email_sent_at: string | null;
+  onboarded_at: string | null;
 };
 
 type AuthCtx = {
