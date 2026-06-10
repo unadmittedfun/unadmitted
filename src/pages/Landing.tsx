@@ -1,7 +1,61 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { GraduationCap, Lock, MessageSquare, ShieldCheck, Sparkles, ArrowRight } from "lucide-react";
+
+const TAGLINES = [
+  "anonymous. verified. campus-only.",
+  "campusweb needs an update ASAP.",
+  "the registrar's office closes at 4pm. the line starts at 3:45.",
+  "campuswifi drops every time it rains.",
+  "the dining hall pizza is a war crime.",
+  "professors who read off slides for 50 minutes. why.",
+  "the parking situation is a human rights violation.",
+  "your tuition pays for the fountain. the fountain is broken.",
+  "the library elevator has been 'under maintenance' since 2019.",
+  "the syllabus says 'participation 10%'. no one knows what that means.",
+  "the campus app crashes more than your gpa.",
+  "group projects: one person works, four people get credit.",
+];
+
+const MOCK_POSTS = [
+  { h: "anonymous", t: "the library 3rd floor is the only honest place on this campus." },
+  { h: "anonymous", t: "professor finally admitted the midterm was unfair. small wins." },
+  { h: "anonymous", t: "anyone else feel like office hours are just performance art?" },
+  { h: "anonymous", t: "the campus gym has been 'renovating' the pool for three years." },
+  { h: "anonymous", t: "just saw a squirrel steal an entire bagel from the quad. respect." },
+  { h: "anonymous", t: "the coffee in the student center tastes like it was brewed during the civil war." },
+  { h: "anonymous", t: "i've been in this lecture hall for fifteen minutes and the ac is still broken." },
+  { h: "anonymous", t: "the 'freshman fifteen' is just the dining hall being open 24/7. no regrets." },
+  { h: "anonymous", t: "found a textbook for $5 in the free bin. beat the bookstore by $200." },
+  { h: "anonymous", t: "the campus alert system sends more spam than my ex." },
+  { h: "anonymous", t: "who decided 8am chemistry was a good idea? i just want to talk." },
+  { h: "anonymous", t: "the study rooms are always booked by people watching netflix. we see you." },
+];
+
+function RotatingTagline() {
+  const tagline = useMemo(() => TAGLINES[Math.floor(Math.random() * TAGLINES.length)], []);
+  return (
+    <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground mb-5">
+      <Sparkles className="h-3.5 w-3.5 text-primary" />
+      {tagline}
+    </div>
+  );
+}
+
+function useRandomPosts(count: number) {
+  return useMemo(() => {
+    const pool = [...MOCK_POSTS];
+    const out = [];
+    for (let i = 0; i < count; i++) {
+      const idx = Math.floor(Math.random() * pool.length);
+      out.push(pool[idx]);
+      pool.splice(idx, 1);
+    }
+    return out;
+  }, []);
+}
 
 const Landing = () => {
   return (
@@ -30,10 +84,7 @@ const Landing = () => {
       <section className="max-w-6xl mx-auto px-5 pt-16 pb-20 lg:pt-24 lg:pb-28">
         <div className="grid lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-7">
-            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground mb-5">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
-              anonymous. verified. campus-only.
-            </div>
+            <RotatingTagline />
             <h1 className="text-5xl lg:text-7xl font-serif leading-[1.02] tracking-tight text-balance">
               the things your campus is thinking,
               <span className="block text-primary">said out loud.</span>
