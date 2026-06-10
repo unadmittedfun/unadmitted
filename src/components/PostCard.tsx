@@ -160,7 +160,7 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
             className={cn("rounded-full h-8 px-2", post.my_vote === "up" && "text-upvote")}
             onClick={() => vote("up")}
           >
-            <ArrowBigUp className={cn("h-5 w-5", post.my_vote === "up" && "fill-current")} />
+            <Heart className={cn("h-5 w-5", post.my_vote === "up" && "fill-current")} />
           </Button>
           <span className={cn(
             "text-sm font-bold tabular-nums px-1 min-w-[1.5rem] text-center",
@@ -174,7 +174,7 @@ export const PostCard = ({ post, onChange }: { post: PostRow; onChange: () => vo
             className={cn("rounded-full h-8 px-2", post.my_vote === "down" && "text-downvote")}
             onClick={() => vote("down")}
           >
-            <ArrowBigDown className={cn("h-5 w-5", post.my_vote === "down" && "fill-current")} />
+            <ThumbsDown className={cn("h-5 w-5", post.my_vote === "down" && "fill-current")} />
           </Button>
         </div>
         <Button asChild variant="ghost" size="sm" className="rounded-full text-muted-foreground gap-1.5">
