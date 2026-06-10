@@ -6,6 +6,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Check, ChevronDown, Megaphone, Send } from "lucide-react";
 import { toast } from "sonner";
 
@@ -28,6 +36,9 @@ const Marketing = () => {
   const [agreed, setAgreed] = useState(false);
   const [openSection, setOpenSection] = useState<"packages" | "policy" | "compose" | null>(null);
   const toggle = (s: "packages" | "policy" | "compose") => setOpenSection((cur) => (cur === s ? null : s));
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalPkg, setModalPkg] = useState<typeof PACKAGES[0] | null>(null);
+  const [requestText, setRequestText] = useState("");
 
   const send = async () => {
     if (!user || !profile || !input.trim()) return;
@@ -65,7 +76,7 @@ const Marketing = () => {
           <div className="px-4 pb-4">
             <div className="grid sm:grid-cols-2 gap-2">
               {PACKAGES.map((p) => (
-                <Button key={p.id} variant={selectedPackage.id === p.id ? "default" : "outline"} className="justify-between h-auto py-3" onClick={() => setSelectedPackage(p)}>
+                <Button key={p.id} variant={selectedPackage.id === p.id ? "default" : "outline"} className="justify-between h-auto py-3" onClick={() => { setSelectedPackage(p); setModalPkg(p); setRequestText(""); setModalOpen(true); }}>
                   <span className="text-left text-xs">{p.label}</span>
                   <span className="font-bold">€{p.price}</span>
                 </Button>
@@ -135,6 +146,39 @@ const Marketing = () => {
           </div>
         )}
       </Card>
+
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>send request</DialogTitle>
+            <DialogDescription>
+              {modalPkg?.label} · €{modalPkg?.price}
+            </DialogDescription>
+          </DialogHeader>
+          <Textarea
+            value={requestText}
+            onChange={(e) => setRequestText(e.target.value)}
+            placeholder="describe your post"
+            className="min-h-28 resize-none"
+          />
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                if (!modalPkg || !requestText.trim()) return;
+                const subject = `promotion request: ${modalPkg.label}`;
+                const body = requestText.trim();
+                window.location.href = `mailto:unadmittedfun@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                setRequestText("");
+                setModalOpen(false);
+                toast.success("opening email client");
+              }}
+              disabled={!requestText.trim()}
+            >
+              <Send className="h-4 w-4 mr-1.5" /> send
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppShell>
   );
 };
