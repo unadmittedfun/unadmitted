@@ -146,6 +146,39 @@ const Marketing = () => {
           </div>
         )}
       </Card>
+
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>send request</DialogTitle>
+            <DialogDescription>
+              {modalPkg?.label} · €{modalPkg?.price}
+            </DialogDescription>
+          </DialogHeader>
+          <Textarea
+            value={requestText}
+            onChange={(e) => setRequestText(e.target.value)}
+            placeholder="describe your post"
+            className="min-h-28 resize-none"
+          />
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                if (!modalPkg || !requestText.trim()) return;
+                const subject = `promotion request: ${modalPkg.label}`;
+                const body = requestText.trim();
+                window.location.href = `mailto:unadmittedfun@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                setRequestText("");
+                setModalOpen(false);
+                toast.success("opening email client");
+              }}
+              disabled={!requestText.trim()}
+            >
+              <Send className="h-4 w-4 mr-1.5" /> send
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppShell>
   );
 };
