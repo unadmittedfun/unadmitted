@@ -302,11 +302,29 @@ const DMs = () => {
                   </AvatarFallback>
                 </Avatar>
                 <span className="font-mono text-sm">{active.other_handle}</span>
+                {active.other_public_key ? (
+                  <span
+                    className="ml-auto inline-flex items-center gap-1 text-[10px] text-green-500 font-medium"
+                    title="end-to-end encrypted on this device"
+                  >
+                    <ShieldCheck className="h-3 w-3" /> e2e
+                  </span>
+                ) : (
+                  <span
+                    className="ml-auto text-[10px] text-muted-foreground"
+                    title="other user hasn't set up encryption yet"
+                  >
+                    not encrypted
+                  </span>
+                )}
               </div>
 
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {messages.map((m) => {
                   const mine = m.sender_id === user?.id;
+                  const text = m.is_encrypted
+                    ? (mine ? "🔒 sent (only your recipient can read)" : (plainById[m.id] ?? "🔒 decrypting…"))
+                    : m.body;
                   return (
                     <div
                       key={m.id}
@@ -319,8 +337,9 @@ const DMs = () => {
                             : "bg-secondary rounded-bl-sm"
                         }`}
                       >
-                        <p className="whitespace-pre-wrap">{m.body}</p>
-                        <p className={`text-[10px] mt-1 opacity-70`}>
+                        <p className="whitespace-pre-wrap">{text}</p>
+                        <p className="text-[10px] mt-1 opacity-70 flex items-center gap-1">
+                          {m.is_encrypted && <ShieldCheck className="h-3 w-3" />}
                           {formatDistanceToNow(new Date(m.created_at), { addSuffix: true })}
                         </p>
                       </div>
@@ -329,6 +348,7 @@ const DMs = () => {
                 })}
                 <div ref={bottomRef} />
               </div>
+
 
               <form
                 onSubmit={(e) => { e.preventDefault(); send(); }}
