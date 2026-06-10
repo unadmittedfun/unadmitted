@@ -9,7 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
-import { MessageSquare, Send, ArrowLeft } from "lucide-react";
+import { MessageSquare, Send, ArrowLeft, ShieldCheck } from "lucide-react";
+import { ensureLocalKeyPair, encryptFor, decryptFrom } from "@/lib/crypto";
 
 type Conv = {
   id: string;
@@ -18,6 +19,7 @@ type Conv = {
   is_marketing_bot: boolean;
   other_handle: string;
   other_avatar: string | null;
+  other_public_key: string | null;
   last_message?: string;
   last_timestamp?: string;
 };
@@ -28,6 +30,8 @@ type Msg = {
   sender_id: string | null;
   is_bot: boolean;
   created_at: string;
+  is_encrypted: boolean;
+  nonce: string | null;
 };
 
 const DMs = () => {
@@ -39,6 +43,13 @@ const DMs = () => {
   const [body, setBody] = useState("");
   const [isSending, setIsSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  // Plaintext view of decrypted messages, keyed by message id.
+  const [plainById, setPlainById] = useState<Record<string, string>>({});
+
+  // Local NaCl keypair for this device (created lazily; AuthContext also seeds it).
+  const myKeys = user ? ensureLocalKeyPair(user.id) : null;
+
 
   const loadConvs = async () => {
     if (!user) return;
@@ -55,16 +66,30 @@ const DMs = () => {
       const otherId = c.user_a === user.id ? c.user_b : c.user_a;
       const { data: otherProfile } = await supabase
         .from("profiles")
-        .select("handle, avatar_url")
+        .select("handle, avatar_url, public_key")
         .eq("id", otherId)
         .maybeSingle();
       const { data: lastMsg } = await supabase
         .from("messages")
-        .select("body, created_at")
+        .select("body, created_at, is_encrypted, nonce, sender_id")
         .eq("conversation_id", c.id)
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
+
+      // Best-effort preview of the last message (decrypt if it was for us).
+      let preview = lastMsg?.body;
+      if (lastMsg?.is_encrypted && lastMsg?.nonce && otherProfile?.public_key && myKeys) {
+        const senderPub =
+          lastMsg.sender_id === user.id ? myKeys.publicKey : otherProfile.public_key;
+        const plain = decryptFrom(
+          lastMsg.body,
+          lastMsg.nonce,
+          senderPub,
+          myKeys.secretKey,
+        );
+        preview = plain ?? "🔒 encrypted";
+      }
 
       mapped.push({
         id: c.id,
@@ -73,10 +98,12 @@ const DMs = () => {
         is_marketing_bot: c.is_marketing_bot,
         other_handle: otherProfile?.handle ?? "anonymous",
         other_avatar: otherProfile?.avatar_url ?? null,
-        last_message: lastMsg?.body,
+        other_public_key: (otherProfile as any)?.public_key ?? null,
+        last_message: preview,
         last_timestamp: lastMsg?.created_at,
       });
     }
+
 
     mapped.sort(
       (a, b) =>
@@ -92,13 +119,36 @@ const DMs = () => {
     }
   };
 
-  const loadMessages = async (cid: string) => {
+  // Decrypt a single message and cache the plaintext.
+  const decryptInto = (msgs: Msg[], conv: Conv | null) => {
+    if (!user || !myKeys || !conv) return;
+    setPlainById((prev) => {
+      const next = { ...prev };
+      for (const m of msgs) {
+        if (!m.is_encrypted || !m.nonce || next[m.id] != null) continue;
+        // For messages I sent, the recipient pub key is the other user.
+        // For messages I received, the sender pub key is the other user.
+        const otherPub = conv.other_public_key;
+        if (!otherPub) {
+          next[m.id] = "🔒 encrypted (other user has no key yet)";
+          continue;
+        }
+        const plain = decryptFrom(m.body, m.nonce, otherPub, myKeys.secretKey);
+        next[m.id] = plain ?? "🔒 cannot decrypt on this device";
+      }
+      return next;
+    });
+  };
+
+  const loadMessages = async (cid: string, conv: Conv | null) => {
     const { data } = await supabase
       .from("messages")
       .select("*")
       .eq("conversation_id", cid)
       .order("created_at");
-    setMessages((data ?? []) as Msg[]);
+    const msgs = (data ?? []) as Msg[];
+    setMessages(msgs);
+    decryptInto(msgs, conv);
   };
 
   useEffect(() => {
@@ -123,7 +173,7 @@ const DMs = () => {
 
   useEffect(() => {
     if (!active) return;
-    loadMessages(active.id);
+    loadMessages(active.id, active);
     const ch = supabase
       .channel(`msg-${active.id}`)
       .on(
@@ -134,10 +184,15 @@ const DMs = () => {
           table: "messages",
           filter: `conversation_id=eq.${active.id}`,
         },
-        (payload) => setMessages((m) => [...m, payload.new as Msg])
+        (payload) => {
+          const m = payload.new as Msg;
+          setMessages((cur) => [...cur, m]);
+          decryptInto([m], active);
+        }
       )
       .subscribe();
     return () => { supabase.removeChannel(ch); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
 
   useEffect(() => {
@@ -154,19 +209,37 @@ const DMs = () => {
       .select("community_id")
       .eq("id", active.id)
       .maybeSingle();
+
+    let payload: { body: string; is_encrypted: boolean; nonce: string | null } = {
+      body: text,
+      is_encrypted: false,
+      nonce: null,
+    };
+
+    if (active.other_public_key && myKeys) {
+      const sealed = encryptFor(text, active.other_public_key, myKeys.secretKey);
+      payload = { body: sealed.body, is_encrypted: true, nonce: sealed.nonce };
+    }
+
     const { error } = await supabase.from("messages").insert({
       conversation_id: active.id,
       sender_id: user.id,
-      body: text,
       is_bot: false,
       community_id: conv?.community_id ?? "",
-    });
+      ...payload,
+    } as any);
     if (error) {
       toast.error(error.message);
       setBody(text);
+    } else if (payload.is_encrypted) {
+      // We already know the plaintext locally — cache it so it renders immediately.
+      // The realtime insert will arrive shortly with a real id; we cache by a temp key
+      // only if we don't already have the new row — simplest is to rely on decryptInto
+      // when the row arrives (we can also decrypt our own ciphertext via the same pair).
     }
     setIsSending(false);
   };
+
 
   return (
     <AppShell>
@@ -229,11 +302,30 @@ const DMs = () => {
                   </AvatarFallback>
                 </Avatar>
                 <span className="font-mono text-sm">{active.other_handle}</span>
+                {active.other_public_key ? (
+                  <span
+                    className="ml-auto inline-flex items-center gap-1 text-[10px] text-green-500 font-medium"
+                    title="end-to-end encrypted on this device"
+                  >
+                    <ShieldCheck className="h-3 w-3" /> e2e
+                  </span>
+                ) : (
+                  <span
+                    className="ml-auto text-[10px] text-muted-foreground"
+                    title="other user hasn't set up encryption yet"
+                  >
+                    not encrypted
+                  </span>
+                )}
               </div>
 
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {messages.map((m) => {
                   const mine = m.sender_id === user?.id;
+                  const text = m.is_encrypted
+                    ? (plainById[m.id] ?? "🔒 decrypting…")
+                    : m.body;
+
                   return (
                     <div
                       key={m.id}
@@ -246,8 +338,9 @@ const DMs = () => {
                             : "bg-secondary rounded-bl-sm"
                         }`}
                       >
-                        <p className="whitespace-pre-wrap">{m.body}</p>
-                        <p className={`text-[10px] mt-1 opacity-70`}>
+                        <p className="whitespace-pre-wrap">{text}</p>
+                        <p className="text-[10px] mt-1 opacity-70 flex items-center gap-1">
+                          {m.is_encrypted && <ShieldCheck className="h-3 w-3" />}
                           {formatDistanceToNow(new Date(m.created_at), { addSuffix: true })}
                         </p>
                       </div>
@@ -256,6 +349,7 @@ const DMs = () => {
                 })}
                 <div ref={bottomRef} />
               </div>
+
 
               <form
                 onSubmit={(e) => { e.preventDefault(); send(); }}
